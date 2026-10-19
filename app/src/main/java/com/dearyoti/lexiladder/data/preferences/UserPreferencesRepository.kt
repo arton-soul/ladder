@@ -14,11 +14,12 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 data class UserPreferences(
-    val uiLanguage: String,
-    val explanationLanguage: String,
-    val targetLanguage: String,
-    val dailyGoalMinutes: Int,
-    val isDarkMode: Boolean
+    val uiLanguage: String = "en",
+    val explanationLanguage: String = "id",
+    val targetLanguage: String = "en",
+    val dailyGoalMinutes: Int = 5,
+    val isDarkMode: Boolean = false,
+    val isOnboardingCompleted: Boolean = false
 )
 
 class UserPreferencesRepository(private val context: Context) {
@@ -28,6 +29,7 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_TARGET_LANGUAGE = stringPreferencesKey("target_language")
         val KEY_DAILY_GOAL = intPreferencesKey("daily_goal_minutes")
         val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
+        val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -36,7 +38,8 @@ class UserPreferencesRepository(private val context: Context) {
             explanationLanguage = preferences[KEY_EXPLANATION_LANGUAGE] ?: "id",
             targetLanguage = preferences[KEY_TARGET_LANGUAGE] ?: "en",
             dailyGoalMinutes = preferences[KEY_DAILY_GOAL] ?: 5,
-            isDarkMode = preferences[KEY_DARK_MODE] ?: false
+            isDarkMode = preferences[KEY_DARK_MODE] ?: false,
+            isOnboardingCompleted = preferences[KEY_ONBOARDING_COMPLETED] ?: false
         )
     }
 
@@ -61,6 +64,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setDarkMode(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[KEY_DARK_MODE] = enabled
+        }
+    }
+
+    suspend fun setCompletedOnboarding(completed: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_ONBOARDING_COMPLETED] = completed
         }
     }
 }

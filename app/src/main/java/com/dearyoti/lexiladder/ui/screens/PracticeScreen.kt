@@ -2,6 +2,7 @@ package com.dearyoti.lexiladder.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,77 +14,87 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.domain.model.QuizQuestion
+import com.dearyoti.lexiladder.domain.model.Word
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @Composable
 fun PracticeScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
-    // Sample adaptive quiz questions generated from initial vocabulary
-    val questions = remember {
-        listOf(
-            QuizQuestion(
-                id = "q1",
-                wordId = "w_a1_001",
-                questionText = "What is the meaning of \"Achieve\"?",
-                options = listOf(
-                    "To successfully complete something with effort",
-                    "To travel around a new place",
-                    "To sleep for a long time",
-                    "To lose something valuable"
-                ),
-                correctOptionIndex = 0,
-                explanation = "\"Achieve\" means to successfully finish or accomplish something."
-            ),
-            QuizQuestion(
-                id = "q2",
-                wordId = "w_a1_002",
-                questionText = "Which word means \"lasting only a short period of time\"?",
-                options = listOf(
-                    "Diligent",
-                    "Courage",
-                    "Brief",
-                    "Explore"
-                ),
-                correctOptionIndex = 2,
-                explanation = "\"Brief\" means short in duration or concise."
-            ),
-            QuizQuestion(
-                id = "q3",
-                wordId = "w_a1_004",
-                questionText = "A student who studies conscientiously every night can be described as:",
-                options = listOf(
-                    "Careless",
-                    "Diligent",
-                    "Brief",
-                    "Frightened"
-                ),
-                correctOptionIndex = 1,
-                explanation = "\"Diligent\" means hardworking and persistent."
-            )
-        )
+    // Generate dynamic quiz questions from words
+    val questions = remember(words) {
+        generateQuizFromWords(words)
     }
 
     var currentIndex by remember { mutableIntStateOf(0) }
     var selectedOption by remember { mutableStateOf<Int?>(null) }
     var isSubmitted by remember { mutableStateOf(false) }
+    var sessionCorrectCount by remember { mutableIntStateOf(0) }
+    var isSessionComplete by remember { mutableStateOf(false) }
+
+    if (words.isEmpty()) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Loading practice questions...", style = MaterialTheme.typography.bodyLarge)
+        }
+        return
+    }
+
+    if (questions.isEmpty()) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Not enough words to generate quiz questions.", style = MaterialTheme.typography.bodyLarge)
+        }
+        return
+    }
+
+    if (isSessionComplete) {
+        QuizResultView(
+            totalQuestions = questions.size,
+            correctCount = sessionCorrectCount,
+            onRestart = {
+                currentIndex = 0
+                selectedOption = null
+                isSubmitted = false
+                sessionCorrectCount = 0
+                isSessionComplete = false
+            }
+        )
+        return
+    }
 
     val currentQuestion = questions[currentIndex]
 
@@ -94,10 +105,28 @@ fun PracticeScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Adaptive Practice",
-            style = MaterialTheme.typography.headlineMedium
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Adaptive Quiz",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Score: $sessionCorrectCount",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        LinearProgressIndicator(
+            progress = { (currentIndex + 1).toFloat() / questions.size.toFloat() },
+            modifier = Modifier.fillMaxWidth()
         )
+
         Text(
             text = "Question ${currentIndex + 1} of ${questions.size}",
             style = MaterialTheme.typography.bodyMedium,
@@ -148,10 +177,11 @@ fun PracticeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         if (isSubmitted) {
+            val isRight = selectedOption == currentQuestion.correctOptionIndex
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (selectedOption == currentQuestion.correctOptionIndex)
+                    containerColor = if (isRight)
                         MaterialTheme.colorScheme.primaryContainer
                     else
                         MaterialTheme.colorScheme.errorContainer
@@ -159,8 +189,9 @@ fun PracticeScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = if (selectedOption == currentQuestion.correctOptionIndex) "Correct! 🎉" else "Not quite right!",
-                        style = MaterialTheme.typography.titleMedium
+                        text = if (isRight) "Correct! 🎉" else "Incorrect",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -172,13 +203,17 @@ fun PracticeScreen(
 
             Button(
                 onClick = {
-                    isSubmitted = false
-                    selectedOption = null
-                    currentIndex = (currentIndex + 1) % questions.size
+                    if (currentIndex < questions.size - 1) {
+                        currentIndex++
+                        selectedOption = null
+                        isSubmitted = false
+                    } else {
+                        isSessionComplete = true
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = if (currentIndex < questions.size - 1) "Next Question" else "Practice Again")
+                Text(text = if (currentIndex < questions.size - 1) "Next Question" else "See Results")
             }
         } else {
             Button(
@@ -186,6 +221,7 @@ fun PracticeScreen(
                     if (selectedOption != null) {
                         isSubmitted = true
                         val correct = selectedOption == currentQuestion.correctOptionIndex
+                        if (correct) sessionCorrectCount++
                         scope.launch {
                             repo.recordReviewResult(currentQuestion.wordId, correct)
                         }
@@ -198,4 +234,95 @@ fun PracticeScreen(
             }
         }
     }
+}
+
+@Composable
+fun QuizResultView(
+    totalQuestions: Int,
+    correctCount: Int,
+    onRestart: () -> Unit
+) {
+    val accuracy = if (totalQuestions > 0) (correctCount.toFloat() / totalQuestions.toFloat()) * 100f else 0f
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Session Complete! 🏆",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = "Your answers have been saved to your local spaced repetition review schedule.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Score: $correctCount / $totalQuestions",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Accuracy: ${String.format("%.1f", accuracy)}%",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = onRestart,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text("Practice Again")
+        }
+    }
+}
+
+fun generateQuizFromWords(words: List<Word>): List<QuizQuestion> {
+    if (words.size < 4) return emptyList()
+
+    val random = Random(42) // Deterministic seed for reproducible order
+    val questions = mutableListOf<QuizQuestion>()
+
+    words.take(8).forEachIndexed { index, word ->
+        // Question type 1: word -> meaning
+        val otherWords = words.filter { it.id != word.id }.shuffled(random).take(3)
+        val options = (listOf(word.definition) + otherWords.map { it.definition }).shuffled(random)
+        val correctIndex = options.indexOf(word.definition)
+
+        questions.add(
+            QuizQuestion(
+                id = "q_gen_$index",
+                wordId = word.id,
+                questionText = "What is the meaning of \"${word.text}\"?",
+                options = options,
+                correctOptionIndex = correctIndex,
+                explanation = "\"${word.text}\" (${word.partOfSpeech}) means: ${word.definition}. Arti: ${word.translation ?: "-"}"
+            )
+        )
+    }
+
+    return questions
 }

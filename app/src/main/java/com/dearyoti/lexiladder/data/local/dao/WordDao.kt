@@ -21,6 +21,9 @@ interface WordDao {
     @Query("SELECT * FROM words")
     fun getAllWords(): Flow<List<WordEntity>>
 
+    @Query("SELECT * FROM words WHERE text LIKE '%' || :query || '%' OR translation LIKE '%' || :query || '%' ORDER BY text ASC")
+    fun searchWords(query: String): Flow<List<WordEntity>>
+
     @Query("SELECT COUNT(*) FROM words WHERE levelId = :levelId")
     suspend fun getWordCountByLevel(levelId: String): Int
 

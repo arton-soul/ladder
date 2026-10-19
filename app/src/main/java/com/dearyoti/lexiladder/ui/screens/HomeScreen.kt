@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -18,24 +19,41 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 
 @Composable
 fun HomeScreen(
     onNavigateToLearn: () -> Unit,
+    onNavigateToPractice: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
+    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(
+        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences(
+            uiLanguage = "en",
+            explanationLanguage = "id",
+            targetLanguage = "en",
+            dailyGoalMinutes = 5,
+            isDarkMode = false,
+            isOnboardingCompleted = true
+        )
+    )
     val currentLevel = levels.firstOrNull { it.isUnlocked }
+    val totalWords = if (words.isNotEmpty()) words.size else 20
+    val progressFraction = if (totalWords > 0) (masteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
 
     Column(
         modifier = modifier
@@ -50,20 +68,32 @@ fun HomeScreen(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Daily Target: 5 Minutes",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Daily Target: ${prefs.dailyGoalMinutes} Minutes",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Text(
+                        text = "${(progressFraction * 100).toInt()}% Done",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Consistent daily practice is the fastest ladder to fluency.",
+                    text = "A 5-minute daily ladder session builds rock-solid memory.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
-                    progress = { 0.4f },
+                    progress = { progressFraction },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -77,7 +107,8 @@ fun HomeScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = currentLevel?.title ?: "Level 1: Beginner Starter",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
@@ -98,16 +129,59 @@ fun HomeScreen(
                             style = MaterialTheme.typography.labelLarge
                         )
                         Text(
-                            text = "$masteredCount / ${currentLevel?.totalWords ?: 5}",
-                            style = MaterialTheme.typography.bodyLarge
+                            text = "$masteredCount / $totalWords words",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
 
                     Button(onClick = onNavigateToLearn) {
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
                         Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = "Start Session")
+                        Text(text = "Learn Words")
                     }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedButton(
+                    onClick = onNavigateToPractice,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Default.FitnessCenter, contentDescription = "Practice")
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(text = "Quick Quiz Practice")
+                }
+            }
+        }
+
+        // Units Breakdown Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Level Units",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Unit 1: Mindset & Actions", style = MaterialTheme.typography.bodyMedium)
+                    Text("10 words", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Unit 2: Life & Surroundings", style = MaterialTheme.typography.bodyMedium)
+                    Text("10 words", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -119,12 +193,13 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Offline-First Ready",
-                    style = MaterialTheme.typography.titleMedium
+                    text = "Offline Mode Active",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "All installed words and flashcards work completely offline without internet.",
+                    text = "Everything in Level 1 runs locally on your device. No internet connection required.",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

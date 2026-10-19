@@ -31,13 +31,7 @@ fun SettingsScreen(
 ) {
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(
-        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences(
-            uiLanguage = "en",
-            explanationLanguage = "id",
-            targetLanguage = "en",
-            dailyGoalMinutes = 5,
-            isDarkMode = false
-        )
+        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences()
     )
     val scope = rememberCoroutineScope()
 

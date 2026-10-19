@@ -6,6 +6,8 @@ import com.dearyoti.lexiladder.domain.model.Word
 import kotlinx.coroutines.flow.Flow
 
 interface VocabularyRepository {
+    fun getAllWords(): Flow<List<Word>>
+    fun searchWords(query: String): Flow<List<Word>>
     fun getWordsByLevel(levelId: String): Flow<List<Word>>
     fun getWordsByUnit(unitId: String): Flow<List<Word>>
     fun getAllLevels(): Flow<List<Level>>

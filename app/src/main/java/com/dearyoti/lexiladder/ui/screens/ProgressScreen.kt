@@ -12,12 +12,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 
@@ -29,6 +31,10 @@ fun ProgressScreen(
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
     val favorites by repo.getFavorites().collectAsState(initial = emptyList())
+    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+
+    val totalWords = if (words.isNotEmpty()) words.size else 20
+    val learningCount = (totalWords - masteredCount).coerceAtLeast(0)
 
     Column(
         modifier = modifier
@@ -38,8 +44,9 @@ fun ProgressScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Learning Progress",
-            style = MaterialTheme.typography.headlineMedium
+            text = "Learning Statistics",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
         )
 
         // Summary Cards
@@ -59,7 +66,8 @@ fun ProgressScreen(
                     Text(
                         text = "$masteredCount",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -70,24 +78,47 @@ fun ProgressScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
+                        text = "In Learning",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    Text(
+                        text = "$learningCount",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier.weight(1f),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
                         text = "Bookmarked",
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
                         text = "${favorites.size}",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
         Text(
-            text = "Ladder Levels",
-            style = MaterialTheme.typography.titleLarge
+            text = "Ladder Level Roadmap",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
         )
 
         levels.forEach { level ->
+            val isA1 = level.id == "level_a1"
+            val fraction = if (isA1 && totalWords > 0) (masteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -99,10 +130,11 @@ fun ProgressScreen(
                     ) {
                         Text(
                             text = level.title,
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = if (level.isUnlocked) "Unlocked" else "Locked 🔒",
+                            text = if (level.isUnlocked) "Active" else "Locked 🔒",
                             style = MaterialTheme.typography.labelLarge,
                             color = if (level.isUnlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
                         )
@@ -113,6 +145,22 @@ fun ProgressScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
+                    if (level.isUnlocked) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Mastery Progress", style = MaterialTheme.typography.labelSmall)
+                            Text(text = "$masteredCount / $totalWords words", style = MaterialTheme.typography.labelSmall)
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        LinearProgressIndicator(
+                            progress = { fraction },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
