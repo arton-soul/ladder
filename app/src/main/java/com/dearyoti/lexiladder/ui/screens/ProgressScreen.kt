@@ -32,6 +32,8 @@ fun ProgressScreen(
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
     val favorites by repo.getFavorites().collectAsState(initial = emptyList())
     val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val dueCount by repo.getDueReviewCount().collectAsState(initial = 0)
+    val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
 
     val totalWords = if (words.isNotEmpty()) words.size else 20
     val learningCount = (totalWords - masteredCount).coerceAtLeast(0)
@@ -49,7 +51,7 @@ fun ProgressScreen(
             fontWeight = FontWeight.Bold
         )
 
-        // Summary Cards
+        // Summary Cards - Row 1
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -74,6 +76,30 @@ fun ProgressScreen(
 
             Card(
                 modifier = Modifier.weight(1f),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Due for Review",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    Text(
+                        text = "$dueCount",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        // Summary Cards - Row 2
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Card(
+                modifier = Modifier.weight(1f),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -92,20 +118,36 @@ fun ProgressScreen(
 
             Card(
                 modifier = Modifier.weight(1f),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Bookmarked",
+                        text = "Difficult Words",
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
-                        text = "${favorites.size}",
+                        text = "${difficultWords.size}",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Bold
                     )
                 }
+            }
+        }
+
+        // Bookmarked Banner
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("★ Bookmarked Words", style = MaterialTheme.typography.titleMedium)
+                Text("${favorites.size} words", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
         }
 

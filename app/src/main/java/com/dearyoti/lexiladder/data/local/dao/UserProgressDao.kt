@@ -21,8 +21,17 @@ interface UserProgressDao {
     @Query("SELECT * FROM user_progress WHERE isMastered = 1")
     fun getMasteredWords(): Flow<List<UserProgressEntity>>
 
-    @Query("SELECT * FROM user_progress WHERE nextReviewAt > 0 AND nextReviewAt <= :currentTime")
+    @Query("SELECT * FROM user_progress WHERE nextReviewAt > 0 AND nextReviewAt <= :currentTime ORDER BY nextReviewAt ASC")
+    fun getWordsDueForReviewFlow(currentTime: Long): Flow<List<UserProgressEntity>>
+
+    @Query("SELECT * FROM user_progress WHERE nextReviewAt > 0 AND nextReviewAt <= :currentTime ORDER BY nextReviewAt ASC")
     suspend fun getWordsDueForReview(currentTime: Long): List<UserProgressEntity>
+
+    @Query("SELECT COUNT(*) FROM user_progress WHERE nextReviewAt > 0 AND nextReviewAt <= :currentTime")
+    fun getDueReviewCount(currentTime: Long): Flow<Int>
+
+    @Query("SELECT * FROM user_progress WHERE incorrectCount > 0 AND isMastered = 0 ORDER BY easeFactor ASC, incorrectCount DESC")
+    fun getDifficultWords(): Flow<List<UserProgressEntity>>
 
     @Query("SELECT COUNT(*) FROM user_progress WHERE isMastered = 1")
     fun getMasteredWordCount(): Flow<Int>

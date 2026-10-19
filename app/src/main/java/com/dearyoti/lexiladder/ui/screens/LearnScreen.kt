@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.Word
 import kotlinx.coroutines.launch
 
@@ -87,9 +88,9 @@ fun LearnScreen(
         FlashcardSessionView(
             words = filteredWords,
             onClose = { isFlashcardMode = false },
-            onWordReviewed = { wordId, isCorrect ->
+            onWordReviewed = { wordId, rating ->
                 scope.launch {
-                    repo.recordReviewResult(wordId, isCorrect)
+                    repo.recordReviewRating(wordId, rating)
                 }
             }
         )
@@ -202,7 +203,7 @@ fun LearnScreen(
 fun FlashcardSessionView(
     words: List<Word>,
     onClose: () -> Unit,
-    onWordReviewed: (String, Boolean) -> Unit
+    onWordReviewed: (String, ReviewRating) -> Unit
 ) {
     var currentIndex by remember { mutableIntStateOf(0) }
     var isFlipped by remember { mutableStateOf(false) }
@@ -317,30 +318,42 @@ fun FlashcardSessionView(
         AnimatedVisibility(visible = isFlipped) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
                     onClick = {
-                        onWordReviewed(currentWord.id, false)
+                        onWordReviewed(currentWord.id, ReviewRating.HARD)
                         isFlipped = false
                         currentIndex = (currentIndex + 1) % words.size
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text(text = "Hard (Review soon)")
+                    Text(text = "Hard")
                 }
 
                 Button(
                     onClick = {
-                        onWordReviewed(currentWord.id, true)
+                        onWordReviewed(currentWord.id, ReviewRating.GOOD)
                         isFlipped = false
                         currentIndex = (currentIndex + 1) % words.size
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Good (Remembered)")
+                    Text(text = "Good")
+                }
+
+                Button(
+                    onClick = {
+                        onWordReviewed(currentWord.id, ReviewRating.EASY)
+                        isFlipped = false
+                        currentIndex = (currentIndex + 1) % words.size
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) {
+                    Text(text = "Easy")
                 }
             }
         }

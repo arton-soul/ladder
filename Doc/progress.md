@@ -8,10 +8,10 @@
 ## 1. Status Proyek Saat Ini
 
 - **Status keseluruhan:** `IN PROGRESS`
-- **Fase aktif:** Phase 2 — Learning MVP (Selesai; siap Phase 3 — Adaptive Review)
-- **Fase terakhir selesai:** Phase 2 — Learning MVP
+- **Fase aktif:** Phase 3 — Adaptive Review (Selesai; siap Phase 4 — Level Unlock & Mastery Test)
+- **Fase terakhir selesai:** Phase 3 — Adaptive Review
 - **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - app-debug.apk 17.8 MB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 6/6 unit tests passed)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 14/14 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.0` (Build 1)
@@ -41,8 +41,8 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 | 0 | Product & Repository Setup | DONE | Setup repo git, package name & SDK 36 selesai |
 | 1 | Android Foundation | DONE | Fondasi Android, Compose, Room, DataStore, NavHost selesai |
 | 2 | Learning MVP | DONE | Onboarding, Flashcard, Kuis Pilihan Ganda, Search & Bookmark selesai |
-| 3 | Adaptive Review | NOT STARTED | Siap dikerjakan |
-| 4 | Level Unlock & Mastery Test | NOT STARTED | Menunggu Phase 2 |
+| 3 | Adaptive Review | DONE | Spaced repetition scheduler, queue kata due/sulit, proteksi clock skew selesai |
+| 4 | Level Unlock & Mastery Test | NOT STARTED | Siap dikerjakan |
 | 5 | GitHub Content Updates | NOT STARTED | Menunggu format konten stabil |
 | 6 | Monetization & Privacy | NOT STARTED | Setelah alur belajar stabil |
 | 7 | QA, ASO & Release | NOT STARTED | Menunggu fitur rilis |
@@ -147,28 +147,29 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ## 7. Phase 3 — Adaptive Review
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `DONE`
 
 ### Task
-- [ ] Model progres kata.
-- [ ] Aturan jadwal review.
-- [ ] Prioritas kata sulit.
-- [ ] Penanganan jawaban benar/salah.
-- [ ] Statistik dasar.
-- [ ] Unit test interval review.
-- [ ] Uji kasus tanggal, zona waktu, dan perubahan jam sistem.
+- [x] Model progres kata (`LearningStage`: NEW, LEARNING, REVIEWING, MASTERED; `ReviewRating`: WRONG, HARD, GOOD, EASY; `easeFactor`, `intervalDays`, `consecutiveCorrect`).
+- [x] Aturan jadwal review (Domain scheduler SM-2 style murni tanpa dependensi UI, kenaikan interval progresif).
+- [x] Prioritas kata sulit (Deteksi kesalahan berulang, salah > benar, filter khusus kata sulit di practice & progress).
+- [x] Penanganan jawaban benar/salah (Reset streak jika salah, penjadwalan ulang pendek 10m, interval bertahap 1d -> 3d -> progresif).
+- [x] Statistik dasar (HomeScreen kartu review due hari ini, ProgressScreen grid 4 metrik: Mastered, Due, Learning, Difficult).
+- [x] Unit test interval review (8 skenario unit test SpacedRepetitionSchedulerTest mencakup reset streak, mastery threshold, interval bonus).
+- [x] Uji kasus tanggal, zona waktu, dan perubahan jam sistem (Clock skew backwards protection mengamankan integritas interval saat jam dimundurkan).
 
 ### Acceptance criteria
-- [ ] Kata yang salah mendapat jadwal review yang sesuai.
-- [ ] Kata yang benar berulang memiliki interval yang dapat bertambah.
-- [ ] Satu jawaban benar tidak langsung menetapkan mastery penuh.
-- [ ] Aturan review dapat diuji tanpa UI.
-- [ ] Jadwal tersimpan dan tetap konsisten setelah restart.
+- [x] Kata yang salah mendapat jadwal review yang sesuai (streak reset 0, interval 0 hari / 10 menit).
+- [x] Kata yang benar berulang memiliki interval yang dapat bertambah (1 hari -> 3 hari -> interval * easeFactor).
+- [x] Satu jawaban benar tidak langsung menetapkan mastery penuh (memerlukan consecutiveCorrect >= 4 & interval >= 7).
+- [x] Aturan review dapat diuji tanpa UI (pure Kotlin domain service diuji dengan JVM test runner).
+- [x] Jadwal tersimpan dan tetap konsisten setelah restart (Room database v2 entity & reactive query).
 
 ### Bukti penyelesaian
-- **Commit/hash:** —
-- **Test:** —
-- **Blocker:** —
+- **Commit/hash:** Segera dicatat pada git commit
+- **Build:** `.\gradlew assembleDebug` (SUCCESS in 18s, app-debug.apk 17.8 MB)
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS in 52s, 14/14 tests passed: 8 scheduler + 6 domain)
+- **Blocker:** Tidak ada
 
 ---
 
@@ -482,3 +483,5 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-19 | Phase 0 | Pencatatan repository GitHub aplikasi (arton-soul/ladder.git, arton.79@gmail.com) dan identitas developer Play Store (dearyoti, made.sudi@gmail.com) | progress.md & rancangan.md diperbarui | DONE |
 | 2026-10-19 | Phase 1 | Inisialisasi Android Foundation: Gradle 8.13, AGP 8.7.3, compileSdk 36, targetSdk 36, minSdk 26, Jetpack Compose Material3, 5 tab navigation, Room DB + KSP, DataStore preferences, initial vocabulary seeder | `.\gradlew assembleDebug` (17.7 MB APK) & `.\gradlew testDebugUnitTest` (4/4 passed) | DONE |
 | 2026-10-19 | Phase 2 | Implementasi Learning MVP: Onboarding, Flashcard flip interaktif dengan rating Hard/Good, Kuis pilihan ganda adaptif dengan skor & review, Search bar & Bookmark, 20 kata bundel Level 1, dan Room persistence | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (6/6 passed) | DONE |
+| 2026-10-19 | Phase 3 | Implementasi Adaptive Review: SpacedRepetitionScheduler murni, UserProgress entity & Room DB v2, queue kata jatuh tempo (due) & kata sulit, integrasi rating Flashcard & Quiz, proteksi clock skew, 8 unit test scheduler | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (14/14 passed) | DONE |
+

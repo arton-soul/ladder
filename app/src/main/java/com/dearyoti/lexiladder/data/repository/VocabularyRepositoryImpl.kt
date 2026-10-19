@@ -7,8 +7,10 @@ import com.dearyoti.lexiladder.data.local.entity.LevelEntity
 import com.dearyoti.lexiladder.data.local.entity.UserProgressEntity
 import com.dearyoti.lexiladder.data.local.entity.WordEntity
 import com.dearyoti.lexiladder.domain.model.Level
+import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.UserProgress
 import com.dearyoti.lexiladder.domain.model.Word
+import com.dearyoti.lexiladder.domain.scheduler.SpacedRepetitionScheduler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
@@ -76,35 +78,40 @@ class VocabularyRepositoryImpl(
         return userProgressDao.getProgressForWord(wordId)?.toDomainModel()
     }
 
-    override suspend fun recordReviewResult(wordId: String, isCorrect: Boolean) {
-        val existing = userProgressDao.getProgressForWord(wordId) ?: UserProgressEntity(wordId = wordId)
-        val now = System.currentTimeMillis()
-
-        val updatedCorrect = if (isCorrect) existing.correctCount + 1 else existing.correctCount
-        val updatedIncorrect = if (!isCorrect) existing.incorrectCount + 1 else existing.incorrectCount
-        val updatedReviews = existing.reviewCount + 1
-        val isMastered = updatedCorrect >= 3 && (updatedCorrect.toFloat() / updatedReviews.toFloat()) >= 0.75f
-
-        // Interval interval spaced repetition (ms)
-        val nextIntervalMs = if (isCorrect) {
-            when (updatedCorrect) {
-                1 -> 24 * 60 * 60 * 1000L      // 1 day
-                2 -> 3 * 24 * 60 * 60 * 1000L  // 3 days
-                else -> 7 * 24 * 60 * 60 * 1000L // 7 days
-            }
-        } else {
-            4 * 60 * 60 * 1000L // 4 hours
+    override fun getWordsDueForReview(currentTime: Long): Flow<List<Word>> {
+        return combine(
+            wordDao.getAllWords(),
+            userProgressDao.getWordsDueForReviewFlow(currentTime)
+        ) { words, dueProgress ->
+            val dueIds = dueProgress.map { it.wordId }.toSet()
+            words.filter { dueIds.contains(it.id) }.map { it.toDomainModel() }
         }
+    }
 
-        val updated = existing.copy(
-            reviewCount = updatedReviews,
-            correctCount = updatedCorrect,
-            incorrectCount = updatedIncorrect,
-            isMastered = isMastered,
-            lastReviewedAt = now,
-            nextReviewAt = now + nextIntervalMs
-        )
-        userProgressDao.saveProgress(updated)
+    override fun getDueReviewCount(currentTime: Long): Flow<Int> {
+        return userProgressDao.getDueReviewCount(currentTime)
+    }
+
+    override fun getDifficultWords(): Flow<List<Word>> {
+        return combine(
+            wordDao.getAllWords(),
+            userProgressDao.getDifficultWords()
+        ) { words, diffProgress ->
+            val diffIds = diffProgress.map { it.wordId }.toSet()
+            words.filter { diffIds.contains(it.id) }.map { it.toDomainModel() }
+        }
+    }
+
+    override suspend fun recordReviewRating(wordId: String, rating: ReviewRating, now: Long) {
+        val existingEntity = userProgressDao.getProgressForWord(wordId)
+        val currentProgress = existingEntity?.toDomainModel() ?: UserProgress(wordId = wordId)
+        val updatedProgress = SpacedRepetitionScheduler.scheduleNextReview(currentProgress, rating, now)
+        userProgressDao.saveProgress(UserProgressEntity.fromDomainModel(updatedProgress))
+    }
+
+    override suspend fun recordReviewResult(wordId: String, isCorrect: Boolean) {
+        val rating = if (isCorrect) ReviewRating.GOOD else ReviewRating.WRONG
+        recordReviewRating(wordId, rating)
     }
 
     override suspend fun toggleFavorite(wordId: String) {

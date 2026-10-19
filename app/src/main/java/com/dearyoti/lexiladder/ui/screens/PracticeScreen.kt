@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -32,21 +35,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.domain.model.QuizQuestion
+import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.Word
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+
+enum class PracticeMode {
+    ALL,
+    DUE_REVIEW,
+    DIFFICULT
+}
 
 @Composable
 fun PracticeScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
-    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val allWords by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val dueWords by repo.getWordsDueForReview().collectAsState(initial = emptyList())
+    val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
+    var selectedMode by remember { mutableStateOf(PracticeMode.ALL) }
+
+    // Active words based on selected mode
+    val activeWordPool = when (selectedMode) {
+        PracticeMode.ALL -> allWords
+        PracticeMode.DUE_REVIEW -> dueWords
+        PracticeMode.DIFFICULT -> difficultWords
+    }
+
     // Generate dynamic quiz questions from words
-    val questions = remember(words) {
-        generateQuizFromWords(words)
+    val questions = remember(activeWordPool, allWords, selectedMode) {
+        val targetWords = if (activeWordPool.size >= 4) activeWordPool else allWords
+        generateQuizFromWords(targetWords, allWords)
     }
 
     var currentIndex by remember { mutableIntStateOf(0) }
@@ -55,7 +77,7 @@ fun PracticeScreen(
     var sessionCorrectCount by remember { mutableIntStateOf(0) }
     var isSessionComplete by remember { mutableStateOf(false) }
 
-    if (words.isEmpty()) {
+    if (allWords.isEmpty()) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -64,19 +86,6 @@ fun PracticeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Loading practice questions...", style = MaterialTheme.typography.bodyLarge)
-        }
-        return
-    }
-
-    if (questions.isEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("Not enough words to generate quiz questions.", style = MaterialTheme.typography.bodyLarge)
         }
         return
     }
@@ -96,28 +105,116 @@ fun PracticeScreen(
         return
     }
 
-    val currentQuestion = questions[currentIndex]
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        Text(
+            text = "Adaptive Practice & Review",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Practice Mode Filter Chips
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val modes = listOf(
+                PracticeMode.ALL to "Standard Quiz (${allWords.size})",
+                PracticeMode.DUE_REVIEW to "Due Review (${dueWords.size})",
+                PracticeMode.DIFFICULT to "Difficult Words (${difficultWords.size})"
+            )
+            items(modes) { (mode, label) ->
+                FilterChip(
+                    selected = selectedMode == mode,
+                    onClick = {
+                        selectedMode = mode
+                        currentIndex = 0
+                        selectedOption = null
+                        isSubmitted = false
+                        sessionCorrectCount = 0
+                        isSessionComplete = false
+                    },
+                    label = { Text(label) }
+                )
+            }
+        }
+
+        if (selectedMode == PracticeMode.DUE_REVIEW && dueWords.isEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text(
+                        text = "All Caught Up! 🎉",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "You have no words scheduled for review right now. Great job keeping up with your spaced repetition schedule!",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(onClick = { selectedMode = PracticeMode.ALL }) {
+                        Text("Practice All Words")
+                    }
+                }
+            }
+            return
+        }
+
+        if (selectedMode == PracticeMode.DIFFICULT && difficultWords.isEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text(
+                        text = "No Difficult Words Yet! 🌟",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Words that you miss during practice will automatically appear here for focused reinforcement.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(onClick = { selectedMode = PracticeMode.ALL }) {
+                        Text("Practice All Words")
+                    }
+                }
+            }
+            return
+        }
+
+        if (questions.isEmpty()) {
+            Text("No questions available for this category.", style = MaterialTheme.typography.bodyMedium)
+            return
+        }
+
+        val currentQuestion = questions[currentIndex]
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Adaptive Quiz",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                text = "Question ${currentIndex + 1} of ${questions.size}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = "Score: $sessionCorrectCount",
                 style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -125,12 +222,6 @@ fun PracticeScreen(
         LinearProgressIndicator(
             progress = { (currentIndex + 1).toFloat() / questions.size.toFloat() },
             modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(
-            text = "Question ${currentIndex + 1} of ${questions.size}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Card(
@@ -174,7 +265,7 @@ fun PracticeScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         if (isSubmitted) {
             val isRight = selectedOption == currentQuestion.correctOptionIndex
@@ -222,8 +313,9 @@ fun PracticeScreen(
                         isSubmitted = true
                         val correct = selectedOption == currentQuestion.correctOptionIndex
                         if (correct) sessionCorrectCount++
+                        val rating = if (correct) ReviewRating.GOOD else ReviewRating.WRONG
                         scope.launch {
-                            repo.recordReviewResult(currentQuestion.wordId, correct)
+                            repo.recordReviewRating(currentQuestion.wordId, rating)
                         }
                     }
                 },
@@ -258,7 +350,7 @@ fun QuizResultView(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Your answers have been saved to your local spaced repetition review schedule.",
+            text = "Review intervals have been updated using your spaced repetition scheduler.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -300,16 +392,18 @@ fun QuizResultView(
     }
 }
 
-fun generateQuizFromWords(words: List<Word>): List<QuizQuestion> {
-    if (words.size < 4) return emptyList()
+fun generateQuizFromWords(
+    words: List<Word>,
+    fallbackPool: List<Word> = words
+): List<QuizQuestion> {
+    if (words.isEmpty() || fallbackPool.size < 4) return emptyList()
 
-    val random = Random(42) // Deterministic seed for reproducible order
+    val random = Random(42)
     val questions = mutableListOf<QuizQuestion>()
 
     words.take(8).forEachIndexed { index, word ->
-        // Question type 1: word -> meaning
-        val otherWords = words.filter { it.id != word.id }.shuffled(random).take(3)
-        val options = (listOf(word.definition) + otherWords.map { it.definition }).shuffled(random)
+        val distractorPool = fallbackPool.filter { it.id != word.id }.shuffled(random).take(3)
+        val options = (listOf(word.definition) + distractorPool.map { it.definition }).shuffled(random)
         val correctIndex = options.indexOf(word.definition)
 
         questions.add(
