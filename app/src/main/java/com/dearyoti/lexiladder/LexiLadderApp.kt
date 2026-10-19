@@ -2,6 +2,7 @@ package com.dearyoti.lexiladder
 
 import android.app.Application
 import com.dearyoti.lexiladder.core.ads.AdManager
+import com.dearyoti.lexiladder.core.audio.TtsManager
 import com.dearyoti.lexiladder.core.billing.BillingManager
 import com.dearyoti.lexiladder.data.content.ContentUpdateManager
 import com.dearyoti.lexiladder.data.local.AppDatabase
@@ -34,6 +35,9 @@ class LexiLadderApp : Application() {
     val adManager: AdManager
         get() = AdManager.getInstance()
 
+    val ttsManager: TtsManager
+        get() = TtsManager.getInstance(this)
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -59,6 +63,9 @@ class LexiLadderApp : Application() {
 
         // Initialize AdMob MobileAds with safe test/prod IDs
         adManager.initialize(this)
+
+        // Prewarm offline TextToSpeech engine
+        ttsManager
 
         applicationScope.launch {
             vocabularyRepository.seedInitialDataIfEmpty()
