@@ -85,7 +85,10 @@ class VocabularyDomainTest {
             assertTrue(q.correctOptionIndex in 0..3)
             val correctOption = q.options[q.correctOptionIndex]
             assertNotNull(correctOption)
-            assertTrue(sampleWords.any { it.definition == correctOption })
+            assertTrue(
+                "Correct option '$correctOption' must match target word's definition, text, or translation",
+                sampleWords.any { it.definition == correctOption || it.text == correctOption || it.translation == correctOption }
+            )
         }
     }
 
@@ -107,5 +110,47 @@ class VocabularyDomainTest {
         }
         assertEquals(1, searchByIndonesian.size)
         assertEquals("Patience", searchByIndonesian[0].text)
+    }
+
+    @Test
+    fun quizGeneration_generatesMultipleQuestionFormatsAndRandomizes() {
+        val sampleWords = listOf(
+            Word("1", "Achieve", "verb", "To complete successfully", "She worked hard to achieve goals.", "level_a1", "unit_1", "/əˈtʃiːv/", "Mencapai"),
+            Word("2", "Brief", "adjective", "Short in duration", "A brief meeting before work.", "level_a1", "unit_1", "/briːf/", "Singkat"),
+            Word("3", "Courage", "noun", "Bravery under fear", "It took courage to speak up.", "level_a1", "unit_1", "/ˈkʌr.ɪdʒ/", "Keberanian"),
+            Word("4", "Diligent", "adjective", "Hardworking and attentive", "The diligent student studied.", "level_a1", "unit_1", "/ˈdɪl.ə.dʒənt/", "Rajin"),
+            Word("5", "Explore", "verb", "Travel to discover", "They explore the ancient city.", "level_a1", "unit_1", "/ɪkˈsplɔːr/", "Menjelajah")
+        )
+
+        // Generate quiz
+        val quiz = generateQuizFromWords(sampleWords)
+        assertFalse(quiz.isEmpty())
+
+        // Verify that question texts are not all identical
+        val questionTexts = quiz.map { it.questionText }.distinct()
+        assertTrue("Quiz should generate varied question texts, got ${questionTexts.size}", questionTexts.size > 1)
+
+        // Verify every question has 4 distinct options
+        for (q in quiz) {
+            assertEquals(4, q.options.size)
+            assertEquals(4, q.options.distinct().size)
+            val correctOpt = q.options[q.correctOptionIndex]
+            assertTrue(sampleWords.any { it.text == correctOpt || it.definition == correctOpt || it.translation == correctOpt })
+        }
+    }
+
+    @Test
+    fun quizGeneration_handlesMultiLevelWordsCorrectly() {
+        val multiLevelWords = listOf(
+            Word("1", "Achieve", "verb", "To complete successfully", "She achieved her goal.", "level_a1", "unit_1", null, "Mencapai"),
+            Word("2", "Adapt", "verb", "To adjust to new conditions", "Living abroad helps you adapt.", "level_a2", "unit_1", null, "Beradaptasi"),
+            Word("3", "Leadership", "noun", "Action of leading a group", "Effective leadership inspires.", "level_b1", "unit_1", null, "Kepemimpinan"),
+            Word("4", "Community", "noun", "A group of people", "The local community gathered.", "level_a2", "unit_3", null, "Komunitas")
+        )
+
+        val quiz = generateQuizFromWords(multiLevelWords)
+        assertEquals(4, quiz.size)
+        val wordIdsInQuiz = quiz.map { it.wordId }.toSet()
+        assertEquals(4, wordIdsInQuiz.size)
     }
 }

@@ -26,9 +26,15 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FilterChip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +55,19 @@ fun HomeScreen(
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
-    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
+    var selectedLevelId by remember { mutableStateOf<String?>(null) }
+    val currentLevel = remember(levels, selectedLevelId) {
+        if (selectedLevelId != null) {
+            levels.firstOrNull { it.id == selectedLevelId && it.isUnlocked }
+        } else {
+            levels.firstOrNull { it.isUnlocked && !it.isMastered }
+                ?: levels.filter { it.isUnlocked }.maxByOrNull { it.order }
+                ?: levels.firstOrNull()
+        }
+    }
+    val activeLevelId = currentLevel?.id ?: "level_a1"
+    val words by repo.getWordsByLevel(activeLevelId).collectAsState(initial = emptyList())
     val dueCount by repo.getDueReviewCount().collectAsState(initial = 0)
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(
@@ -62,9 +80,9 @@ fun HomeScreen(
             isOnboardingCompleted = true
         )
     )
-    val currentLevel = levels.firstOrNull { it.isUnlocked }
-    val totalWords = if (words.isNotEmpty()) words.size else 20
-    val progressFraction = if (totalWords > 0) (masteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+    val totalWords = if (words.isNotEmpty()) words.size else (currentLevel?.totalWords ?: 40)
+    val levelMasteredCount = currentLevel?.masteredWords ?: 0
+    val progressFraction = if (totalWords > 0) (levelMasteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
 
     Column(
         modifier = modifier
@@ -147,6 +165,24 @@ fun HomeScreen(
             }
         }
 
+        // Level Roadmap Switcher (when multiple levels are unlocked)
+        if (unlockedLevels.size > 1) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(unlockedLevels) { lvl ->
+                    val isSelected = currentLevel?.id == lvl.id
+                    val badge = if (lvl.isMastered) "🏆" else "🔓"
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { selectedLevelId = lvl.id },
+                        label = { Text("${lvl.title.split(":").firstOrNull() ?: lvl.title} $badge") }
+                    )
+                }
+            }
+        }
+
         // Active Level Card
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -186,7 +222,7 @@ fun HomeScreen(
                             style = MaterialTheme.typography.labelLarge
                         )
                         Text(
-                            text = "$masteredCount / $totalWords words",
+                            text = "$levelMasteredCount / $totalWords words",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -233,33 +269,38 @@ fun HomeScreen(
             }
         }
 
-        // Units Breakdown Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Level Units",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+        // Dynamic Units Breakdown Card
+        val unitsMap = remember(words) {
+            words.groupBy { it.unitId ?: "unit_1" }
+        }
+        if (unitsMap.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "${currentLevel?.title?.split(":")?.firstOrNull() ?: "Level"} Units",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Unit 1: Mindset & Actions", style = MaterialTheme.typography.bodyMedium)
-                    Text("10 words", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                }
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Unit 2: Life & Surroundings", style = MaterialTheme.typography.bodyMedium)
-                    Text("10 words", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                    unitsMap.entries.sortedBy { it.key }.forEachIndexed { idx, entry ->
+                        if (idx > 0) Spacer(modifier = Modifier.height(6.dp))
+                        val unitTitle = entry.key.replace("_", " ").replaceFirstChar { it.uppercase() }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(unitTitle, style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                "${entry.value.size} words",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -277,7 +318,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Everything in Level 1 runs locally on your device. No internet connection required.",
+                    text = "All vocabulary and mastery tests for unlocked levels run locally on your device. No internet connection required.",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

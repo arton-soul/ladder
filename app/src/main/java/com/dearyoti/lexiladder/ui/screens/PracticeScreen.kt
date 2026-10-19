@@ -65,24 +65,47 @@ fun PracticeScreen(
     val adManager = LexiLadderApp.instance.adManager
 
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
-    val allWords by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val levels by repo.getAllLevels().collectAsState(initial = emptyList())
+    val allWords by repo.getAllWords().collectAsState(initial = emptyList())
     val dueWords by repo.getWordsDueForReview().collectAsState(initial = emptyList())
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
+    val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
+    var selectedLevelId by remember { mutableStateOf("all") }
     var selectedMode by remember { mutableStateOf(PracticeMode.ALL) }
+    var sessionRound by remember { mutableIntStateOf(0) }
 
-    // Active words based on selected mode
-    val activeWordPool = when (selectedMode) {
-        PracticeMode.ALL -> allWords
-        PracticeMode.DUE_REVIEW -> dueWords
-        PracticeMode.DIFFICULT -> difficultWords
+    // Words filtered by selected level (or all unlocked levels)
+    val levelFilteredWords = remember(allWords, selectedLevelId, unlockedLevels) {
+        if (selectedLevelId == "all") {
+            val unlockedIds = unlockedLevels.map { it.id }.toSet()
+            if (unlockedIds.isNotEmpty()) allWords.filter { unlockedIds.contains(it.levelId) } else allWords
+        } else {
+            allWords.filter { it.levelId == selectedLevelId }
+        }
     }
 
-    // Generate dynamic quiz questions from words
-    val questions = remember(activeWordPool, allWords, selectedMode) {
-        val targetWords = if (activeWordPool.size >= 4) activeWordPool else allWords
-        generateQuizFromWords(targetWords, allWords)
+    // Active words based on selected mode
+    val activeWordPool = remember(selectedMode, levelFilteredWords, dueWords, difficultWords) {
+        when (selectedMode) {
+            PracticeMode.ALL -> levelFilteredWords
+            PracticeMode.DUE_REVIEW -> {
+                val dueIds = dueWords.map { it.id }.toSet()
+                levelFilteredWords.filter { dueIds.contains(it.id) }
+            }
+            PracticeMode.DIFFICULT -> {
+                val diffIds = difficultWords.map { it.id }.toSet()
+                levelFilteredWords.filter { diffIds.contains(it.id) }
+            }
+        }
+    }
+
+    // Generate dynamic quiz questions with fresh randomization every sessionRound
+    val questions = remember(activeWordPool, levelFilteredWords, selectedMode, sessionRound) {
+        val targetWords = if (activeWordPool.size >= 4) activeWordPool else levelFilteredWords
+        val fallbackPool = if (levelFilteredWords.size >= 4) levelFilteredWords else allWords
+        generateQuizFromWords(targetWords, fallbackPool)
     }
 
     var currentIndex by remember { mutableIntStateOf(0) }
@@ -111,6 +134,7 @@ fun PracticeScreen(
             isPremium = prefs.isPremium,
             onRestart = {
                 val restartAction = {
+                    sessionRound++
                     currentIndex = 0
                     selectedOption = null
                     isSubmitted = false
@@ -144,13 +168,50 @@ fun PracticeScreen(
             fontWeight = FontWeight.Bold
         )
 
+        // Level Selection Chips (when multiple levels are unlocked)
+        if (unlockedLevels.size > 1) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                item {
+                    FilterChip(
+                        selected = selectedLevelId == "all",
+                        onClick = {
+                            selectedLevelId = "all"
+                            currentIndex = 0
+                            selectedOption = null
+                            isSubmitted = false
+                            sessionCorrectCount = 0
+                            isSessionComplete = false
+                        },
+                        label = { Text("All Unlocked Levels") }
+                    )
+                }
+                items(unlockedLevels) { lvl ->
+                    FilterChip(
+                        selected = selectedLevelId == lvl.id,
+                        onClick = {
+                            selectedLevelId = lvl.id
+                            currentIndex = 0
+                            selectedOption = null
+                            isSubmitted = false
+                            sessionCorrectCount = 0
+                            isSessionComplete = false
+                        },
+                        label = { Text(lvl.title.split(":").firstOrNull() ?: lvl.title) }
+                    )
+                }
+            }
+        }
+
         // Practice Mode Filter Chips
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             val modes = listOf(
-                PracticeMode.ALL to "Standard Quiz (${allWords.size})",
+                PracticeMode.ALL to "Standard Quiz (${levelFilteredWords.size})",
                 PracticeMode.DUE_REVIEW to "Due Review (${dueWords.size})",
                 PracticeMode.DIFFICULT to "Difficult Words (${difficultWords.size})"
             )
@@ -448,28 +509,91 @@ fun QuizResultView(
 
 fun generateQuizFromWords(
     words: List<Word>,
-    fallbackPool: List<Word> = words
+    fallbackPool: List<Word> = words,
+    random: Random = Random.Default
 ): List<QuizQuestion> {
     if (words.isEmpty() || fallbackPool.size < 4) return emptyList()
 
-    val random = Random(42)
+    val targetWords = words.shuffled(random).take(minOf(10, words.size))
     val questions = mutableListOf<QuizQuestion>()
 
-    words.take(8).forEachIndexed { index, word ->
-        val distractorPool = fallbackPool.filter { it.id != word.id }.shuffled(random).take(3)
-        val options = (listOf(word.definition) + distractorPool.map { it.definition }).shuffled(random)
-        val correctIndex = options.indexOf(word.definition)
-
-        questions.add(
-            QuizQuestion(
-                id = "q_gen_$index",
-                wordId = word.id,
-                questionText = "What is the meaning of \"${word.text}\"?",
-                options = options,
-                correctOptionIndex = correctIndex,
-                explanation = "\"${word.text}\" (${word.partOfSpeech}) means: ${word.definition}. Arti: ${word.translation ?: "-"}"
-            )
-        )
+    targetWords.forEachIndexed { index, word ->
+        val otherWords = fallbackPool.filter { it.id != word.id }
+        // Cycle between 4 different question styles:
+        // 0: Word to Definition ("What is the meaning of \"X\"?")
+        // 1: Definition to Word ("Which word matches this definition...")
+        // 2: Fill in the Blank with contextual sentence
+        // 3: Indonesian Translation to Word
+        when (index % 4) {
+            0 -> {
+                val distractorPool = otherWords.shuffled(random).take(3)
+                val options = (listOf(word.definition) + distractorPool.map { it.definition }).shuffled(random)
+                val correctIndex = options.indexOf(word.definition)
+                questions.add(
+                    QuizQuestion(
+                        id = "q_gen_${word.id}_$index",
+                        wordId = word.id,
+                        questionText = "What is the meaning of \"${word.text}\"?",
+                        options = options,
+                        correctOptionIndex = correctIndex,
+                        explanation = "\"${word.text}\" (${word.partOfSpeech}) means: ${word.definition}. Arti: ${word.translation ?: "-"}"
+                    )
+                )
+            }
+            1 -> {
+                val distractorPool = otherWords.shuffled(random).take(3)
+                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
+                val correctIndex = options.indexOf(word.text)
+                questions.add(
+                    QuizQuestion(
+                        id = "q_gen_${word.id}_$index",
+                        wordId = word.id,
+                        questionText = "Which word matches this definition:\n\"${word.definition}\"?",
+                        options = options,
+                        correctOptionIndex = correctIndex,
+                        explanation = "\"${word.text}\" (${word.phonetic ?: ""}): ${word.definition}. Arti: ${word.translation ?: "-"}"
+                    )
+                )
+            }
+            2 -> {
+                val sentence = word.exampleSentence
+                val regex = Regex("\\b${Regex.escape(word.text)}\\b", RegexOption.IGNORE_CASE)
+                val blankSentence = if (sentence.contains(regex)) {
+                    sentence.replace(regex, "______")
+                } else {
+                    "Complete with \"${word.text}\": $sentence"
+                }
+                val distractorPool = otherWords.shuffled(random).take(3)
+                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
+                val correctIndex = options.indexOf(word.text)
+                questions.add(
+                    QuizQuestion(
+                        id = "q_gen_${word.id}_$index",
+                        wordId = word.id,
+                        questionText = "Complete the sentence:\n\"$blankSentence\"",
+                        options = options,
+                        correctOptionIndex = correctIndex,
+                        explanation = "Full sentence: \"${word.exampleSentence}\". (${word.text} = ${word.translation ?: "-"})"
+                    )
+                )
+            }
+            else -> {
+                val translationText = word.translation ?: word.definition
+                val distractorPool = otherWords.shuffled(random).take(3)
+                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
+                val correctIndex = options.indexOf(word.text)
+                questions.add(
+                    QuizQuestion(
+                        id = "q_gen_${word.id}_$index",
+                        wordId = word.id,
+                        questionText = "Which English word translates to:\n\"$translationText\"?",
+                        options = options,
+                        correctOptionIndex = correctIndex,
+                        explanation = "\"${word.text}\" translates to \"$translationText\". (${word.phonetic ?: ""})"
+                    )
+                )
+            }
+        }
     }
 
     return questions

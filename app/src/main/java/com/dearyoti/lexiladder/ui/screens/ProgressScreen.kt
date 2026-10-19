@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,11 +49,16 @@ fun ProgressScreen(
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
     val favorites by repo.getFavorites().collectAsState(initial = emptyList())
-    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val allWords by repo.getAllWords().collectAsState(initial = emptyList())
     val dueCount by repo.getDueReviewCount().collectAsState(initial = 0)
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
 
-    val totalWords = if (words.isNotEmpty()) words.size else 20
+    val unlockedLevelIds = remember(levels) { levels.filter { it.isUnlocked }.map { it.id }.toSet() }
+    val unlockedWords = remember(allWords, unlockedLevelIds) {
+        if (unlockedLevelIds.isNotEmpty()) allWords.filter { unlockedLevelIds.contains(it.levelId) }
+        else allWords
+    }
+    val totalWords = if (unlockedWords.isNotEmpty()) unlockedWords.size else 40
     val learningCount = (totalWords - masteredCount).coerceAtLeast(0)
 
     Column(

@@ -60,7 +60,16 @@ fun LearnScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
-    val words by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
+    val levels by repo.getAllLevels().collectAsState(initial = emptyList())
+    val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
+    var selectedLevelId by remember { mutableStateOf("level_a1") }
+
+    val activeLevelId = remember(selectedLevelId, unlockedLevels) {
+        if (unlockedLevels.any { it.id == selectedLevelId }) selectedLevelId
+        else unlockedLevels.firstOrNull()?.id ?: "level_a1"
+    }
+
+    val words by repo.getWordsByLevel(activeLevelId).collectAsState(initial = emptyList())
     val favorites by repo.getFavorites().collectAsState(initial = emptyList())
     val favIds = favorites.map { it.id }.toSet()
     val scope = rememberCoroutineScope()
@@ -68,6 +77,11 @@ fun LearnScreen(
     var searchQuery by remember { mutableStateOf("") }
     var selectedFilter by remember { mutableStateOf("all") }
     var isFlashcardMode by remember { mutableStateOf(false) }
+
+    // Dynamic available units for the active level
+    val availableUnits = remember(words) {
+        words.mapNotNull { it.unitId }.distinct().sorted()
+    }
 
     // Filtered words
     val filteredWords = remember(words, searchQuery, selectedFilter, favIds) {
@@ -77,10 +91,9 @@ fun LearnScreen(
                     (word.translation?.contains(searchQuery, ignoreCase = true) == true)
 
             val matchesFilter = when (selectedFilter) {
-                "unit_1" -> word.unitId == "unit_1"
-                "unit_2" -> word.unitId == "unit_2"
+                "all" -> true
                 "favorites" -> favIds.contains(word.id)
-                else -> true
+                else -> word.unitId == selectedFilter
             }
 
             matchesQuery && matchesFilter
@@ -105,6 +118,28 @@ fun LearnScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Level Selector Chips (when multiple levels are unlocked)
+        if (unlockedLevels.size > 1) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(unlockedLevels) { lvl ->
+                    FilterChip(
+                        selected = activeLevelId == lvl.id,
+                        onClick = {
+                            selectedLevelId = lvl.id
+                            selectedFilter = "all"
+                        },
+                        label = {
+                            Text(lvl.title.split(":").firstOrNull() ?: lvl.title)
+                        }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
         // Search bar
         OutlinedTextField(
             value = searchQuery,
@@ -124,22 +159,33 @@ fun LearnScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Filter chips
+        // Dynamic Unit & Bookmarks Filter chips
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            val chips = listOf(
-                "all" to "All Words (${words.size})",
-                "unit_1" to "Unit 1: Mindset",
-                "unit_2" to "Unit 2: Life",
-                "favorites" to "★ Favorites (${favorites.size})"
-            )
-            items(chips) { (filterId, label) ->
+            item {
                 FilterChip(
-                    selected = selectedFilter == filterId,
-                    onClick = { selectedFilter = filterId },
-                    label = { Text(label) }
+                    selected = selectedFilter == "all",
+                    onClick = { selectedFilter = "all" },
+                    label = { Text("All Words (${words.size})") }
+                )
+            }
+            items(availableUnits) { unitId ->
+                val unitWordCount = words.count { it.unitId == unitId }
+                val unitLabel = unitId.replace("_", " ").replaceFirstChar { it.uppercase() }
+                FilterChip(
+                    selected = selectedFilter == unitId,
+                    onClick = { selectedFilter = unitId },
+                    label = { Text("$unitLabel ($unitWordCount)") }
+                )
+            }
+            item {
+                val favCountInLevel = words.count { favIds.contains(it.id) }
+                FilterChip(
+                    selected = selectedFilter == "favorites",
+                    onClick = { selectedFilter = "favorites" },
+                    label = { Text("★ Bookmarks ($favCountInLevel)") }
                 )
             }
         }
