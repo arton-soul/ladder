@@ -18,8 +18,9 @@ class MainActivity : ComponentActivity() {
             val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
             val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
 
+            val startDestination = intent?.getStringExtra("startDestination") ?: com.dearyoti.lexiladder.navigation.Screen.Home.route
             LexiLadderTheme(darkTheme = prefs.isDarkMode) {
-                MainAppNavigation()
+                MainAppNavigation(initialRoute = startDestination)
             }
         }
     }

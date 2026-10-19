@@ -25,14 +25,14 @@
 - **Format:** JPEG or 24-bit PNG
 - **Specifications & Captions:**
 
-| No | Screen View | Marketing Title / Caption | Target File |
-|---|---|---|---|
-| 1 | **Home Screen** | *Daily 5-Minute Vocabulary Routine* | `app/build/outputs/screen_p6.png` |
-| 2 | **Flashcard / Learn** | *Rich Definitions, IPA & Contextual Sentences* | `screen_learn.png` |
-| 3 | **Adaptive Practice** | *Smart Spaced Repetition (SM-2) for Long-Term Memory* | `screen_practice.png` |
-| 4 | **Mastery Test** | *Pass Level Tests to Unlock New Vocabulary Stages* | `screen_mastery_test.png` |
-| 5 | **Progress & Review** | *Track Mastered Words, Retention & Due Reviews* | `screen_progress.png` |
-| 6 | **Settings & Offline** | *100% Offline Access & Multiple Translation Support* | `screen_settings.png` |
+| No | Screen View | Marketing Title / Caption | Final Asset File | Resolution & Size |
+|---|---|---|---|---|
+| 1 | **Home Screen** | *Daily 5-Minute Vocabulary Routine* | `Doc/store_listing/assets/screenshots/01_home_screen.png` | 1080 x 2340 (220 KB) |
+| 2 | **Flashcard / Learn** | *Rich Definitions, IPA & Contextual Sentences* | `Doc/store_listing/assets/screenshots/02_learn_screen.png` | 1080 x 2340 (213 KB) |
+| 3 | **Adaptive Practice** | *Smart Spaced Repetition (SM-2) for Long-Term Memory* | `Doc/store_listing/assets/screenshots/03_practice_quiz.png` | 1080 x 2340 (225 KB) |
+| 4 | **Mastery Test** | *Pass Level Tests to Unlock New Vocabulary Stages* | `Doc/store_listing/assets/screenshots/04_mastery_test.png` | 1080 x 2340 (187 KB) |
+| 5 | **Progress & Review** | *Track Mastered Words, Retention & Due Reviews* | `Doc/store_listing/assets/screenshots/05_progress_screen.png` | 1080 x 2340 (208 KB) |
+| 6 | **Settings & Offline** | *100% Offline Access & Multiple Translation Support* | `Doc/store_listing/assets/screenshots/06_settings_screen.png` | 1080 x 2340 (199 KB) |
 
 ---
 

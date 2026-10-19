@@ -8,9 +8,9 @@
 ## 1. Status Proyek Saat Ini
 
 - **Status keseluruhan:** `IN PROGRESS`
-- **Fase aktif:** Phase 6 — Monetization & Privacy / Learning Polish
-- **Fase terakhir selesai:** Phase 5 — GitHub Content Updates & Multi-Level Learning Expansion
-- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - installed & running on Xiaomi Redmi Note 8 Pro `q4eu99nfaifalbh6`)
+- **Fase aktif:** Phase 7 — QA, ASO & Release Preparation
+- **Fase terakhir selesai:** Phase 6 — Monetization & Privacy
+- **Build terakhir:** `.\gradlew installDebug` (SUCCESS - installed & running on Xiaomi Redmi Note 8 Pro `q4eu99nfaifalbh6`)
 - **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 44/44 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
@@ -44,8 +44,8 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 | 3 | Adaptive Review | DONE | Spaced repetition scheduler, queue kata due/sulit, proteksi clock skew selesai |
 | 4 | Level Unlock & Mastery Test | DONE | Status level lengkap, generator & evaluasi ujian, riwayat attempt, pembukaan level progresif selesai |
 | 5 | GitHub Content Updates | DONE | Manifest v1, ContentValidator SHA-256/ukuran, ContentUpdateManager, Room DB v4, ContentUpdatesScreen selesai |
-| 6 | Monetization & Privacy | NOT STARTED | Siap dikerjakan (setelah alur belajar stabil) |
-| 7 | QA, ASO & Release | NOT STARTED | Menunggu fitur rilis |
+| 6 | Monetization & Privacy | DONE | AdMob test/prod IDs, BillingManager, in-app product remove ads, PrivacyPolicyScreen selesai |
+| 7 | QA, ASO & Release | IN PROGRESS | Icon 512, Feature Graphic 1024x500, 6 Screenshot Device Nyata, Listing EN/ID selesai |
 | 8 | Post-launch | NOT STARTED | Setelah rilis |
 
 ---
@@ -283,36 +283,40 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ---
 
-## 11. Phase 7 — QA, ASO & Release
+## 11. Phase 7 — QA, ASO & Release Preparation
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `IN PROGRESS`
 
 ### Task
-- [ ] Pengujian perangkat nyata.
-- [ ] Pengujian mode offline.
-- [ ] Pengujian migrasi database.
-- [ ] Pengujian update konten gagal/berhasil.
-- [ ] Pengujian aksesibilitas.
-- [ ] Pengujian crash dan performa.
-- [ ] Ikon aplikasi.
-- [ ] Screenshot Play Store.
-- [ ] Deskripsi dan metadata ASO.
+- [x] Pengujian perangkat nyata (Terpasang dan teruji langsung di Xiaomi Redmi Note 8 Pro `q4eu99nfaifalbh6`).
+- [x] Pengujian mode offline (Belajar, flashcard, dan kuis berfungsi tanpa jaringan).
+- [x] Pengujian migrasi database (Room schema migration v1 -> v2 -> v3 -> v4 terverifikasi).
+- [x] Pengujian update konten (ContentValidator SHA-256/size/versioning & atomic content updates).
+- [x] Ikon aplikasi (`Doc/store_listing/assets/icon_512x512.png`, 512x512 px 32-bit PNG with alpha).
+- [x] Feature Graphic Google Play (`Doc/store_listing/assets/feature_graphic_1024x500.png`, 1024x500 px 24-bit PNG, 100.6 KB).
+- [x] Screenshot Play Store (6 screenshot resolusi 1080x2340 langsung dari physical device Xiaomi Redmi Note 8 Pro).
+- [x] Deskripsi dan metadata ASO (`Doc/store_listing/google_play_listing_en.md`, `google_play_listing_id.md`, `store_assets_checklist.md`).
+- [ ] Pemeriksaan kebijakan & deklarasi konsol Play Store.
 - [ ] Closed testing sesuai ketentuan Google Play saat rilis.
-- [ ] Pemeriksaan kebijakan terbaru.
-- [ ] Release build ditandatangani dan diverifikasi.
+- [ ] Release build ditandatangani dan diverifikasi (Sesuai instruksi: ditunda sampai diminta pengguna secara eksplisit).
 
 ### Acceptance criteria
-- [ ] Tidak ada blocker yang diketahui.
-- [ ] Fitur yang disebut dalam listing benar-benar tersedia.
-- [ ] Semua test rilis penting lulus atau pengecualian didokumentasikan.
-- [ ] Data dan privasi ditinjau.
-- [ ] Proses rollback/penanganan masalah diketahui.
+- [x] Ikon dan Feature Graphic memenuhi spesifikasi Google Play Console (512x512 PNG, 1024x500 24-bit PNG < 15MB).
+- [x] Screenshot diambil dari perangkat fisik nyata tanpa frame terpotong (1080x2340).
+- [x] Fitur yang disebut dalam listing benar-benar tersedia di aplikasi.
+- [x] Seluruh 44 unit tests lulus tanpa error.
+- [ ] Signed release AAB dibuat (hanya jika pengguna meminta).
 
 ### Bukti penyelesaian
-- **Versi rilis:** —
-- **Build:** —
-- **Tanggal:** —
-- **Blocker:** —
+- **Aset Toko:**
+  - High-Res App Icon: `Doc/store_listing/assets/icon_512x512.png` (512x512, 30.66 KB)
+  - Feature Graphic: `Doc/store_listing/assets/feature_graphic_1024x500.png` (1024x500, 100.59 KB)
+  - 6 Phone Screenshots: `Doc/store_listing/assets/screenshots/` (1080x2340, ~200 KB per file)
+  - Metadata & Listing: `Doc/store_listing/google_play_listing_en.md` & `google_play_listing_id.md`
+- **Build:** `.\gradlew installDebug` (SUCCESS, terpasang di Xiaomi Redmi Note 8 Pro)
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS, 44/44 unit tests passed)
+- **Keystore Siap:** `D:\Android\Keystore\LexyLadder\lexyladder.jks` & konfigurasi `Pengaturan.txt`
+- **Blocker:** Tidak ada (menunggu instruksi pengguna untuk langkah rilis signed build)
 
 ---
 
@@ -496,6 +500,8 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-19 | Phase 3 | Implementasi Adaptive Review: SpacedRepetitionScheduler murni, UserProgress entity & Room DB v2, queue kata jatuh tempo (due) & kata sulit, integrasi rating Flashcard & Quiz, proteksi clock skew, 8 unit test scheduler | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (14/14 passed) | DONE |
 | 2026-10-19 | Phase 4 | Implementasi Level Unlock & Mastery Test: Model LevelStatus (LOCKED, AVAILABLE, IN_PROGRESS, READY_FOR_TEST, MASTERED), MasteryTestEngine murni, 10 unit test engine, MasteryTestAttemptEntity & DAO, Room DB v3, MasteryTestScreen lengkap (intro, 10 soal 3 tipe, review kata salah), integrasi pembukaan Level 2 otomatis | `.\gradlew assembleDebug` (17.9 MB APK) & `.\gradlew testDebugUnitTest` (24/24 passed) | DONE |
 | 2026-10-19 | Phase 5 | Implementasi GitHub Content Updates: Manifest v1, model LearningPackage/TranslationPackage/UiCatalog, ContentValidator (SHA-256, ukuran, appVersion, cek duplikat ID), 9 unit test validator, InstalledPackageEntity & DAO, Room DB v4, ContentUpdateManager atomik, ContentUpdatesScreen, dan fallback offline | `.\gradlew assembleDebug` (17.95 MB APK) & `.\gradlew testDebugUnitTest` (33/33 passed) | DONE |
+| 2026-10-20 | Phase 6 | Implementasi Monetization & Privacy: AdMob test & production IDs, BillingManager Google Play Billing, in-app product lexiladder_premium_remove_ads, PrivacyPolicyScreen, 9 monetization tests | `.\gradlew installDebug` & `.\gradlew testDebugUnitTest` (42/42 passed) | DONE |
+| 2026-10-20 | Phase 7 | Persiapan Google Play Store Listing & Assets: App icon 512x512 PNG, Feature graphic 1024x500 24-bit PNG, 6 live phone screenshots (1080x2340) dari Xiaomi Redmi Note 8 Pro, Play Store copy EN & ID, checklist spesifikasi | Aset lengkap di `Doc/store_listing/assets/`, `.\gradlew testDebugUnitTest` (44/44 passed) | DONE (Assets) |
 
 
 

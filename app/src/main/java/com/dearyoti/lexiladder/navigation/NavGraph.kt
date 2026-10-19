@@ -31,7 +31,9 @@ import com.dearyoti.lexiladder.ui.screens.ProgressScreen
 import com.dearyoti.lexiladder.ui.screens.SettingsScreen
 
 @Composable
-fun MainAppNavigation() {
+fun MainAppNavigation(
+    initialRoute: String = Screen.Home.route
+) {
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(
         initial = UserPreferences(
@@ -77,7 +79,7 @@ fun MainAppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = initialRoute,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) {
