@@ -8,10 +8,10 @@
 ## 1. Status Proyek Saat Ini
 
 - **Status keseluruhan:** `IN PROGRESS`
-- **Fase aktif:** Phase 3 — Adaptive Review (Selesai; siap Phase 4 — Level Unlock & Mastery Test)
-- **Fase terakhir selesai:** Phase 3 — Adaptive Review
-- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - app-debug.apk 17.8 MB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 14/14 unit tests passed)
+- **Fase aktif:** Phase 4 — Level Unlock & Mastery Test (Selesai; siap Phase 5 — GitHub Content Updates)
+- **Fase terakhir selesai:** Phase 4 — Level Unlock & Mastery Test
+- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - app-debug.apk 17.9 MB)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 24/24 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.0` (Build 1)
@@ -42,8 +42,8 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 | 1 | Android Foundation | DONE | Fondasi Android, Compose, Room, DataStore, NavHost selesai |
 | 2 | Learning MVP | DONE | Onboarding, Flashcard, Kuis Pilihan Ganda, Search & Bookmark selesai |
 | 3 | Adaptive Review | DONE | Spaced repetition scheduler, queue kata due/sulit, proteksi clock skew selesai |
-| 4 | Level Unlock & Mastery Test | NOT STARTED | Siap dikerjakan |
-| 5 | GitHub Content Updates | NOT STARTED | Menunggu format konten stabil |
+| 4 | Level Unlock & Mastery Test | DONE | Status level lengkap, generator & evaluasi ujian, riwayat attempt, pembukaan level progresif selesai |
+| 5 | GitHub Content Updates | NOT STARTED | Menunggu format konten stabil & repo publik |
 | 6 | Monetization & Privacy | NOT STARTED | Setelah alur belajar stabil |
 | 7 | QA, ASO & Release | NOT STARTED | Menunggu fitur rilis |
 | 8 | Post-launch | NOT STARTED | Setelah rilis |
@@ -175,32 +175,33 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ## 8. Phase 4 — Level Unlock & Mastery Test
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `DONE`
 
 ### Task
-- [ ] Status level: Locked, Available, In Progress, Ready for Test, Mastered.
-- [ ] Persyaratan unit wajib.
-- [ ] Bank soal ujian.
-- [ ] Randomisasi soal dan pilihan.
-- [ ] Penilaian kelulusan.
-- [ ] Layar hasil ujian.
-- [ ] Pengulangan ujian setelah gagal.
-- [ ] Penyimpanan riwayat percobaan dan versi ujian.
-- [ ] Level berikutnya terbuka setelah lulus.
-- [ ] Kelulusan tidak hilang setelah update konten.
+- [x] Status level: Locked, Available, In Progress, Ready for Test, Mastered (`LevelStatus` enum & pure domain evaluation di `MasteryTestEngine`).
+- [x] Persyaratan unit wajib (Evaluasi ambang batas rasio belajar minimal 75% kosakata level sebelum siap ujian).
+- [x] Bank soal ujian (Generator dinamis dari kosakata level mendukung 3 tipe soal: arti kata, terjemahan ke Inggris, dan kelengkapan kalimat konteks).
+- [x] Randomisasi soal dan pilihan (Shuffling pertanyaan dan 4 pilihan jawaban dengan kunci jawaban valid dan distraktor acak unik).
+- [x] Penilaian kelulusan (Kalkulasi skor persentase otomatis dan ambang kelulusan standar 80%).
+- [x] Layar hasil ujian (`MasteryTestScreen.kt` dengan kartu kelulusan, skor, umpan balik daftar kata salah, dan rincian kalimat).
+- [x] Pengulangan ujian setelah gagal (Dukungan retake ujian tanpa batasan dengan regenerasi variasi soal baru).
+- [x] Penyimpanan riwayat percobaan dan versi ujian (Tabel Room `mastery_test_attempts`, `MasteryTestDao`, timestamps, versi tes, skor, dan status kelulusan).
+- [x] Level berikutnya terbuka setelah lulus (Saat ujian level lulus, `levelDao.setLevelUnlocked(nextLevel.id, true)` otomatis membuka level berikutnya, dan Level 2 dibundel dengan 10 kata awal).
+- [x] Kelulusan tidak hilang setelah update konten (`isMastered = true` disimpan permanen di database lokal pengguna).
 
 ### Acceptance criteria
-- [ ] Level terkunci tidak dapat dibuka hanya dengan mengubah UI.
-- [ ] Ujian menilai berdasarkan kunci jawaban yang tervalidasi.
-- [ ] Ambang kelulusan mengikuti konfigurasi versi ujian.
-- [ ] Hasil dan versi ujian tersimpan.
-- [ ] Level selanjutnya terbuka hanya setelah syarat kelulusan terpenuhi.
-- [ ] Kelulusan lama tidak dicabut oleh update biasa.
+- [x] Level terkunci tidak dapat dibuka hanya dengan mengubah UI (Verifikasi di domain engine & repository; tombol disable jika prasyarat belum terpenuhi).
+- [x] Ujian menilai berdasarkan kunci jawaban yang tervalidasi (100% konsisten antara pilihan jawaban dan kamus kata target).
+- [x] Ambang kelulusan mengikuti konfigurasi versi ujian (Passing percentage configurable, default 80%).
+- [x] Hasil dan versi ujian tersimpan (Room entity `MasteryTestAttemptEntity` persisten).
+- [x] Level selanjutnya terbuka hanya setelah syarat kelulusan terpenuhi (`scorePercentage >= 80` memicu pembukaan level berikutnya).
+- [x] Kelulusan lama tidak dicabut oleh update biasa (`isMastered` flag di database dipertahankan).
 
 ### Bukti penyelesaian
-- **Commit/hash:** —
-- **Test:** —
-- **Blocker:** —
+- **Commit/hash:** Segera dicatat pada git commit
+- **Build:** `.\gradlew assembleDebug` (SUCCESS in 19s, app-debug.apk 17.89 MB)
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS in 51s, 24/24 tests passed: 10 test engine + 8 scheduler + 6 domain)
+- **Blocker:** Tidak ada
 
 ---
 
@@ -484,4 +485,6 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-19 | Phase 1 | Inisialisasi Android Foundation: Gradle 8.13, AGP 8.7.3, compileSdk 36, targetSdk 36, minSdk 26, Jetpack Compose Material3, 5 tab navigation, Room DB + KSP, DataStore preferences, initial vocabulary seeder | `.\gradlew assembleDebug` (17.7 MB APK) & `.\gradlew testDebugUnitTest` (4/4 passed) | DONE |
 | 2026-10-19 | Phase 2 | Implementasi Learning MVP: Onboarding, Flashcard flip interaktif dengan rating Hard/Good, Kuis pilihan ganda adaptif dengan skor & review, Search bar & Bookmark, 20 kata bundel Level 1, dan Room persistence | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (6/6 passed) | DONE |
 | 2026-10-19 | Phase 3 | Implementasi Adaptive Review: SpacedRepetitionScheduler murni, UserProgress entity & Room DB v2, queue kata jatuh tempo (due) & kata sulit, integrasi rating Flashcard & Quiz, proteksi clock skew, 8 unit test scheduler | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (14/14 passed) | DONE |
+| 2026-10-19 | Phase 4 | Implementasi Level Unlock & Mastery Test: Model LevelStatus (LOCKED, AVAILABLE, IN_PROGRESS, READY_FOR_TEST, MASTERED), MasteryTestEngine murni, 10 unit test engine, MasteryTestAttemptEntity & DAO, Room DB v3, MasteryTestScreen lengkap (intro, 10 soal 3 tipe, review kata salah), integrasi pembukaan Level 2 otomatis | `.\gradlew assembleDebug` (17.9 MB APK) & `.\gradlew testDebugUnitTest` (24/24 passed) | DONE |
+
 

@@ -11,14 +11,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.ui.screens.HomeScreen
 import com.dearyoti.lexiladder.ui.screens.LearnScreen
+import com.dearyoti.lexiladder.ui.screens.MasteryTestScreen
 import com.dearyoti.lexiladder.ui.screens.OnboardingScreen
 import com.dearyoti.lexiladder.ui.screens.PracticeScreen
 import com.dearyoti.lexiladder.ui.screens.ProgressScreen
@@ -93,6 +96,9 @@ fun MainAppNavigation() {
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    onNavigateToMasteryTest = { levelId ->
+                        navController.navigate(Screen.MasteryTest.createRoute(levelId))
                     }
                 )
             }
@@ -103,10 +109,26 @@ fun MainAppNavigation() {
                 PracticeScreen()
             }
             composable(Screen.Progress.route) {
-                ProgressScreen()
+                ProgressScreen(
+                    onNavigateToMasteryTest = { levelId ->
+                        navController.navigate(Screen.MasteryTest.createRoute(levelId))
+                    }
+                )
             }
             composable(Screen.Settings.route) {
                 SettingsScreen()
+            }
+            composable(
+                route = Screen.MasteryTest.route,
+                arguments = listOf(
+                    navArgument("levelId") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val levelId = backStackEntry.arguments?.getString("levelId") ?: "level_a1"
+                MasteryTestScreen(
+                    levelId = levelId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
         }
     }

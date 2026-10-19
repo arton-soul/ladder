@@ -20,4 +20,10 @@ interface LevelDao {
 
     @Query("UPDATE levels SET isUnlocked = :isUnlocked WHERE id = :levelId")
     suspend fun setLevelUnlocked(levelId: String, isUnlocked: Boolean)
+
+    @Query("UPDATE levels SET isMastered = :isMastered WHERE id = :levelId")
+    suspend fun setLevelMastered(levelId: String, isMastered: Boolean)
+
+    @Query("SELECT * FROM levels WHERE `order` > :currentOrder AND isUnlocked = 0 ORDER BY `order` ASC LIMIT 1")
+    suspend fun getNextLockedLevel(currentOrder: Int): LevelEntity?
 }

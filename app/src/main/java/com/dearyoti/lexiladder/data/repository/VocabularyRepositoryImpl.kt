@@ -1,16 +1,20 @@
 package com.dearyoti.lexiladder.data.repository
 
 import com.dearyoti.lexiladder.data.local.dao.LevelDao
+import com.dearyoti.lexiladder.data.local.dao.MasteryTestDao
 import com.dearyoti.lexiladder.data.local.dao.UserProgressDao
 import com.dearyoti.lexiladder.data.local.dao.WordDao
 import com.dearyoti.lexiladder.data.local.entity.LevelEntity
+import com.dearyoti.lexiladder.data.local.entity.MasteryTestAttemptEntity
 import com.dearyoti.lexiladder.data.local.entity.UserProgressEntity
 import com.dearyoti.lexiladder.data.local.entity.WordEntity
 import com.dearyoti.lexiladder.domain.model.Level
+import com.dearyoti.lexiladder.domain.model.MasteryTestAttempt
 import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.UserProgress
 import com.dearyoti.lexiladder.domain.model.Word
 import com.dearyoti.lexiladder.domain.scheduler.SpacedRepetitionScheduler
+import com.dearyoti.lexiladder.domain.service.MasteryTestEngine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,7 +23,8 @@ import kotlinx.coroutines.flow.map
 class VocabularyRepositoryImpl(
     private val wordDao: WordDao,
     private val userProgressDao: UserProgressDao,
-    private val levelDao: LevelDao
+    private val levelDao: LevelDao,
+    private val masteryTestDao: MasteryTestDao
 ) : VocabularyRepository {
 
     override fun getAllWords(): Flow<List<Word>> {
@@ -50,8 +55,22 @@ class VocabularyRepositoryImpl(
         return levelDao.getAllLevels().map { levels ->
             levels.map { levelEntity ->
                 val total = wordDao.getWordCountByLevel(levelEntity.id)
+                val studied = userProgressDao.getStudiedWordCountByLevel(levelEntity.id)
                 val mastered = userProgressDao.getMasteredWordCountByLevel(levelEntity.id)
-                levelEntity.toDomainModel(totalWords = total, masteredWords = mastered)
+                val hasPassed = masteryTestDao.hasPassedLevel(levelEntity.id)
+                val isMastered = levelEntity.isMastered || hasPassed
+                val status = MasteryTestEngine.determineLevelStatus(
+                    isUnlocked = levelEntity.isUnlocked,
+                    isMastered = isMastered,
+                    totalWords = total,
+                    studiedWords = studied
+                )
+                levelEntity.toDomainModel(
+                    totalWords = total,
+                    studiedWords = studied,
+                    masteredWords = mastered,
+                    status = status
+                )
             }
         }
     }
@@ -102,6 +121,32 @@ class VocabularyRepositoryImpl(
         }
     }
 
+    override fun getTestAttempts(levelId: String): Flow<List<MasteryTestAttempt>> {
+        return masteryTestDao.getAttemptsByLevel(levelId).map { list ->
+            list.map { it.toDomainModel() }
+        }
+    }
+
+    override suspend fun submitMasteryTest(attempt: MasteryTestAttempt): Boolean {
+        masteryTestDao.insertAttempt(MasteryTestAttemptEntity.fromDomainModel(attempt))
+        if (attempt.isPassed) {
+            levelDao.setLevelMastered(attempt.levelId, true)
+            val currentLevel = levelDao.getLevelById(attempt.levelId)
+            if (currentLevel != null) {
+                val nextLocked = levelDao.getNextLockedLevel(currentLevel.order)
+                if (nextLocked != null) {
+                    levelDao.setLevelUnlocked(nextLocked.id, true)
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    override suspend fun unlockLevel(levelId: String) {
+        levelDao.setLevelUnlocked(levelId, true)
+    }
+
     override suspend fun recordReviewRating(wordId: String, rating: ReviewRating, now: Long) {
         val existingEntity = userProgressDao.getProgressForWord(wordId)
         val currentProgress = existingEntity?.toDomainModel() ?: UserProgress(wordId = wordId)
@@ -130,28 +175,31 @@ class VocabularyRepositoryImpl(
                         title = "Level 1: Beginner Starter",
                         description = "Essential vocabulary for everyday conversations",
                         order = 1,
-                        isUnlocked = true
+                        isUnlocked = true,
+                        isMastered = false
                     ),
                     LevelEntity(
                         id = "level_a2",
                         title = "Level 2: Elementary",
                         description = "Expanding topics and common routines",
                         order = 2,
-                        isUnlocked = false
+                        isUnlocked = false,
+                        isMastered = false
                     ),
                     LevelEntity(
                         id = "level_b1",
                         title = "Level 3: Intermediate",
                         description = "Work, travel, and personal experiences",
                         order = 3,
-                        isUnlocked = false
+                        isUnlocked = false,
+                        isMastered = false
                     )
                 )
             )
 
             wordDao.insertWords(
                 listOf(
-                    // Unit 1: Mindset & Action (10 words)
+                    // Level 1 - Unit 1: Mindset & Action (10 words)
                     WordEntity(
                         id = "w_a1_001",
                         text = "Achieve",
@@ -262,7 +310,7 @@ class VocabularyRepositoryImpl(
                         phonetic = "/ˈdʒɜːr.ni/",
                         translation = "Perjalanan"
                     ),
-                    // Unit 2: Life & Surroundings (10 words)
+                    // Level 1 - Unit 2: Life & Surroundings (10 words)
                     WordEntity(
                         id = "w_a1_011",
                         text = "Knowledge",
@@ -372,6 +420,117 @@ class VocabularyRepositoryImpl(
                         unitId = "unit_2",
                         phonetic = "/ˈtreʒ.ɚ/",
                         translation = "Harta berharga / Harta karun"
+                    ),
+                    // Level 2 - Unit 1: Everyday Communication (10 words)
+                    WordEntity(
+                        id = "w_a2_001",
+                        text = "Adapt",
+                        partOfSpeech = "verb",
+                        definition = "To adjust to new conditions",
+                        exampleSentence = "Living abroad helps you adapt to different lifestyles.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/əˈdæpt/",
+                        translation = "Menyesuaikan diri / Beradaptasi"
+                    ),
+                    WordEntity(
+                        id = "w_a2_002",
+                        text = "Balance",
+                        partOfSpeech = "noun",
+                        definition = "A situation in which different elements are equal",
+                        exampleSentence = "Work-life balance is essential for health.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈbæl.əns/",
+                        translation = "Keseimbangan"
+                    ),
+                    WordEntity(
+                        id = "w_a2_003",
+                        text = "Celebrate",
+                        partOfSpeech = "verb",
+                        definition = "To honor a special event or achievement",
+                        exampleSentence = "We gathered with friends to celebrate her graduation.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈsel.ə.breɪt/",
+                        translation = "Merayakan"
+                    ),
+                    WordEntity(
+                        id = "w_a2_004",
+                        text = "Decide",
+                        partOfSpeech = "verb",
+                        definition = "To make a choice from a number of alternatives",
+                        exampleSentence = "Take your time to decide which path to follow.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/dɪˈsaɪd/",
+                        translation = "Memutuskan / Menentukan"
+                    ),
+                    WordEntity(
+                        id = "w_a2_005",
+                        text = "Efficient",
+                        partOfSpeech = "adjective",
+                        definition = "Achieving maximum productivity with minimum wasted effort",
+                        exampleSentence = "An efficient schedule saves hours every week.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ɪˈfɪʃ.ənt/",
+                        translation = "Efisien / Berdaya guna"
+                    ),
+                    WordEntity(
+                        id = "w_a2_006",
+                        text = "Frequent",
+                        partOfSpeech = "adjective",
+                        definition = "Occurring or done on many occasions with short intervals",
+                        exampleSentence = "Frequent repetition builds lasting fluency.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈfriː.kwənt/",
+                        translation = "Sering / Kerap"
+                    ),
+                    WordEntity(
+                        id = "w_a2_007",
+                        text = "Gratitude",
+                        partOfSpeech = "noun",
+                        definition = "The quality of being thankful",
+                        exampleSentence = "Expressing gratitude brightens someone's day.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈɡræt̬.ə.tuːd/",
+                        translation = "Rasa syukur / Terima kasih"
+                    ),
+                    WordEntity(
+                        id = "w_a2_008",
+                        text = "Harmony",
+                        partOfSpeech = "noun",
+                        definition = "Agreement or concord",
+                        exampleSentence = "The team worked in perfect harmony to complete the project.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈhɑːr.mə.ni/",
+                        translation = "Keharmonisan / Keselarasan"
+                    ),
+                    WordEntity(
+                        id = "w_a2_009",
+                        text = "Impact",
+                        partOfSpeech = "noun",
+                        definition = "A marked effect or influence",
+                        exampleSentence = "Small consistent actions create a big positive impact.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈɪm.pækt/",
+                        translation = "Dampak / Pengaruh"
+                    ),
+                    WordEntity(
+                        id = "w_a2_010",
+                        text = "Joyful",
+                        partOfSpeech = "adjective",
+                        definition = "Feeling, expressing, or causing great pleasure and happiness",
+                        exampleSentence = "The family shared a joyful meal together.",
+                        levelId = "level_a2",
+                        unitId = "unit_1",
+                        phonetic = "/ˈdʒɔɪ.fəl/",
+                        translation = "Gembira / Penuh sukacita"
                     )
                 )
             )

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -14,6 +15,9 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Practice : Screen("practice", "Practice", Icons.Default.FitnessCenter)
     object Progress : Screen("progress", "Progress", Icons.Default.BarChart)
     object Settings : Screen("settings", "Settings", Icons.Default.Settings)
+    object MasteryTest : Screen("mastery_test/{levelId}", "Mastery Test", Icons.Default.WorkspacePremium) {
+        fun createRoute(levelId: String): String = "mastery_test/$levelId"
+    }
 }
 
 val bottomNavItems = listOf(

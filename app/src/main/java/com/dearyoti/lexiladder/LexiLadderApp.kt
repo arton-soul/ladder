@@ -30,7 +30,8 @@ class LexiLadderApp : Application() {
         vocabularyRepository = VocabularyRepositoryImpl(
             wordDao = database.wordDao(),
             userProgressDao = database.userProgressDao(),
-            levelDao = database.levelDao()
+            levelDao = database.levelDao(),
+            masteryTestDao = database.masteryTestDao()
         )
         userPreferencesRepository = UserPreferencesRepository(this)
 

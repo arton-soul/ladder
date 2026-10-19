@@ -39,6 +39,12 @@ interface UserProgressDao {
     @Query("SELECT COUNT(*) FROM user_progress WHERE isMastered = 1 AND wordId IN (SELECT id FROM words WHERE levelId = :levelId)")
     suspend fun getMasteredWordCountByLevel(levelId: String): Int
 
+    @Query("SELECT COUNT(*) FROM user_progress WHERE (learningStage != 'NEW' OR (correctCount + incorrectCount) > 0) AND wordId IN (SELECT id FROM words WHERE levelId = :levelId)")
+    suspend fun getStudiedWordCountByLevel(levelId: String): Int
+
+    @Query("SELECT COUNT(*) FROM user_progress WHERE (learningStage != 'NEW' OR (correctCount + incorrectCount) > 0) AND wordId IN (SELECT id FROM words WHERE levelId = :levelId)")
+    fun getStudiedWordCountByLevelFlow(levelId: String): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveProgress(progress: UserProgressEntity)
 

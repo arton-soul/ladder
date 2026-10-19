@@ -1,6 +1,7 @@
 package com.dearyoti.lexiladder.data.repository
 
 import com.dearyoti.lexiladder.domain.model.Level
+import com.dearyoti.lexiladder.domain.model.MasteryTestAttempt
 import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.UserProgress
 import com.dearyoti.lexiladder.domain.model.Word
@@ -17,10 +18,13 @@ interface VocabularyRepository {
     fun getWordsDueForReview(currentTime: Long = System.currentTimeMillis()): Flow<List<Word>>
     fun getDueReviewCount(currentTime: Long = System.currentTimeMillis()): Flow<Int>
     fun getDifficultWords(): Flow<List<Word>>
+    fun getTestAttempts(levelId: String): Flow<List<MasteryTestAttempt>>
     suspend fun getWordById(wordId: String): Word?
     suspend fun getProgressForWord(wordId: String): UserProgress?
     suspend fun recordReviewRating(wordId: String, rating: ReviewRating, now: Long = System.currentTimeMillis())
     suspend fun recordReviewResult(wordId: String, isCorrect: Boolean)
     suspend fun toggleFavorite(wordId: String)
+    suspend fun submitMasteryTest(attempt: MasteryTestAttempt): Boolean
+    suspend fun unlockLevel(levelId: String)
     suspend fun seedInitialDataIfEmpty()
 }

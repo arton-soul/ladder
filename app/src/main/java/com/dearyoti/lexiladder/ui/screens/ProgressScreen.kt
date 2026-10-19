@@ -1,6 +1,8 @@
 package com.dearyoti.lexiladder.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,22 +11,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.domain.model.LevelStatus
 
 @Composable
 fun ProgressScreen(
+    onNavigateToMasteryTest: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
@@ -158,8 +170,9 @@ fun ProgressScreen(
         )
 
         levels.forEach { level ->
-            val isA1 = level.id == "level_a1"
-            val fraction = if (isA1 && totalWords > 0) (masteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+            val fraction = if (level.totalWords > 0) {
+                (level.studiedWords.toFloat() / level.totalWords.toFloat()).coerceIn(0f, 1f)
+            } else 0f
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -168,18 +181,15 @@ fun ProgressScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = level.title,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
-                        Text(
-                            text = if (level.isUnlocked) "Active" else "Locked 🔒",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = if (level.isUnlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-                        )
+                        ProgressLevelBadge(status = level.status)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -194,17 +204,69 @@ fun ProgressScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "Mastery Progress", style = MaterialTheme.typography.labelSmall)
-                            Text(text = "$masteredCount / $totalWords words", style = MaterialTheme.typography.labelSmall)
+                            Text(text = "Study Progress (${level.studiedWords}/${level.totalWords} words)", style = MaterialTheme.typography.labelSmall)
+                            Text(text = "${(fraction * 100).toInt()}%", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
                             progress = { fraction },
                             modifier = Modifier.fillMaxWidth()
                         )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            onClick = { onNavigateToMasteryTest(level.id) },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (level.isMastered)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.primary
+                            )
+                        ) {
+                            Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
+                            Spacer(modifier = Modifier.padding(4.dp))
+                            Text(
+                                text = if (level.isMastered)
+                                    "Retake Mastery Test 🏆"
+                                else
+                                    "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯"
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "🔒 Locked — Pass Level ${level.order - 1} Mastery Test to unlock.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.outline
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ProgressLevelBadge(status: LevelStatus) {
+    val (label, bg, textCol) = when (status) {
+        LevelStatus.LOCKED -> Triple("Locked 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
+        LevelStatus.AVAILABLE -> Triple("Available 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
+        LevelStatus.IN_PROGRESS -> Triple("Learning ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
+        LevelStatus.READY_FOR_TEST -> Triple("Ready for Test 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        LevelStatus.MASTERED -> Triple("Mastered 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
+    }
+
+    Box(
+        modifier = Modifier
+            .background(color = bg, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = textCol
+        )
     }
 }
