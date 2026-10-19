@@ -1,6 +1,7 @@
 package com.dearyoti.lexiladder
 
 import android.app.Application
+import com.dearyoti.lexiladder.data.content.ContentUpdateManager
 import com.dearyoti.lexiladder.data.local.AppDatabase
 import com.dearyoti.lexiladder.data.preferences.UserPreferencesRepository
 import com.dearyoti.lexiladder.data.repository.VocabularyRepository
@@ -22,6 +23,9 @@ class LexiLadderApp : Application() {
     lateinit var userPreferencesRepository: UserPreferencesRepository
         private set
 
+    lateinit var contentUpdateManager: ContentUpdateManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -34,6 +38,11 @@ class LexiLadderApp : Application() {
             masteryTestDao = database.masteryTestDao()
         )
         userPreferencesRepository = UserPreferencesRepository(this)
+        contentUpdateManager = ContentUpdateManager(
+            context = this,
+            database = database,
+            currentAppVersion = 1
+        )
 
         applicationScope.launch {
             vocabularyRepository.seedInitialDataIfEmpty()

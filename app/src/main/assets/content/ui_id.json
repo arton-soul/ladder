@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "packageId": "ui.id",
+  "locale": "id",
+  "contentVersion": 1,
+  "strings": {
+    "app_name": "LexiLadder",
+    "home_title": "Beranda",
+    "learn_title": "Belajar",
+    "practice_title": "Latihan",
+    "progress_title": "Progres",
+    "settings_title": "Pengaturan",
+    "mastery_test_title": "Ujian Tingkat",
+    "content_updates_title": "Pembaruan Konten",
+    "offline_mode_label": "Mode Offline Aktif",
+    "due_review_label": "Kata Jatuh Tempo",
+    "mastered_label": "Dikuasai"
+  }
+}

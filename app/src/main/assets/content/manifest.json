@@ -1,0 +1,49 @@
+{
+  "manifestSchemaVersion": 1,
+  "manifestVersion": 1,
+  "appContent": {
+    "fallbackUiLocale": "en",
+    "targetLanguage": "en"
+  },
+  "packages": [
+    {
+      "packageId": "learning.en.a1",
+      "type": "learning-package",
+      "locale": "en",
+      "contentVersion": 1,
+      "schemaVersion": 1,
+      "minimumAppVersion": 1,
+      "status": "published",
+      "url": "https://raw.githubusercontent.com/arton-soul/ladder/master/content/learning_a1.json",
+      "sha256": "9da5aa17f3490b5be4509eb2107264e51cf2f792ff9f3d13da97fc102972e566",
+      "sizeBytes": 6699,
+      "description": "Level 1: Beginner Starter Vocabulary Package"
+    },
+    {
+      "packageId": "translation.id.en.a1",
+      "type": "translation-package",
+      "locale": "id",
+      "contentVersion": 1,
+      "schemaVersion": 1,
+      "minimumAppVersion": 1,
+      "status": "published",
+      "url": "https://raw.githubusercontent.com/arton-soul/ladder/master/content/translation_id_a1.json",
+      "sha256": "cdcd2855b9bd8c90c8a30a8f3b49d8ebdf9d411340156ca3fe310ff37c5164bb",
+      "sizeBytes": 1501,
+      "description": "Indonesian Translations for Level 1"
+    },
+    {
+      "packageId": "ui.id",
+      "type": "ui-catalog",
+      "locale": "id",
+      "contentVersion": 1,
+      "schemaVersion": 1,
+      "minimumAppVersion": 1,
+      "status": "published",
+      "url": "https://raw.githubusercontent.com/arton-soul/ladder/master/content/ui_id.json",
+      "sha256": "1c1aa5a4d33b7412ac84429443a65b6e7caffd7543a4b8d438e99e2a9f94f9cd",
+      "sizeBytes": 518,
+      "description": "Indonesian UI Localization Catalog"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "packageId": "learning.en.a1",
+  "contentVersion": 1,
+  "targetLanguage": "en",
+  "levelId": "level_a1",
+  "levelTitle": "Level 1: Beginner Starter",
+  "levelDescription": "Essential vocabulary for everyday conversations",
+  "levelOrder": 1,
+  "units": [
+    {
+      "unitId": "unit_1",
+      "title": "Mindset & Actions",
+      "wordIds": ["w_a1_001", "w_a1_002", "w_a1_003", "w_a1_004", "w_a1_005", "w_a1_006", "w_a1_007", "w_a1_008", "w_a1_009", "w_a1_010"]
+    },
+    {
+      "unitId": "unit_2",
+      "title": "Life & Surroundings",
+      "wordIds": ["w_a1_011", "w_a1_012", "w_a1_013", "w_a1_014", "w_a1_015", "w_a1_016", "w_a1_017", "w_a1_018", "w_a1_019", "w_a1_020"]
+    }
+  ],
+  "words": [
+    { "wordId": "w_a1_001", "term": "Achieve", "partOfSpeech": "verb", "definition": "To successfully complete something with effort or skill", "example": "She worked hard to achieve her goal of becoming a doctor.", "unitId": "unit_1", "phonetic": "/əˈtʃiːv/", "translation": "Mencapai / Meraih" },
+    { "wordId": "w_a1_002", "term": "Brief", "partOfSpeech": "adjective", "definition": "Lasting only a short period of time", "example": "We had a brief meeting before the project started.", "unitId": "unit_1", "phonetic": "/briːf/", "translation": "Singkat / Ringkas" },
+    { "wordId": "w_a1_003", "term": "Courage", "partOfSpeech": "noun", "definition": "The ability to do something that frightens someone", "example": "It took a lot of courage to speak in front of the crowd.", "unitId": "unit_1", "phonetic": "/ˈkʌr.ɪdʒ/", "translation": "Keberanian" },
+    { "wordId": "w_a1_004", "term": "Diligent", "partOfSpeech": "adjective", "definition": "Having or showing care and conscientiousness in one's work", "example": "The diligent student studied vocabulary every evening.", "unitId": "unit_1", "phonetic": "/ˈdɪl.ə.dʒənt/", "translation": "Rajin / Tekun" },
+    { "wordId": "w_a1_005", "term": "Explore", "partOfSpeech": "verb", "definition": "To travel around a new place to learn about it", "example": "They decided to explore the ancient city on foot.", "unitId": "unit_1", "phonetic": "/ɪkˈsplɔːr/", "translation": "Menjelajahi / Mengeksplorasi" },
+    { "wordId": "w_a1_006", "term": "Focus", "partOfSpeech": "verb", "definition": "To pay particular attention to something", "example": "Please focus on your pronunciation during practice.", "unitId": "unit_1", "phonetic": "/ˈfoʊ.kəs/", "translation": "Fokus / Memusatkan perhatian" },
+    { "wordId": "w_a1_007", "term": "Growth", "partOfSpeech": "noun", "definition": "The process of developing or maturing", "example": "Daily practice leads to steady growth in language skills.", "unitId": "unit_1", "phonetic": "/ɡroʊθ/", "translation": "Pertumbuhan / Perkembangan" },
+    { "wordId": "w_a1_008", "term": "Habit", "partOfSpeech": "noun", "definition": "A settled or regular tendency or practice", "example": "Reading five minutes a day is an excellent habit.", "unitId": "unit_1", "phonetic": "/ˈhæb.ɪt/", "translation": "Kebiasaan" },
+    { "wordId": "w_a1_009", "term": "Inspire", "partOfSpeech": "verb", "definition": "To fill someone with the urge or ability to do something creative", "example": "Her dedication inspired all the other students in the room.", "unitId": "unit_1", "phonetic": "/ɪnˈspaɪr/", "translation": "Menginspirasi / Mengilhami" },
+    { "wordId": "w_a1_010", "term": "Journey", "partOfSpeech": "noun", "definition": "An act of traveling from one place to another", "example": "Learning a language is an exciting long-term journey.", "unitId": "unit_1", "phonetic": "/ˈdʒɜːr.ni/", "translation": "Perjalanan" },
+    { "wordId": "w_a1_011", "term": "Knowledge", "partOfSpeech": "noun", "definition": "Facts, information, and skills acquired through experience or education", "example": "Books are an endless source of knowledge and wisdom.", "unitId": "unit_2", "phonetic": "/ˈnɑː.lɪdʒ/", "translation": "Pengetahuan" },
+    { "wordId": "w_a1_012", "term": "Listen", "partOfSpeech": "verb", "definition": "To give attention to sound or action", "example": "Listen carefully to native speakers to improve accent.", "unitId": "unit_2", "phonetic": "/ˈlɪs.ən/", "translation": "Mendengarkan" },
+    { "wordId": "w_a1_013", "term": "Memory", "partOfSpeech": "noun", "definition": "The faculty by which the mind stores and remembers information", "example": "Flashcards strengthen your long-term memory for words.", "unitId": "unit_2", "phonetic": "/ˈmem.ər.i/", "translation": "Ingatan / Memori" },
+    { "wordId": "w_a1_014", "term": "Nature", "partOfSpeech": "noun", "definition": "The physical world collective, including plants and animals", "example": "Taking a walk in nature refreshes the tired mind.", "unitId": "unit_2", "phonetic": "/ˈneɪ.tʃər/", "translation": "Alam / Alam sekitar" },
+    { "wordId": "w_a1_015", "term": "Opportunity", "partOfSpeech": "noun", "definition": "A set of circumstances that makes it possible to do something", "example": "Do not miss the opportunity to practice English today.", "unitId": "unit_2", "phonetic": "/ˌɑː.pɚˈtuː.nə.t̬i/", "translation": "Peluang / Kesempatan" },
+    { "wordId": "w_a1_016", "term": "Patience", "partOfSpeech": "noun", "definition": "The capacity to accept delay or suffering without getting angry", "example": "Mastering vocabulary requires consistency and patience.", "unitId": "unit_2", "phonetic": "/ˈpeɪ.ʃəns/", "translation": "Kesabaran" },
+    { "wordId": "w_a1_017", "term": "Quiet", "partOfSpeech": "adjective", "definition": "Making little or no noise", "example": "Find a quiet room so you can study without distractions.", "unitId": "unit_2", "phonetic": "/ˈkwaɪ.ət/", "translation": "Tenang / Sunyi" },
+    { "wordId": "w_a1_018", "term": "Reliable", "partOfSpeech": "adjective", "definition": "Consistently good in quality or performance; able to be trusted", "example": "A good dictionary is a reliable tool for learners.", "unitId": "unit_2", "phonetic": "/rɪˈlaɪ.ə.bəl/", "translation": "Dapat diandalkan" },
+    { "wordId": "w_a1_019", "term": "Simple", "partOfSpeech": "adjective", "definition": "Easily understood or done; presenting no difficulty", "example": "Start with simple sentences before writing complex essays.", "unitId": "unit_2", "phonetic": "/ˈsɪm.pəl/", "translation": "Sederhana / Mudah" },
+    { "wordId": "w_a1_020", "term": "Treasure", "partOfSpeech": "noun", "definition": "A quantity of precious items or a prized possession", "example": "Every new word you learn is a treasure for your communication.", "unitId": "unit_2", "phonetic": "/ˈtreʒ.ɚ/", "translation": "Harta berharga / Harta karun" }
+  ]
+}

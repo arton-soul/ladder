@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "packageId": "translation.id.en.a1",
+  "contentVersion": 1,
+  "locale": "id",
+  "targetLanguage": "en",
+  "levelId": "level_a1",
+  "entries": [
+    { "wordId": "w_a1_001", "translation": "Mencapai / Meraih" },
+    { "wordId": "w_a1_002", "translation": "Singkat / Ringkas" },
+    { "wordId": "w_a1_003", "translation": "Keberanian" },
+    { "wordId": "w_a1_004", "translation": "Rajin / Tekun" },
+    { "wordId": "w_a1_005", "translation": "Menjelajahi / Mengeksplorasi" },
+    { "wordId": "w_a1_006", "translation": "Fokus / Memusatkan perhatian" },
+    { "wordId": "w_a1_007", "translation": "Pertumbuhan / Perkembangan" },
+    { "wordId": "w_a1_008", "translation": "Kebiasaan" },
+    { "wordId": "w_a1_009", "translation": "Menginspirasi / Mengilhami" },
+    { "wordId": "w_a1_010", "translation": "Perjalanan" },
+    { "wordId": "w_a1_011", "translation": "Pengetahuan" },
+    { "wordId": "w_a1_012", "translation": "Mendengarkan" },
+    { "wordId": "w_a1_013", "translation": "Ingatan / Memori" },
+    { "wordId": "w_a1_014", "translation": "Alam / Alam sekitar" },
+    { "wordId": "w_a1_015", "translation": "Peluang / Kesempatan" },
+    { "wordId": "w_a1_016", "translation": "Kesabaran" },
+    { "wordId": "w_a1_017", "translation": "Tenang / Sunyi" },
+    { "wordId": "w_a1_018", "translation": "Dapat diandalkan" },
+    { "wordId": "w_a1_019", "translation": "Sederhana / Mudah" },
+    { "wordId": "w_a1_020", "translation": "Harta berharga / Harta karun" }
+  ]
+}

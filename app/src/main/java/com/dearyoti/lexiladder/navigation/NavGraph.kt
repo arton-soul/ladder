@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
+import com.dearyoti.lexiladder.ui.screens.ContentUpdatesScreen
 import com.dearyoti.lexiladder.ui.screens.HomeScreen
 import com.dearyoti.lexiladder.ui.screens.LearnScreen
 import com.dearyoti.lexiladder.ui.screens.MasteryTestScreen
@@ -116,7 +117,16 @@ fun MainAppNavigation() {
                 )
             }
             composable(Screen.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(
+                    onNavigateToContentUpdates = {
+                        navController.navigate(Screen.ContentUpdates.route)
+                    }
+                )
+            }
+            composable(Screen.ContentUpdates.route) {
+                ContentUpdatesScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
             composable(
                 route = Screen.MasteryTest.route,

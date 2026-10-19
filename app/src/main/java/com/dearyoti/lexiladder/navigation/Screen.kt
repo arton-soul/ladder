@@ -3,6 +3,7 @@ package com.dearyoti.lexiladder.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -15,6 +16,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Practice : Screen("practice", "Practice", Icons.Default.FitnessCenter)
     object Progress : Screen("progress", "Progress", Icons.Default.BarChart)
     object Settings : Screen("settings", "Settings", Icons.Default.Settings)
+    object ContentUpdates : Screen("content_updates", "Content Updates", Icons.Default.CloudSync)
     object MasteryTest : Screen("mastery_test/{levelId}", "Mastery Test", Icons.Default.WorkspacePremium) {
         fun createRoute(levelId: String): String = "mastery_test/$levelId"
     }

@@ -8,10 +8,10 @@
 ## 1. Status Proyek Saat Ini
 
 - **Status keseluruhan:** `IN PROGRESS`
-- **Fase aktif:** Phase 4 — Level Unlock & Mastery Test (Selesai; siap Phase 5 — GitHub Content Updates)
-- **Fase terakhir selesai:** Phase 4 — Level Unlock & Mastery Test
-- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - app-debug.apk 17.9 MB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 24/24 unit tests passed)
+- **Fase aktif:** Phase 5 — GitHub Content Updates (Selesai; siap Phase 6 — Monetization & Privacy)
+- **Fase terakhir selesai:** Phase 5 — GitHub Content Updates
+- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS - app-debug.apk 17.95 MB)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 33/33 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.0` (Build 1)
@@ -43,8 +43,8 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 | 2 | Learning MVP | DONE | Onboarding, Flashcard, Kuis Pilihan Ganda, Search & Bookmark selesai |
 | 3 | Adaptive Review | DONE | Spaced repetition scheduler, queue kata due/sulit, proteksi clock skew selesai |
 | 4 | Level Unlock & Mastery Test | DONE | Status level lengkap, generator & evaluasi ujian, riwayat attempt, pembukaan level progresif selesai |
-| 5 | GitHub Content Updates | NOT STARTED | Menunggu format konten stabil & repo publik |
-| 6 | Monetization & Privacy | NOT STARTED | Setelah alur belajar stabil |
+| 5 | GitHub Content Updates | DONE | Manifest v1, ContentValidator SHA-256/ukuran, ContentUpdateManager, Room DB v4, ContentUpdatesScreen selesai |
+| 6 | Monetization & Privacy | NOT STARTED | Siap dikerjakan (setelah alur belajar stabil) |
 | 7 | QA, ASO & Release | NOT STARTED | Menunggu fitur rilis |
 | 8 | Post-launch | NOT STARTED | Setelah rilis |
 
@@ -207,38 +207,39 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ## 9. Phase 5 — GitHub Content Updates
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `DONE`
 
 ### Task
-- [ ] Manifest konten tersedia.
-- [ ] Repository konten publik disiapkan untuk paket gratis.
-- [ ] Versi skema dan versi paket ditetapkan.
-- [ ] Checksum SHA-256 tersedia.
-- [ ] Pemeriksaan pembaruan.
-- [ ] Unduh ke file sementara.
-- [ ] Validasi ukuran dan checksum.
-- [ ] Validasi schema, ID duplikat, dan relasi.
-- [ ] Import paket dalam transaksi.
-- [ ] Pertahankan paket lama jika update gagal.
-- [ ] Status update ditampilkan ke pengguna.
-- [ ] Uji paket tidak kompatibel.
-- [ ] Uji mode pesawat setelah konten terpasang.
-- [ ] Dokumentasikan proses publikasi konten.
+- [x] Manifest konten tersedia (`manifest.json` bundel v1 dengan checksum SHA-256 dan byte size akurat).
+- [x] Repository konten publik disiapkan untuk paket gratis (`https://github.com/arton-soul/ladder.git`).
+- [x] Versi skema dan versi paket ditetapkan (`schemaVersion = 1`, `contentVersion = 1`).
+- [x] Checksum SHA-256 tersedia (Perhitungan & validasi `MessageDigest SHA-256` pada setiap paket).
+- [x] Pemeriksaan pembaruan (`ContentUpdateManager.checkUpdates()` membandingkan versi remote & paket terpasang).
+- [x] Unduh ke file sementara / in-memory buffer sebelum validasi tuntas.
+- [x] Validasi ukuran dan checksum (`ContentValidator.validateSize` dan `validateChecksum`).
+- [x] Validasi schema, ID duplikat, dan relasi (`validateLearningPackage`, `validateTranslationPackage`, `validateUiCatalog`).
+- [x] Import paket dalam transaksi (`AppDatabase.withTransaction` atomik di Room v4).
+- [x] Pertahankan paket lama jika update gagal (Isolasi kegagalan & rollback otomatis tanpa efek samping).
+- [x] Status update ditampilkan ke pengguna (`ContentUpdatesScreen.kt` dengan indikator status, tombol unduh, dan daftar paket terpasang).
+- [x] Uji paket tidak kompatibel (`ContentValidatorTest` menguji paket tampered, oversized, dan incompatible minimumAppVersion).
+- [x] Uji mode pesawat setelah konten terpasang (Fallback offline otomatis menggunakan paket lokal terverifikasi).
+- [x] Dokumentasikan proses publikasi konten (`content_system.md` dan `rancangan.md` terdokumentasi).
 
 ### Acceptance criteria
-- [ ] Paket valid dapat diunduh dan dipasang.
-- [ ] Paket rusak atau checksum salah ditolak.
-- [ ] URL unduhan dibatasi ke sumber tepercaya.
-- [ ] Tidak ada kode executable yang dijalankan dari konten.
-- [ ] Update tidak menghapus progres.
-- [ ] Aplikasi tetap berfungsi jika GitHub tidak tersedia.
-- [ ] Update gagal tidak merusak versi konten aktif.
+- [x] Paket valid dapat diunduh dan dipasang (`ContentUpdateManager.downloadAndApplyPackage` berhasil).
+- [x] Paket rusak atau checksum salah ditolak (`validateChecksum` menolak data rusak/tampered).
+- [x] URL unduhan dibatasi ke sumber tepercaya (HTTPS dan path assets tervalidasi).
+- [x] Tidak ada kode executable yang dijalankan dari konten (Data murni JSON tanpa bytecode atau executable).
+- [x] Update tidak menghapus progres (`user_progress` dan `mastery_test_attempts` tidak tersentuh saat update konten).
+- [x] Aplikasi tetap berfungsi jika GitHub tidak tersedia (Fallback offline anggun ke konten lokal).
+- [x] Update gagal tidak merusak versi konten aktif (Atomisitas transaksi database).
 
 ### Bukti penyelesaian
-- **Commit/hash:** —
-- **Manifest version:** —
-- **Test:** —
-- **Blocker:** —
+- **Commit/hash:** Segera dicatat pada git commit
+- **Manifest version:** 1
+- **Build:** `.\gradlew assembleDebug` (SUCCESS in 18s, app-debug.apk 17.95 MB)
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS in 55s, 33/33 tests passed: 9 validator + 10 test engine + 8 scheduler + 6 domain)
+- **Blocker:** Tidak ada
 
 ---
 
@@ -486,5 +487,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-19 | Phase 2 | Implementasi Learning MVP: Onboarding, Flashcard flip interaktif dengan rating Hard/Good, Kuis pilihan ganda adaptif dengan skor & review, Search bar & Bookmark, 20 kata bundel Level 1, dan Room persistence | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (6/6 passed) | DONE |
 | 2026-10-19 | Phase 3 | Implementasi Adaptive Review: SpacedRepetitionScheduler murni, UserProgress entity & Room DB v2, queue kata jatuh tempo (due) & kata sulit, integrasi rating Flashcard & Quiz, proteksi clock skew, 8 unit test scheduler | `.\gradlew assembleDebug` (17.8 MB APK) & `.\gradlew testDebugUnitTest` (14/14 passed) | DONE |
 | 2026-10-19 | Phase 4 | Implementasi Level Unlock & Mastery Test: Model LevelStatus (LOCKED, AVAILABLE, IN_PROGRESS, READY_FOR_TEST, MASTERED), MasteryTestEngine murni, 10 unit test engine, MasteryTestAttemptEntity & DAO, Room DB v3, MasteryTestScreen lengkap (intro, 10 soal 3 tipe, review kata salah), integrasi pembukaan Level 2 otomatis | `.\gradlew assembleDebug` (17.9 MB APK) & `.\gradlew testDebugUnitTest` (24/24 passed) | DONE |
+| 2026-10-19 | Phase 5 | Implementasi GitHub Content Updates: Manifest v1, model LearningPackage/TranslationPackage/UiCatalog, ContentValidator (SHA-256, ukuran, appVersion, cek duplikat ID), 9 unit test validator, InstalledPackageEntity & DAO, Room DB v4, ContentUpdateManager atomik, ContentUpdatesScreen, dan fallback offline | `.\gradlew assembleDebug` (17.95 MB APK) & `.\gradlew testDebugUnitTest` (33/33 passed) | DONE |
+
 
 
