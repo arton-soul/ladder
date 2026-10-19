@@ -27,12 +27,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Policy
+import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.ui.graphics.Color
 import com.dearyoti.lexiladder.LexiLadderApp
 import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     onNavigateToContentUpdates: () -> Unit = {},
+    onNavigateToPremium: () -> Unit = {},
+    onNavigateToPrivacyPolicy: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
@@ -52,6 +58,45 @@ fun SettingsScreen(
             text = "Settings",
             style = MaterialTheme.typography.headlineMedium
         )
+
+        // Premium Status Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = if (prefs.isPremium) Color(0xFFE8F5E9) else MaterialTheme.colorScheme.secondaryContainer
+            )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = if (prefs.isPremium) "✨ LexiLadder Premium Active" else "LexiLadder Free Edition",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (prefs.isPremium) Color(0xFF1B5E20) else MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = if (prefs.isPremium) "All advertisements are permanently disabled. 100% offline access." else "Remove all banner and session ads with a one-time purchase.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (prefs.isPremium) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = onNavigateToPremium,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(if (prefs.isPremium) "Manage Premium" else "Upgrade to Premium (Ad-Free)")
+                }
+            }
+        }
 
         // Explanation Language
         Card(
@@ -150,6 +195,34 @@ fun SettingsScreen(
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
+                }
+            }
+        }
+
+        // Privacy Policy Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Privacy & Data Safety",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "100% offline learning progress. No account required. Learn how your data is handled.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedButton(
+                    onClick = onNavigateToPrivacyPolicy,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Default.Policy, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Read Privacy Policy")
                 }
             }
         }

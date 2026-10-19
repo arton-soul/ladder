@@ -19,7 +19,8 @@ data class UserPreferences(
     val targetLanguage: String = "en",
     val dailyGoalMinutes: Int = 5,
     val isDarkMode: Boolean = false,
-    val isOnboardingCompleted: Boolean = false
+    val isOnboardingCompleted: Boolean = false,
+    val isPremium: Boolean = false
 )
 
 class UserPreferencesRepository(private val context: Context) {
@@ -30,6 +31,7 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_DAILY_GOAL = intPreferencesKey("daily_goal_minutes")
         val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
         val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
+        val KEY_IS_PREMIUM = booleanPreferencesKey("is_premium")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -39,7 +41,8 @@ class UserPreferencesRepository(private val context: Context) {
             targetLanguage = preferences[KEY_TARGET_LANGUAGE] ?: "en",
             dailyGoalMinutes = preferences[KEY_DAILY_GOAL] ?: 5,
             isDarkMode = preferences[KEY_DARK_MODE] ?: false,
-            isOnboardingCompleted = preferences[KEY_ONBOARDING_COMPLETED] ?: false
+            isOnboardingCompleted = preferences[KEY_ONBOARDING_COMPLETED] ?: false,
+            isPremium = preferences[KEY_IS_PREMIUM] ?: false
         )
     }
 
@@ -70,6 +73,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setCompletedOnboarding(completed: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[KEY_ONBOARDING_COMPLETED] = completed
+        }
+    }
+
+    suspend fun setPremium(isPremium: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_IS_PREMIUM] = isPremium
         }
     }
 }

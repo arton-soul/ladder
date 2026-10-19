@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 
 @Composable
@@ -281,6 +282,12 @@ fun HomeScreen(
                 )
             }
         }
+
+        // Ad Banner (Non-intrusive bottom placement, hidden when Premium)
+        AdBannerView(
+            isPremium = prefs.isPremium,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 

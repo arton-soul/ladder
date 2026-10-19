@@ -25,6 +25,8 @@ import com.dearyoti.lexiladder.ui.screens.LearnScreen
 import com.dearyoti.lexiladder.ui.screens.MasteryTestScreen
 import com.dearyoti.lexiladder.ui.screens.OnboardingScreen
 import com.dearyoti.lexiladder.ui.screens.PracticeScreen
+import com.dearyoti.lexiladder.ui.screens.PremiumScreen
+import com.dearyoti.lexiladder.ui.screens.PrivacyPolicyScreen
 import com.dearyoti.lexiladder.ui.screens.ProgressScreen
 import com.dearyoti.lexiladder.ui.screens.SettingsScreen
 
@@ -116,15 +118,32 @@ fun MainAppNavigation() {
                     }
                 )
             }
+
             composable(Screen.Settings.route) {
                 SettingsScreen(
                     onNavigateToContentUpdates = {
                         navController.navigate(Screen.ContentUpdates.route)
+                    },
+                    onNavigateToPremium = {
+                        navController.navigate(Screen.Premium.route)
+                    },
+                    onNavigateToPrivacyPolicy = {
+                        navController.navigate(Screen.PrivacyPolicy.route)
                     }
                 )
             }
             composable(Screen.ContentUpdates.route) {
                 ContentUpdatesScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.Premium.route) {
+                PremiumScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.PrivacyPolicy.route) {
+                PrivacyPolicyScreen(
                     onNavigateBack = { navController.popBackStack() }
                 )
             }

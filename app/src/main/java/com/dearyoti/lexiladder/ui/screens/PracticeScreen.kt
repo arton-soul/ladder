@@ -33,7 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.ads.AdBannerView
+import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.QuizQuestion
 import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.Word
@@ -50,7 +54,13 @@ enum class PracticeMode {
 fun PracticeScreen(
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
+    val adManager = LexiLadderApp.instance.adManager
+
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
     val allWords by repo.getWordsByLevel("level_a1").collectAsState(initial = emptyList())
     val dueWords by repo.getWordsDueForReview().collectAsState(initial = emptyList())
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
@@ -94,12 +104,24 @@ fun PracticeScreen(
         QuizResultView(
             totalQuestions = questions.size,
             correctCount = sessionCorrectCount,
+            isPremium = prefs.isPremium,
             onRestart = {
-                currentIndex = 0
-                selectedOption = null
-                isSubmitted = false
-                sessionCorrectCount = 0
-                isSessionComplete = false
+                val restartAction = {
+                    currentIndex = 0
+                    selectedOption = null
+                    isSubmitted = false
+                    sessionCorrectCount = 0
+                    isSessionComplete = false
+                }
+                if (activity != null) {
+                    adManager.showInterstitialAd(
+                        activity = activity,
+                        isPremium = prefs.isPremium,
+                        onDismiss = restartAction
+                    )
+                } else {
+                    restartAction()
+                }
             }
         )
         return
@@ -332,6 +354,7 @@ fun PracticeScreen(
 fun QuizResultView(
     totalQuestions: Int,
     correctCount: Int,
+    isPremium: Boolean = false,
     onRestart: () -> Unit
 ) {
     val accuracy = if (totalQuestions > 0) (correctCount.toFloat() / totalQuestions.toFloat()) * 100f else 0f
@@ -339,7 +362,8 @@ fun QuizResultView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -379,7 +403,7 @@ fun QuizResultView(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = onRestart,
@@ -389,6 +413,12 @@ fun QuizResultView(
         ) {
             Text("Practice Again")
         }
+
+        // Safe Banner Ad at end of session (hidden if Premium)
+        AdBannerView(
+            isPremium = isPremium,
+            modifier = Modifier.padding(top = 16.dp)
+        )
     }
 }
 

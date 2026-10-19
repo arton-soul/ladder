@@ -17,6 +17,8 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Progress : Screen("progress", "Progress", Icons.Default.BarChart)
     object Settings : Screen("settings", "Settings", Icons.Default.Settings)
     object ContentUpdates : Screen("content_updates", "Content Updates", Icons.Default.CloudSync)
+    object Premium : Screen("premium", "LexiLadder Premium", Icons.Default.WorkspacePremium)
+    object PrivacyPolicy : Screen("privacy_policy", "Privacy Policy", Icons.Default.Settings)
     object MasteryTest : Screen("mastery_test/{levelId}", "Mastery Test", Icons.Default.WorkspacePremium) {
         fun createRoute(levelId: String): String = "mastery_test/$levelId"
     }

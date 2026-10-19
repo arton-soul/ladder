@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.ads.AdBannerView
+import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 
 @Composable
@@ -40,6 +42,9 @@ fun ProgressScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
+
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
     val favorites by repo.getFavorites().collectAsState(initial = emptyList())
@@ -244,6 +249,12 @@ fun ProgressScreen(
                 }
             }
         }
+
+        // Ad Banner (Non-intrusive bottom placement, hidden when Premium)
+        AdBannerView(
+            isPremium = prefs.isPremium,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 

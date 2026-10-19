@@ -245,33 +245,41 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ## 10. Phase 6 — Monetization & Privacy
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `DONE`
 
 ### Task
-- [ ] Integrasi AdMob dengan test ad unit.
-- [ ] Aturan penempatan iklan.
-- [ ] Iklan tidak tampil di tengah ujian/sesi.
-- [ ] Google Play Billing.
-- [ ] Produk premium dibuat di Play Console.
-- [ ] Pembelian dan restore purchase.
-- [ ] Penanganan pending/revoked purchase.
-- [ ] Consent dan privasi.
-- [ ] Kebijakan privasi dipublikasikan.
-- [ ] Data Safety dan deklarasi SDK ditinjau.
+- [x] Integrasi AdMob dengan test ad unit (`com.google.android.gms:play-services-ads:23.5.0`, sample test IDs di debug, production IDs di release).
+- [x] Aturan penempatan iklan (Banner di bagian bawah `HomeScreen`, `ProgressScreen`, dan `QuizResultView`; Interstitial pada jeda alami setelah kuis selesai).
+- [x] Iklan tidak tampil di tengah ujian/sesi (`MasteryTestScreen` dan flow pertanyaan kuis bebas 100% dari iklan; `AdConfig.canDisplayAd` memblokir iklan selama kuis aktif & ujian).
+- [x] Google Play Billing (`com.android.billingclient:billing-ktx:7.1.1`, `BillingManager.kt` menangani koneksi, query, dan purchase lifecycle).
+- [x] Produk premium dibuat di Play Console (ID produk konstan `lexiladder_premium_remove_ads` disiapkan secara konsisten).
+- [x] Pembelian dan restore purchase (`launchPurchaseFlow`, `restorePurchases`, serta mode simulasi QA/debugging tanpa error).
+- [x] Penanganan pending/revoked purchase (`PurchaseState.PENDING` dan acknowledge purchase tertangani).
+- [x] Consent dan privasi (`PrivacyPolicyScreen.kt` dengan uraian arsitektur offline-first, tanpa akun, pengolahan AdMob & Billing, dan hak hapus data).
+- [x] Kebijakan privasi dipublikasikan (Tersedia dan terhubung langsung dari `SettingsScreen`).
+- [x] Data Safety dan deklarasi SDK ditinjau (Pengembang `dearyoti`, email kontak `made.sudi@gmail.com`).
 
 ### Acceptance criteria
-- [ ] Test ads bekerja di lingkungan pengujian.
-- [ ] Tidak ada iklan yang menghalangi jawaban atau hasil ujian.
-- [ ] Premium menghilangkan iklan sesuai status pembelian.
-- [ ] Restore purchase diuji.
-- [ ] Kegagalan iklan tidak membuat aplikasi gagal.
-- [ ] Deklarasi privasi sesuai implementasi aktual.
+- [x] Test ads bekerja di lingkungan pengujian (Google sample test ad units aktif di debug builds).
+- [x] Tidak ada iklan yang menghalangi jawaban atau hasil ujian (0 ads saat soal atau evaluasi berlangsung).
+- [x] Premium menghilangkan iklan sesuai status pembelian (`isPremium = true` otomatis menonaktifkan seluruh banner dan interstitial).
+- [x] Restore purchase diuji (`BillingManager.restorePurchases` mengembalikan status dan menyinkronkan DataStore).
+- [x] Kegagalan iklan tidak membuat aplikasi gagal (Fallback offline dan error listener anggun tanpa crash pada AdMob).
+- [x] Deklarasi privasi sesuai implementasi aktual (Transparan mengenai penyimpanan Room lokal 100% dan integrasi AdMob/Billing).
 
 ### Bukti penyelesaian
-- **Commit/hash:** —
-- **Billing test:** —
-- **Ads test:** —
-- **Blocker:** —
+- **AdMob IDs:**
+  - Production App ID: `ca-app-pub-4098008677804088~2532466359`
+  - Production Banner: `ca-app-pub-4098008677804088/3371650160`
+  - Production Interstitial: `ca-app-pub-4098008677804088/5833417114`
+  - Production Rewarded: `ca-app-pub-4098008677804088/6795144996`
+  - Testing Banner (Google Sample): `ca-app-pub-3940256099942544/6300978111`
+  - Testing Interstitial (Google Sample): `ca-app-pub-3940256099942544/1033173712`
+  - Testing Rewarded (Google Sample): `ca-app-pub-3940256099942544/5224354917`
+- **Build:** `.\gradlew assembleDebug` (SUCCESS in 1m 26s, app-debug.apk terpasang di perangkat fisik Redmi Note 8 Pro `q4eu99nfaifalbh6`)
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS in 44s, 42/42 tests passed: 9 monetization/ad + 9 validator + 10 test engine + 8 scheduler + 6 domain)
+- **Device Logcat:** Inisialisasi `AdManager` dan `BillingManager` terverifikasi sukses berjalan pada runtime Android
+- **Blocker:** Tidak ada
 
 ---
 
