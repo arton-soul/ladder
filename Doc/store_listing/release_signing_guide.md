@@ -4,31 +4,32 @@ Dokumen ini menjelaskan langkah-langkah menandatangani (*signing*) Android App B
 
 ---
 
-## 1. Pembuatan Keystore Rilis (Satu Kali Saja)
+## 1. Lokasi dan Data Keystore Rilis
 
-Jalankan perintah berikut di PowerShell atau Command Prompt untuk membuat file keystore rilis pribadi:
+Keystore telah dibuat dan disimpan di folder privat khusus:
+- **Lokasi Keystore:** `D:\Android\Keystore\LexyLadder\lexyladder.jks`
+- **File Referensi Pengaturan:** `D:\Android\Keystore\LexyLadder\Pengaturan.txt`
+- **Alias:** `lexy`
+- **Password Keystore:** `lexyladderkey`
+- **Password Alias:** `lexyladderkey`
+- **Nama Pengembang:** `dearyoti`
+- **Validity:** `10000` hari
 
-```powershell
-keytool -genkey -v -keystore lexiladder-release.jks -alias lexiladder-key -keyalg RSA -keysize 2048 -validity 10000
-```
-
-> [!WARNING]
-> Simpan file `lexiladder-release.jks`, alias, dan password di tempat yang sangat aman (misal password manager). Jangan mengunggah keystore atau password ke repository GitHub publik!
+> [!IMPORTANT]
+> **Aturan Rilis:** JANGAN membuat signed bundle / release build sebelum diminta secara eksplisit oleh pengguna.
 
 ---
 
-## 2. Konfigurasi Signing di `app/build.gradle.kts` (Opsional / Terstandar)
-
-Untuk melakukan build rilis otomatis:
+## 2. Konfigurasi Signing di `app/build.gradle.kts` (Digunakan Saat Diminta)
 
 ```kotlin
 android {
     signingConfigs {
         create("release") {
-            storeFile = file("lexiladder-release.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "YOUR_KEYSTORE_PASSWORD"
-            keyAlias = "lexiladder-key"
-            keyPassword = System.getenv("KEY_PASSWORD") ?: "YOUR_KEY_PASSWORD"
+            storeFile = file("D:/Android/Keystore/LexyLadder/lexyladder.jks")
+            storePassword = "lexyladderkey"
+            keyAlias = "lexy"
+            keyPassword = "lexyladderkey"
         }
     }
     buildTypes {
