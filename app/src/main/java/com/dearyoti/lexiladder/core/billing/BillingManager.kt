@@ -112,9 +112,9 @@ class BillingManager(
             .setProductList(productList)
             .build()
 
-        client.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+        client.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val product = productDetailsList.firstOrNull {
+                val product = queryProductDetailsResult.productDetailsList.firstOrNull {
                     it.productId == PRODUCT_PREMIUM_REMOVE_ADS
                 }
                 _premiumProductDetails.value = product

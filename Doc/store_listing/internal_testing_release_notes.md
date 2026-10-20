@@ -1,4 +1,4 @@
-# Catatan Rilis Internal Testing — LexiLadder v1.0.0 (Build 1)
+# Catatan Rilis Internal Testing — LexiLadder v1.0.1 (Build 2)
 
 Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*), dan panduan lengkap pengunggahan ke **Google Play Console (Internal Testing)**.
 
@@ -10,10 +10,11 @@ Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*
 |---|---|
 | **Nama Aplikasi** | LexiLadder: English Vocab |
 | **Package Name / Application ID** | `com.dearyoti.lexiladder` |
-| **Version Name** | `1.0.0` |
-| **Version Code** | `1` |
+| **Version Name** | `1.0.1` |
+| **Version Code** | `2` |
+| **Google Play Billing Library** | `8.0.0` *(Memenuhi syarat kebijakan monetisasi terbaru Google Play)* |
 | **Tipe Berkas** | Android App Bundle (`.aab`) |
-| **Ukuran Berkas** | **14.51 MiB** (15,213,742 bytes) *(Sangat ringan, batas Play Console: 150 MB)* |
+| **Ukuran Berkas** | **14.51 MiB** (15,215,368 bytes) *(Batas Play Console: 150 MB)* |
 | **Lokasi Berkas di Proyek** | `app/build/outputs/bundle/release/app-release.aab` |
 | **Minimum SDK** | Android 8.0 (API Level 26) |
 | **Target SDK / Compile SDK** | Android 16 (API Level 36) |
@@ -31,13 +32,12 @@ Salin teks berikut ke kolom **Catatan rilis / Release notes** di Google Play Con
 
 ### 🇮🇩 Bahasa Indonesia (`id-ID`):
 ```text
-Selamat datang di rilis perdana LexiLadder (v1.0.0)!
-
-Fitur Utama:
-- 370 Kosakata Terstruktur: 150 kata Level 1 (5 Unit) & 200 kata Level 2 (7 Unit) lengkap dengan transkripsi fonetik IPA, definisi, kalimat contoh, dan terjemahan.
+Rilis Pembaruan LexiLadder (v1.0.1 Build 2):
+- Pembaruan pustaka Google Play Billing Library ke versi 8.0.0 sesuai standar monetisasi terbaru Google Play.
+- 370 Kosakata Terstruktur: 150 kata Level 1 (5 Unit) & 200 kata Level 2 (7 Unit) lengkap dengan transkripsi fonetik IPA, definisi CEFR, kalimat contoh, dan terjemahan.
 - 100% Offline-First: Belajar dan berlatih kapan saja tanpa koneksi internet.
-- Pengucapan Suara Asli: Menggunakan mesin Text-to-Speech (TTS) perangkat Anda.
-- Sistem Pengulangan Spasi (SRS): Algoritma pintar untuk memperkuat memori jangka panjang.
+- Pengucapan Suara Asli: Menggunakan Text-to-Speech (TTS) bawaan Android.
+- Sistem Pengulangan Spasi (SRS): Algoritma pintar untuk memperkuat daya ingat jangka panjang.
 - Kuis Pilihan Ganda & Ujian Level: Uji pemahaman kosakata dengan umpan balik langsung.
 - Pilihan Bahasa Antarmuka & Penjelasan: Dukungan penuh Bahasa Indonesia dan English Immersion.
 - Pembaruan Konten Otomatis: Pemeriksaan pembaruan materi harian dari GitHub.
@@ -45,9 +45,16 @@ Fitur Utama:
 
 ### 🇺🇸 Bahasa Inggris (`en-US`):
 ```text
-Welcome to the initial internal release of LexiLadder (v1.0.0)!
-
-Key Features:
+LexiLadder Update Release (v1.0.1 Build 2):
+- Upgraded Google Play Billing Library to version 8.0.0 complying with the latest Google Play monetization policies.
+- 370 Curated Vocabulary Words: 150 Level 1 words (5 Units) & 200 Level 2 words (7 Units) with IPA phonetics, CEFR definitions, context sentences, and translations.
+- 100% Offline-First: Learn and review anytime without needing an active internet connection.
+- Native Pronunciation: Fast, zero-data audio pronunciation powered by Android TTS.
+- Spaced Repetition System (SRS): Scientific review scheduling for rock-solid vocabulary retention.
+- Adaptive Quizzes & Mastery Tests: Interactive challenges and unit mastery milestones.
+- Dual Language Experience: Choose between English Immersion and Indonesian explanations.
+- Automatic Daily Content Updates: Daily background checks for new lessons from GitHub.
+```
 - 370 Curated Vocabulary Words: 150 Level 1 words (5 Units) & 200 Level 2 words (7 Units) with IPA phonetics, CEFR definitions, context sentences, and translations.
 - 100% Offline-First: Learn and review anytime without needing an active internet connection.
 - Native Pronunciation: Fast, zero-data audio pronunciation powered by Android TTS.
