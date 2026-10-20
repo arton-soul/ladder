@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,14 +23,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.FilterChip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,20 +42,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
+import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 
 @Composable
 fun HomeScreen(
-    onNavigateToLearn: () -> Unit,
-    onNavigateToPractice: () -> Unit,
+    onNavigateToLearn: () -> Unit = {},
+    onNavigateToPractice: () -> Unit = {},
     onNavigateToMasteryTest: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
-    val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
+
     var selectedLevelId by remember { mutableStateOf<String?>(null) }
     val currentLevel = remember(levels, selectedLevelId) {
         if (selectedLevelId != null) {
@@ -71,15 +72,10 @@ fun HomeScreen(
     val dueCount by repo.getDueReviewCount().collectAsState(initial = 0)
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(
-        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences(
-            uiLanguage = "en",
-            explanationLanguage = "id",
-            targetLanguage = "en",
-            dailyGoalMinutes = 5,
-            isDarkMode = false,
-            isOnboardingCompleted = true
-        )
+        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences()
     )
+    val lang = prefs.uiLanguage
+
     val totalWords = if (words.isNotEmpty()) words.size else (currentLevel?.totalWords ?: 40)
     val levelMasteredCount = currentLevel?.masteredWords ?: 0
     val progressFraction = if (totalWords > 0) (levelMasteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
@@ -106,14 +102,14 @@ fun HomeScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "⚡ $dueCount Words Due for Review",
+                            text = "⚡ " + UiLocalizer.getString("home_due_title", lang, dueCount),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Spaced repetition scheduled review to cement your memory.",
+                            text = UiLocalizer.getString("home_due_desc", lang),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
@@ -122,7 +118,7 @@ fun HomeScreen(
                         onClick = onNavigateToPractice,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                     ) {
-                        Text("Review")
+                        Text(UiLocalizer.getString("home_review_btn", lang))
                     }
                 }
             }
@@ -140,20 +136,20 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Daily Target: ${prefs.dailyGoalMinutes} Minutes",
+                        text = UiLocalizer.getString("home_target_title", lang, prefs.dailyGoalMinutes),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
-                        text = "${(progressFraction * 100).toInt()}% Done",
+                        text = "${(progressFraction * 100).toInt()}% " + if (lang == "id") "Selesai" else "Done",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "A 5-minute daily ladder session builds rock-solid memory.",
+                    text = UiLocalizer.getString("home_target_desc", lang, prefs.dailyGoalMinutes),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -200,7 +196,7 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold
                     )
                     currentLevel?.let { lvl ->
-                        HomeStatusBadge(status = lvl.status)
+                        HomeStatusBadge(status = lvl.status, uiLanguage = lang)
                     }
                 }
                 Spacer(modifier = Modifier.height(6.dp))
@@ -218,11 +214,11 @@ fun HomeScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Words Mastered",
+                            text = UiLocalizer.getString("home_words_mastered", lang),
                             style = MaterialTheme.typography.labelLarge
                         )
                         Text(
-                            text = "$levelMasteredCount / $totalWords words",
+                            text = "$levelMasteredCount / $totalWords " + if (lang == "id") "kata" else "words",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -231,7 +227,7 @@ fun HomeScreen(
                     Button(onClick = onNavigateToLearn) {
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
                         Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = "Learn Words")
+                        Text(text = UiLocalizer.getString("home_learn_words", lang))
                     }
                 }
 
@@ -243,7 +239,7 @@ fun HomeScreen(
                 ) {
                     Icon(imageVector = Icons.Default.FitnessCenter, contentDescription = "Practice")
                     Spacer(modifier = Modifier.padding(4.dp))
-                    Text(text = "Quick Quiz Practice")
+                    Text(text = UiLocalizer.getString("home_quick_quiz", lang))
                 }
 
                 // Mastery Test Button
@@ -262,7 +258,10 @@ fun HomeScreen(
                         Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
                         Spacer(modifier = Modifier.padding(4.dp))
                         Text(
-                            text = if (lvl.isMastered) "Retake Level Mastery Test 🏆" else "Take Level Mastery Test 🎯"
+                            text = if (lvl.isMastered)
+                                (if (lang == "id") "Ulangi Ujian Level 🏆" else "Retake Level Mastery Test 🏆")
+                            else
+                                (if (lang == "id") "Ikuti Ujian Level 🎯" else "Take Level Mastery Test 🎯")
                         )
                     }
                 }
@@ -279,8 +278,9 @@ fun HomeScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    val levelShortTitle = currentLevel?.title?.split(":")?.firstOrNull() ?: "Level"
                     Text(
-                        text = "${currentLevel?.title?.split(":")?.firstOrNull() ?: "Level"} Units",
+                        text = UiLocalizer.getString("home_units_header", lang, levelShortTitle),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -295,7 +295,7 @@ fun HomeScreen(
                         ) {
                             Text(unitTitle, style = MaterialTheme.typography.bodyMedium)
                             Text(
-                                "${entry.value.size} words",
+                                UiLocalizer.getString("home_words_count", lang, entry.value.size),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -305,20 +305,23 @@ fun HomeScreen(
             }
         }
 
-        // Offline Banner
+        // Offline notice
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Offline Mode Active",
-                    style = MaterialTheme.typography.titleMedium,
+                    text = if (lang == "id") "🌐 Akses Penuh Offline" else "🌐 100% Offline Access",
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "All vocabulary and mastery tests for unlocked levels run locally on your device. No internet connection required.",
+                    text = if (lang == "id")
+                        "Semua kosakata dan ujian level disimpan langsung di perangkat Anda. Belajar kapan saja tanpa koneksi internet."
+                    else
+                        "All vocabulary and mastery tests for unlocked levels run locally on your device. No internet connection required.",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -333,13 +336,14 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeStatusBadge(status: LevelStatus) {
+private fun HomeStatusBadge(status: LevelStatus, uiLanguage: String = "en") {
+    val isId = uiLanguage == "id"
     val (label, bg, textCol) = when (status) {
-        LevelStatus.LOCKED -> Triple("Locked 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
-        LevelStatus.AVAILABLE -> Triple("Available 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
-        LevelStatus.IN_PROGRESS -> Triple("Learning ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
-        LevelStatus.READY_FOR_TEST -> Triple("Ready for Test 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
-        LevelStatus.MASTERED -> Triple("Mastered 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
+        LevelStatus.LOCKED -> Triple(if (isId) "Terkunci 🔒" else "Locked 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
+        LevelStatus.AVAILABLE -> Triple(if (isId) "Tersedia 🔓" else "Available 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
+        LevelStatus.IN_PROGRESS -> Triple(if (isId) "Belajar ⏳" else "Learning ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
+        LevelStatus.READY_FOR_TEST -> Triple(if (isId) "Siap Ujian 🎯" else "Ready for Test 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        LevelStatus.MASTERED -> Triple(if (isId) "Dikuasai 🏆" else "Mastered 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
     }
 
     Box(

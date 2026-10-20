@@ -1,5 +1,6 @@
 package com.dearyoti.lexiladder.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,12 +36,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import android.app.Activity
-import androidx.compose.ui.platform.LocalContext
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
+import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.QuizQuestion
 import com.dearyoti.lexiladder.domain.model.ReviewRating
@@ -65,6 +66,9 @@ fun PracticeScreen(
     val adManager = LexiLadderApp.instance.adManager
 
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
+    val uiLang = prefs.uiLanguage
+    val expLang = prefs.explanationLanguage
+
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val allWords by repo.getAllWords().collectAsState(initial = emptyList())
     val dueWords by repo.getWordsDueForReview().collectAsState(initial = emptyList())
@@ -102,10 +106,15 @@ fun PracticeScreen(
     }
 
     // Generate dynamic quiz questions with fresh randomization every sessionRound
-    val questions = remember(activeWordPool, levelFilteredWords, selectedMode, sessionRound) {
+    val questions = remember(activeWordPool, levelFilteredWords, selectedMode, sessionRound, expLang, uiLang) {
         val targetWords = if (activeWordPool.size >= 4) activeWordPool else levelFilteredWords
         val fallbackPool = if (levelFilteredWords.size >= 4) levelFilteredWords else allWords
-        generateQuizFromWords(targetWords, fallbackPool)
+        generateQuizFromWords(
+            words = targetWords,
+            fallbackPool = fallbackPool,
+            explanationLanguage = expLang,
+            uiLanguage = uiLang
+        )
     }
 
     var currentIndex by remember { mutableIntStateOf(0) }
@@ -122,7 +131,10 @@ fun PracticeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Loading practice questions...", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                if (uiLang == "id") "Memuat soal latihan..." else "Loading practice questions...",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
         return
     }
@@ -132,6 +144,7 @@ fun PracticeScreen(
             totalQuestions = questions.size,
             correctCount = sessionCorrectCount,
             isPremium = prefs.isPremium,
+            uiLanguage = uiLang,
             onRestart = {
                 val restartAction = {
                     sessionRound++
@@ -163,7 +176,7 @@ fun PracticeScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
-            text = "Adaptive Practice & Review",
+            text = UiLocalizer.getString("practice_title", uiLang),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -185,7 +198,7 @@ fun PracticeScreen(
                             sessionCorrectCount = 0
                             isSessionComplete = false
                         },
-                        label = { Text("All Unlocked Levels") }
+                        label = { Text(UiLocalizer.getString("practice_all_levels", uiLang)) }
                     )
                 }
                 items(unlockedLevels) { lvl ->
@@ -211,9 +224,9 @@ fun PracticeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             val modes = listOf(
-                PracticeMode.ALL to "Standard Quiz (${levelFilteredWords.size})",
-                PracticeMode.DUE_REVIEW to "Due Review (${dueWords.size})",
-                PracticeMode.DIFFICULT to "Difficult Words (${difficultWords.size})"
+                PracticeMode.ALL to UiLocalizer.getString("practice_standard_quiz", uiLang, levelFilteredWords.size),
+                PracticeMode.DUE_REVIEW to UiLocalizer.getString("practice_due_review", uiLang, dueWords.size),
+                PracticeMode.DIFFICULT to UiLocalizer.getString("practice_difficult_words", uiLang, difficultWords.size)
             )
             items(modes) { (mode, label) ->
                 FilterChip(
@@ -238,18 +251,21 @@ fun PracticeScreen(
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
-                        text = "All Caught Up! 🎉",
+                        text = if (uiLang == "id") "Semua Sudah Diulang! 🎉" else "All Caught Up! 🎉",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "You have no words scheduled for review right now. Great job keeping up with your spaced repetition schedule!",
+                        text = if (uiLang == "id")
+                            "Tidak ada kata yang jatuh tempo untuk diulang saat ini. Pertahankan konsistensi jadwal Spaced Repetition Anda!"
+                        else
+                            "You have no words scheduled for review right now. Great job keeping up with your spaced repetition schedule!",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(onClick = { selectedMode = PracticeMode.ALL }) {
-                        Text("Practice All Words")
+                        Text(if (uiLang == "id") "Latihan Semua Kata" else "Practice All Words")
                     }
                 }
             }
@@ -263,18 +279,21 @@ fun PracticeScreen(
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
-                        text = "No Difficult Words Yet! 🌟",
+                        text = if (uiLang == "id") "Belum Ada Kata Sulit! 🌟" else "No Difficult Words Yet! 🌟",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Words that you miss during practice will automatically appear here for focused reinforcement.",
+                        text = if (uiLang == "id")
+                            "Kata yang salah dijawab selama kuis akan otomatis tercatat di sini untuk penguatan intensif."
+                        else
+                            "Words that you miss during practice will automatically appear here for focused reinforcement.",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(onClick = { selectedMode = PracticeMode.ALL }) {
-                        Text("Practice All Words")
+                        Text(if (uiLang == "id") "Latihan Semua Kata" else "Practice All Words")
                     }
                 }
             }
@@ -282,7 +301,10 @@ fun PracticeScreen(
         }
 
         if (questions.isEmpty()) {
-            Text("No questions available for this category.", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                if (uiLang == "id") "Tidak ada pertanyaan untuk kategori ini." else "No questions available for this category.",
+                style = MaterialTheme.typography.bodyMedium
+            )
             return
         }
 
@@ -294,12 +316,12 @@ fun PracticeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Question ${currentIndex + 1} of ${questions.size}",
+                text = UiLocalizer.getString("practice_question_counter", uiLang, currentIndex + 1, questions.size),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Score: $sessionCorrectCount",
+                text = UiLocalizer.getString("practice_score", uiLang, sessionCorrectCount),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary
@@ -359,6 +381,15 @@ fun PracticeScreen(
                 onClick = {
                     if (!isSubmitted) {
                         selectedOption = index
+                        isSubmitted = true
+                        val correct = index == currentQuestion.correctOptionIndex
+                        if (correct) {
+                            sessionCorrectCount++
+                        }
+                        scope.launch {
+                            val rating = if (correct) ReviewRating.GOOD else ReviewRating.HARD
+                            repo.recordReviewRating(currentQuestion.wordId, rating)
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -366,20 +397,18 @@ fun PracticeScreen(
             ) {
                 Text(
                     text = optionText,
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
-
         if (isSubmitted) {
-            val isRight = selectedOption == currentQuestion.correctOptionIndex
+            val isAnswerCorrect = selectedOption == currentQuestion.correctOptionIndex
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isRight)
+                    containerColor = if (isAnswerCorrect)
                         MaterialTheme.colorScheme.primaryContainer
                     else
                         MaterialTheme.colorScheme.errorContainer
@@ -387,7 +416,10 @@ fun PracticeScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = if (isRight) "Correct! 🎉" else "Incorrect",
+                        text = if (isAnswerCorrect)
+                            (if (uiLang == "id") "Benar! 🎉" else "Correct! 🎉")
+                        else
+                            (if (uiLang == "id") "Belum Tepat 💡" else "Incorrect 💡"),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -396,40 +428,27 @@ fun PracticeScreen(
                         text = currentQuestion.explanation,
                         style = MaterialTheme.typography.bodyMedium
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            if (currentIndex < questions.size - 1) {
+                                currentIndex++
+                                selectedOption = null
+                                isSubmitted = false
+                            } else {
+                                isSessionComplete = true
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (currentIndex < questions.size - 1)
+                                (if (uiLang == "id") "Pertanyaan Berikutnya" else "Next Question")
+                            else
+                                (if (uiLang == "id") "Lihat Hasil" else "See Results")
+                        )
+                    }
                 }
-            }
-
-            Button(
-                onClick = {
-                    if (currentIndex < questions.size - 1) {
-                        currentIndex++
-                        selectedOption = null
-                        isSubmitted = false
-                    } else {
-                        isSessionComplete = true
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = if (currentIndex < questions.size - 1) "Next Question" else "See Results")
-            }
-        } else {
-            Button(
-                onClick = {
-                    if (selectedOption != null) {
-                        isSubmitted = true
-                        val correct = selectedOption == currentQuestion.correctOptionIndex
-                        if (correct) sessionCorrectCount++
-                        val rating = if (correct) ReviewRating.GOOD else ReviewRating.WRONG
-                        scope.launch {
-                            repo.recordReviewRating(currentQuestion.wordId, rating)
-                        }
-                    }
-                },
-                enabled = selectedOption != null,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Submit Answer")
             }
         }
     }
@@ -439,7 +458,8 @@ fun PracticeScreen(
 fun QuizResultView(
     totalQuestions: Int,
     correctCount: Int,
-    isPremium: Boolean = false,
+    isPremium: Boolean,
+    uiLanguage: String = "en",
     onRestart: () -> Unit
 ) {
     val accuracy = if (totalQuestions > 0) (correctCount.toFloat() / totalQuestions.toFloat()) * 100f else 0f
@@ -453,13 +473,16 @@ fun QuizResultView(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Session Complete! 🏆",
+            text = UiLocalizer.getString("practice_complete_title", uiLanguage) + " 🏆",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Review intervals have been updated using your spaced repetition scheduler.",
+            text = if (accuracy >= 70f)
+                UiLocalizer.getString("practice_great_job", uiLanguage)
+            else
+                UiLocalizer.getString("practice_keep_going", uiLanguage),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -475,14 +498,14 @@ fun QuizResultView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Score: $correctCount / $totalQuestions",
+                    text = "${UiLocalizer.getString("practice_score", uiLanguage, correctCount)} / $totalQuestions",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Accuracy: ${String.format("%.1f", accuracy)}%",
+                    text = "${if (uiLanguage == "id") "Akurasi" else "Accuracy"}: ${String.format("%.1f", accuracy)}%",
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -496,7 +519,7 @@ fun QuizResultView(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text("Practice Again")
+            Text(UiLocalizer.getString("practice_practice_again", uiLanguage))
         }
 
         // Safe Banner Ad at end of session (hidden if Premium)
@@ -510,7 +533,9 @@ fun QuizResultView(
 fun generateQuizFromWords(
     words: List<Word>,
     fallbackPool: List<Word> = words,
-    random: Random = Random.Default
+    random: Random = Random.Default,
+    explanationLanguage: String = "id",
+    uiLanguage: String = "en"
 ): List<QuizQuestion> {
     if (words.isEmpty() || fallbackPool.size < 4) return emptyList()
 
@@ -519,24 +544,29 @@ fun generateQuizFromWords(
 
     targetWords.forEachIndexed { index, word ->
         val otherWords = fallbackPool.filter { it.id != word.id }
-        // Cycle between 4 different question styles:
-        // 0: Word to Definition ("What is the meaning of \"X\"?")
-        // 1: Definition to Word ("Which word matches this definition...")
-        // 2: Fill in the Blank with contextual sentence
-        // 3: Indonesian Translation to Word
+        // Cycle between question styles:
+        // 0: Word to Definition
+        // 1: Definition to Word
+        // 2: Fill in the Blank
+        // 3: Translation/Immersion Matching
         when (index % 4) {
             0 -> {
                 val distractorPool = otherWords.shuffled(random).take(3)
                 val options = (listOf(word.definition) + distractorPool.map { it.definition }).shuffled(random)
                 val correctIndex = options.indexOf(word.definition)
+                val expText = if (explanationLanguage == "id") {
+                    "\"${word.text}\" (${word.partOfSpeech}) bermakna: ${word.definition}. Arti: ${word.translation ?: "-"}"
+                } else {
+                    "\"${word.text}\" (${word.partOfSpeech}) means: ${word.definition}."
+                }
                 questions.add(
                     QuizQuestion(
                         id = "q_gen_${word.id}_$index",
                         wordId = word.id,
-                        questionText = "What is the meaning of \"${word.text}\"?",
+                        questionText = UiLocalizer.getString("practice_what_meaning", uiLanguage, word.text),
                         options = options,
                         correctOptionIndex = correctIndex,
-                        explanation = "\"${word.text}\" (${word.partOfSpeech}) means: ${word.definition}. Arti: ${word.translation ?: "-"}"
+                        explanation = expText
                     )
                 )
             }
@@ -544,14 +574,19 @@ fun generateQuizFromWords(
                 val distractorPool = otherWords.shuffled(random).take(3)
                 val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
                 val correctIndex = options.indexOf(word.text)
+                val expText = if (explanationLanguage == "id") {
+                    "\"${word.text}\" (${word.phonetic ?: ""}): ${word.definition}. Arti: ${word.translation ?: "-"}"
+                } else {
+                    "\"${word.text}\" (${word.phonetic ?: ""}): ${word.definition}."
+                }
                 questions.add(
                     QuizQuestion(
                         id = "q_gen_${word.id}_$index",
                         wordId = word.id,
-                        questionText = "Which word matches this definition:\n\"${word.definition}\"?",
+                        questionText = UiLocalizer.getString("practice_which_word", uiLanguage, word.definition),
                         options = options,
                         correctOptionIndex = correctIndex,
-                        explanation = "\"${word.text}\" (${word.phonetic ?: ""}): ${word.definition}. Arti: ${word.translation ?: "-"}"
+                        explanation = expText
                     )
                 )
             }
@@ -566,32 +601,55 @@ fun generateQuizFromWords(
                 val distractorPool = otherWords.shuffled(random).take(3)
                 val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
                 val correctIndex = options.indexOf(word.text)
+                val expText = if (explanationLanguage == "id") {
+                    "Kalimat lengkap: \"${word.exampleSentence}\". (${word.text} = ${word.translation ?: "-"})"
+                } else {
+                    "Full sentence: \"${word.exampleSentence}\"."
+                }
                 questions.add(
                     QuizQuestion(
                         id = "q_gen_${word.id}_$index",
                         wordId = word.id,
-                        questionText = "Complete the sentence:\n\"$blankSentence\"",
+                        questionText = UiLocalizer.getString("practice_complete_sentence", uiLanguage, blankSentence),
                         options = options,
                         correctOptionIndex = correctIndex,
-                        explanation = "Full sentence: \"${word.exampleSentence}\". (${word.text} = ${word.translation ?: "-"})"
+                        explanation = expText
                     )
                 )
             }
             else -> {
-                val translationText = word.translation ?: word.definition
-                val distractorPool = otherWords.shuffled(random).take(3)
-                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
-                val correctIndex = options.indexOf(word.text)
-                questions.add(
-                    QuizQuestion(
-                        id = "q_gen_${word.id}_$index",
-                        wordId = word.id,
-                        questionText = "Which English word translates to:\n\"$translationText\"?",
-                        options = options,
-                        correctOptionIndex = correctIndex,
-                        explanation = "\"${word.text}\" translates to \"$translationText\". (${word.phonetic ?: ""})"
+                if (explanationLanguage == "id") {
+                    // Indonesian translation to English word
+                    val translationText = word.translation ?: word.definition
+                    val distractorPool = otherWords.shuffled(random).take(3)
+                    val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
+                    val correctIndex = options.indexOf(word.text)
+                    questions.add(
+                        QuizQuestion(
+                            id = "q_gen_${word.id}_$index",
+                            wordId = word.id,
+                            questionText = UiLocalizer.getString("practice_which_translates", uiLanguage, translationText),
+                            options = options,
+                            correctOptionIndex = correctIndex,
+                            explanation = "\"${word.text}\" bermakna \"$translationText\". (${word.phonetic ?: ""})"
+                        )
                     )
-                )
+                } else {
+                    // English Direct Immersion: Context/Definition fitting
+                    val distractorPool = otherWords.shuffled(random).take(3)
+                    val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
+                    val correctIndex = options.indexOf(word.text)
+                    questions.add(
+                        QuizQuestion(
+                            id = "q_gen_${word.id}_$index",
+                            wordId = word.id,
+                            questionText = UiLocalizer.getString("practice_which_fits", uiLanguage, word.definition),
+                            options = options,
+                            correctOptionIndex = correctIndex,
+                            explanation = "\"${word.text}\" matches: \"${word.definition}\"."
+                        )
+                    )
+                }
             }
         }
     }

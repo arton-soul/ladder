@@ -57,6 +57,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.localization.UiLocalizer
+import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 import com.dearyoti.lexiladder.domain.model.MasteryTestAttempt
 import com.dearyoti.lexiladder.domain.model.MasteryTestQuestion
@@ -83,6 +85,10 @@ fun MasteryTestScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
+    val uiLang = prefs.uiLanguage
+
     val scope = rememberCoroutineScope()
 
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
@@ -149,6 +155,7 @@ fun MasteryTestScreen(
                         level = currentLevel,
                         wordsCount = words.size,
                         attempts = testAttempts,
+                        uiLanguage = uiLang,
                         onStartTest = { startNewTest() }
                     )
                 }
@@ -158,6 +165,7 @@ fun MasteryTestScreen(
                             questions = questions,
                             currentIndex = currentIndex,
                             userAnswers = userAnswers,
+                            uiLanguage = uiLang,
                             onSelectAnswer = { qId, ans -> userAnswers[qId] = ans },
                             onNext = { if (currentIndex < questions.size - 1) currentIndex++ },
                             onPrevious = { if (currentIndex > 0) currentIndex-- },
@@ -193,6 +201,7 @@ fun MasteryTestScreen(
                         MasteryTestResultView(
                             result = res,
                             nextLevelUnlocked = nextLevelUnlocked,
+                            uiLanguage = uiLang,
                             onRetakeTest = { startNewTest() },
                             onDone = { onNavigateBack() }
                         )
@@ -208,6 +217,7 @@ private fun MasteryTestIntroView(
     level: com.dearyoti.lexiladder.domain.model.Level?,
     wordsCount: Int,
     attempts: List<MasteryTestAttempt>,
+    uiLanguage: String = "en",
     onStartTest: () -> Unit
 ) {
     val isLocked = level?.isUnlocked != true
@@ -254,7 +264,7 @@ private fun MasteryTestIntroView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                StatusChip(status = level?.status ?: LevelStatus.LOCKED)
+                StatusChip(status = level?.status ?: LevelStatus.LOCKED, uiLanguage = uiLanguage)
             }
         }
 
@@ -268,15 +278,33 @@ private fun MasteryTestIntroView(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Test Specifications",
+                    text = UiLocalizer.getString("test_specs_title", uiLanguage),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                RuleItem(label = "Questions", value = "10 Randomized questions")
-                RuleItem(label = "Passing Score", value = "${level?.requiredPassingScore ?: 80}% (8 of 10 correct)")
-                RuleItem(label = "Format", value = "Meaning, Translation & Sentence Completion")
-                RuleItem(label = "Prerequisite", value = if (isLocked) "Prerequisite level must be completed" else "Ready to take")
-                RuleItem(label = "Outcome", value = "Unlocks next level upon passing")
+                RuleItem(
+                    label = UiLocalizer.getString("test_specs_questions", uiLanguage),
+                    value = UiLocalizer.getString("test_specs_questions_val", uiLanguage)
+                )
+                RuleItem(
+                    label = UiLocalizer.getString("test_specs_passing", uiLanguage),
+                    value = "${level?.requiredPassingScore ?: 80}% (8 of 10 correct)"
+                )
+                RuleItem(
+                    label = UiLocalizer.getString("test_specs_format", uiLanguage),
+                    value = UiLocalizer.getString("test_specs_format_val", uiLanguage)
+                )
+                RuleItem(
+                    label = if (uiLanguage == "id") "Prasyarat" else "Prerequisite",
+                    value = if (isLocked)
+                        (if (uiLanguage == "id") "Selesaikan level sebelumnya" else "Prerequisite level must be completed")
+                    else
+                        (if (uiLanguage == "id") "Siap diikuti" else "Ready to take")
+                )
+                RuleItem(
+                    label = UiLocalizer.getString("test_specs_outcome", uiLanguage),
+                    value = UiLocalizer.getString("test_specs_outcome_val", uiLanguage)
+                )
             }
         }
 
@@ -291,9 +319,9 @@ private fun MasteryTestIntroView(
         ) {
             Text(
                 text = when {
-                    isLocked -> "Level Locked"
-                    level?.isMastered == true -> "Retake Mastery Test"
-                    else -> "Start Mastery Test"
+                    isLocked -> if (uiLanguage == "id") "Level Terkunci" else "Level Locked"
+                    level?.isMastered == true -> UiLocalizer.getString("test_retake_btn", uiLanguage)
+                    else -> UiLocalizer.getString("test_start_btn", uiLanguage)
                 },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
@@ -303,7 +331,7 @@ private fun MasteryTestIntroView(
         // Previous Attempts History
         if (attempts.isNotEmpty()) {
             Text(
-                text = "Previous Attempts (${attempts.size})",
+                text = UiLocalizer.getString("test_prev_attempts", uiLanguage, attempts.size),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -328,7 +356,10 @@ private fun MasteryTestIntroView(
                     ) {
                         Column {
                             Text(
-                                text = if (attempt.isPassed) "PASSED" else "FAILED",
+                                text = if (attempt.isPassed)
+                                    UiLocalizer.getString("test_passed_badge", uiLanguage)
+                                else
+                                    UiLocalizer.getString("test_failed_badge", uiLanguage),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = if (attempt.isPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
@@ -352,13 +383,14 @@ private fun MasteryTestIntroView(
 }
 
 @Composable
-private fun StatusChip(status: LevelStatus) {
+private fun StatusChip(status: LevelStatus, uiLanguage: String = "en") {
+    val isId = uiLanguage == "id"
     val (label, bg, textCol) = when (status) {
-        LevelStatus.LOCKED -> Triple("LOCKED 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
-        LevelStatus.AVAILABLE -> Triple("AVAILABLE 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
-        LevelStatus.IN_PROGRESS -> Triple("IN PROGRESS ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
-        LevelStatus.READY_FOR_TEST -> Triple("READY FOR TEST 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
-        LevelStatus.MASTERED -> Triple("MASTERED 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
+        LevelStatus.LOCKED -> Triple(if (isId) "TERKUNCI 🔒" else "LOCKED 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
+        LevelStatus.AVAILABLE -> Triple(if (isId) "TERSEDIA 🔓" else "AVAILABLE 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
+        LevelStatus.IN_PROGRESS -> Triple(if (isId) "BELAJAR ⏳" else "IN PROGRESS ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
+        LevelStatus.READY_FOR_TEST -> Triple(if (isId) "SIAP UJIAN 🎯" else "READY FOR TEST 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        LevelStatus.MASTERED -> Triple(if (isId) "DIKUASAI 🏆" else "MASTERED 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
     }
 
     Box(
@@ -391,6 +423,7 @@ private fun MasteryTestActiveView(
     questions: List<MasteryTestQuestion>,
     currentIndex: Int,
     userAnswers: Map<String, String>,
+    uiLanguage: String = "en",
     onSelectAnswer: (String, String) -> Unit,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
@@ -414,13 +447,13 @@ private fun MasteryTestActiveView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Question ${currentIndex + 1} of ${questions.size}",
+                text = UiLocalizer.getString("practice_question_counter", uiLanguage, currentIndex + 1, questions.size),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold
             )
             val answeredCount = userAnswers.size
             Text(
-                text = "$answeredCount answered",
+                text = if (uiLanguage == "id") "$answeredCount dijawab" else "$answeredCount answered",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -436,9 +469,9 @@ private fun MasteryTestActiveView(
 
         // Question Type Tag
         val typeBadge = when (currentQuestion.type) {
-            QuestionType.WORD_TO_TRANSLATION -> "Vocabulary Meaning"
-            QuestionType.TRANSLATION_TO_WORD -> "English Word Selection"
-            QuestionType.FILL_IN_BLANK -> "Sentence Context Completion"
+            QuestionType.WORD_TO_TRANSLATION -> if (uiLanguage == "id") "Arti Kosakata" else "Vocabulary Meaning"
+            QuestionType.TRANSLATION_TO_WORD -> if (uiLanguage == "id") "Pemilihan Kata Bahasa Inggris" else "English Word Selection"
+            QuestionType.FILL_IN_BLANK -> if (uiLanguage == "id") "Melengkapi Kalimat" else "Sentence Context Completion"
         }
         SuggestionChip(
             onClick = {},
@@ -538,7 +571,7 @@ private fun MasteryTestActiveView(
                 enabled = currentIndex > 0,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Previous")
+                Text(if (uiLanguage == "id") "Sebelumnya" else "Previous")
             }
             Spacer(modifier = Modifier.width(12.dp))
             if (currentIndex < questions.size - 1) {
@@ -546,7 +579,7 @@ private fun MasteryTestActiveView(
                     onClick = onNext,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Next")
+                    Text(if (uiLanguage == "id") "Berikutnya" else "Next")
                 }
             } else {
                 Button(
@@ -554,7 +587,7 @@ private fun MasteryTestActiveView(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Submit Test")
+                    Text(if (uiLanguage == "id") "Kirim Jawaban" else "Submit Test")
                 }
             }
         }
@@ -565,9 +598,11 @@ private fun MasteryTestActiveView(
 private fun MasteryTestResultView(
     result: MasteryTestResult,
     nextLevelUnlocked: Boolean,
+    uiLanguage: String = "en",
     onRetakeTest: () -> Unit,
     onDone: () -> Unit
 ) {
+    val isId = uiLanguage == "id"
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -598,7 +633,10 @@ private fun MasteryTestResultView(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = if (result.isPassed) "Level Mastered! 🎉" else "Keep Practicing! 💪",
+                    text = if (result.isPassed)
+                        (if (isId) "Tingkat Dikuasai! 🎉" else "Level Mastered! 🎉")
+                    else
+                        (if (isId) "Terus Berlatih! 💪" else "Keep Practicing! 💪"),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -611,16 +649,19 @@ private fun MasteryTestResultView(
                     color = if (result.isPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                 )
                 Text(
-                    text = "${result.correctCount} of ${result.totalQuestions} questions correct",
+                    text = if (isId)
+                        "${result.correctCount} dari ${result.totalQuestions} soal terjawab benar"
+                    else
+                        "${result.correctCount} of ${result.totalQuestions} questions correct",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = if (result.isPassed)
-                        "Congratulations! You exceeded the ${result.passingPercentage}% requirement."
+                        (if (isId) "Selamat! Anda melampaui batas kelulusan ${result.passingPercentage}%." else "Congratulations! You exceeded the ${result.passingPercentage}% requirement.")
                     else
-                        "You scored ${result.scorePercentage}%. Passing score requires ${result.passingPercentage}%.",
+                        (if (isId) "Nilai Anda ${result.scorePercentage}%. Batas kelulusan adalah ${result.passingPercentage}%." else "You scored ${result.scorePercentage}%. Passing score requires ${result.passingPercentage}%."),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
@@ -648,13 +689,13 @@ private fun MasteryTestResultView(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Next Level Unlocked! 🚀",
+                            text = if (isId) "Level Berikutnya Terbuka! 🚀" else "Next Level Unlocked! 🚀",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
-                            text = "The next level in your ladder is now available to learn.",
+                            text = if (isId) "Level berikutnya pada tangga belajar Anda kini siap dipelajari." else "The next level in your ladder is now available to learn.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
@@ -666,7 +707,7 @@ private fun MasteryTestResultView(
         // Review Missed Questions
         if (result.incorrectQuestions.isNotEmpty()) {
             Text(
-                text = "Questions to Review (${result.incorrectQuestions.size})",
+                text = if (isId) "Soal yang Perlu Ditinjau (${result.incorrectQuestions.size})" else "Questions to Review (${result.incorrectQuestions.size})",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
@@ -686,13 +727,13 @@ private fun MasteryTestResultView(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Correct Answer: ${q.correctAnswer}",
+                            text = (if (isId) "Jawaban Benar: " else "Correct Answer: ") + q.correctAnswer,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         q.targetWord.translation?.let {
-                            Text(text = "Meaning: $it", style = MaterialTheme.typography.bodySmall)
+                            Text(text = "${if (isId) "Arti" else "Meaning"}: $it", style = MaterialTheme.typography.bodySmall)
                         }
                         Text(
                             text = "\"${q.targetWord.exampleSentence}\"",
@@ -712,7 +753,10 @@ private fun MasteryTestResultView(
                 .height(50.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("Back to Level Roadmap", fontWeight = FontWeight.Bold)
+            Text(
+                text = if (isId) "Kembali ke Peta Level" else "Back to Level Roadmap",
+                fontWeight = FontWeight.Bold
+            )
         }
 
         OutlinedButton(
@@ -724,7 +768,10 @@ private fun MasteryTestResultView(
         ) {
             Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Retake Mastery Test", fontWeight = FontWeight.Bold)
+            Text(
+                text = if (isId) "Ulangi Ujian Level" else "Retake Mastery Test",
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

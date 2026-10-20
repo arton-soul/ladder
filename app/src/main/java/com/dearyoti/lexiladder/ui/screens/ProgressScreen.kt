@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
+import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 
@@ -45,6 +46,7 @@ fun ProgressScreen(
     val repo = LexiLadderApp.instance.vocabularyRepository
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
+    val uiLang = prefs.uiLanguage
 
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val masteredCount by repo.getMasteredWordCount().collectAsState(initial = 0)
@@ -69,7 +71,7 @@ fun ProgressScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Learning Statistics",
+            text = UiLocalizer.getString("progress_title", uiLang),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -85,7 +87,7 @@ fun ProgressScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Mastered",
+                        text = UiLocalizer.getString("progress_stat_mastered", uiLang),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
@@ -103,7 +105,7 @@ fun ProgressScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Due for Review",
+                        text = UiLocalizer.getString("progress_stat_due", uiLang),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
@@ -127,7 +129,7 @@ fun ProgressScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "In Learning",
+                        text = UiLocalizer.getString("progress_stat_learning", uiLang),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
@@ -145,7 +147,7 @@ fun ProgressScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Difficult Words",
+                        text = UiLocalizer.getString("progress_stat_difficult", uiLang),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
@@ -169,13 +171,17 @@ fun ProgressScreen(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("★ Bookmarked Words", style = MaterialTheme.typography.titleMedium)
-                Text("${favorites.size} words", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("★ " + UiLocalizer.getString("progress_bookmarked", uiLang), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "${favorites.size} " + if (uiLang == "id") "kata" else "words",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
         Text(
-            text = "Ladder Level Roadmap",
+            text = UiLocalizer.getString("progress_roadmap_title", uiLang),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -200,7 +206,7 @@ fun ProgressScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
-                        ProgressLevelBadge(status = level.status)
+                        ProgressLevelBadge(status = level.status, uiLanguage = uiLang)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -215,8 +221,15 @@ fun ProgressScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "Study Progress (${level.studiedWords}/${level.totalWords} words)", style = MaterialTheme.typography.labelSmall)
-                            Text(text = "${(fraction * 100).toInt()}%", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = UiLocalizer.getString("progress_study_progress", uiLang, level.studiedWords, level.totalWords),
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                            Text(
+                                text = "${(fraction * 100).toInt()}%",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
@@ -239,15 +252,18 @@ fun ProgressScreen(
                             Spacer(modifier = Modifier.padding(4.dp))
                             Text(
                                 text = if (level.isMastered)
-                                    "Retake Mastery Test 🏆"
+                                    (if (uiLang == "id") "Ulangi Ujian Level 🏆" else "Retake Mastery Test 🏆")
                                 else
-                                    "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯"
+                                    (if (uiLang == "id") "Ikuti Ujian Level (Lulus ${level.requiredPassingScore}%) 🎯" else "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯")
                             )
                         }
                     } else {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "🔒 Locked — Pass Level ${level.order - 1} Mastery Test to unlock.",
+                            text = if (uiLang == "id")
+                                "🔒 Terkunci — Lulus Ujian Level ${level.order - 1} untuk membuka."
+                            else
+                                "🔒 Locked — Pass Level ${level.order - 1} Mastery Test to unlock.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -265,13 +281,14 @@ fun ProgressScreen(
 }
 
 @Composable
-private fun ProgressLevelBadge(status: LevelStatus) {
+private fun ProgressLevelBadge(status: LevelStatus, uiLanguage: String = "en") {
+    val isId = uiLanguage == "id"
     val (label, bg, textCol) = when (status) {
-        LevelStatus.LOCKED -> Triple("Locked 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
-        LevelStatus.AVAILABLE -> Triple("Available 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
-        LevelStatus.IN_PROGRESS -> Triple("Learning ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
-        LevelStatus.READY_FOR_TEST -> Triple("Ready for Test 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
-        LevelStatus.MASTERED -> Triple("Mastered 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
+        LevelStatus.LOCKED -> Triple(if (isId) "Terkunci 🔒" else "Locked 🔒", Color(0xFFEEEEEE), Color(0xFF757575))
+        LevelStatus.AVAILABLE -> Triple(if (isId) "Tersedia 🔓" else "Available 🔓", Color(0xFFE3F2FD), Color(0xFF1976D2))
+        LevelStatus.IN_PROGRESS -> Triple(if (isId) "Belajar ⏳" else "Learning ⏳", Color(0xFFFFF3E0), Color(0xFFE65100))
+        LevelStatus.READY_FOR_TEST -> Triple(if (isId) "Siap Ujian 🎯" else "Ready for Test 🎯", Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        LevelStatus.MASTERED -> Triple(if (isId) "Dikuasai 🏆" else "Mastered 🏆", Color(0xFFEDE7F6), Color(0xFF512DA8))
     }
 
     Box(

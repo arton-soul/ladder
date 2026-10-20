@@ -59,9 +59,10 @@ fun MainAppNavigation(
         bottomBar = {
             NavigationBar {
                 bottomNavItems.forEach { screen ->
+                    val labelText = com.dearyoti.lexiladder.core.localization.UiLocalizer.getString(screen.titleKey, prefs.uiLanguage)
                     NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title) },
+                        icon = { Icon(screen.icon, contentDescription = labelText) },
+                        label = { Text(labelText) },
                         selected = currentRoute == screen.route,
                         onClick = {
                             navController.navigate(screen.route) {

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
@@ -35,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.localization.UiLocalizer
+import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.ReviewRating
 import com.dearyoti.lexiladder.domain.model.Word
 import kotlinx.coroutines.launch
@@ -60,6 +62,12 @@ fun LearnScreen(
     modifier: Modifier = Modifier
 ) {
     val repo = LexiLadderApp.instance.vocabularyRepository
+    val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(initial = UserPreferences())
+
+    val uiLang = prefs.uiLanguage
+    val expLang = prefs.explanationLanguage
+
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
     var selectedLevelId by remember { mutableStateOf("level_a1") }
@@ -88,7 +96,8 @@ fun LearnScreen(
         words.filter { word ->
             val matchesQuery = searchQuery.isBlank() ||
                     word.text.contains(searchQuery, ignoreCase = true) ||
-                    (word.translation?.contains(searchQuery, ignoreCase = true) == true)
+                    (word.translation?.contains(searchQuery, ignoreCase = true) == true) ||
+                    word.definition.contains(searchQuery, ignoreCase = true)
 
             val matchesFilter = when (selectedFilter) {
                 "all" -> true
@@ -103,6 +112,8 @@ fun LearnScreen(
     if (isFlashcardMode && filteredWords.isNotEmpty()) {
         FlashcardSessionView(
             words = filteredWords,
+            uiLanguage = uiLang,
+            explanationLanguage = expLang,
             onClose = { isFlashcardMode = false },
             onWordReviewed = { wordId, rating ->
                 scope.launch {
@@ -141,11 +152,17 @@ fun LearnScreen(
         }
 
         // Search bar
+        val searchPlaceholder = if (expLang == "en") {
+            UiLocalizer.getString("learn_search_placeholder_en", uiLang)
+        } else {
+            UiLocalizer.getString("learn_search_placeholder_id", uiLang)
+        }
+
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Search word or Indonesian meaning...") },
+            placeholder = { Text(searchPlaceholder) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
@@ -168,7 +185,7 @@ fun LearnScreen(
                 FilterChip(
                     selected = selectedFilter == "all",
                     onClick = { selectedFilter = "all" },
-                    label = { Text("All Words (${words.size})") }
+                    label = { Text(UiLocalizer.getString("learn_all_words", uiLang, words.size)) }
                 )
             }
             items(availableUnits) { unitId ->
@@ -185,7 +202,7 @@ fun LearnScreen(
                 FilterChip(
                     selected = selectedFilter == "favorites",
                     onClick = { selectedFilter = "favorites" },
-                    label = { Text("★ Bookmarks ($favCountInLevel)") }
+                    label = { Text("★ " + UiLocalizer.getString("learn_favorites", uiLang, favCountInLevel)) }
                 )
             }
         }
@@ -212,13 +229,13 @@ fun LearnScreen(
                     Spacer(modifier = Modifier.padding(6.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Practice Flashcard Mode",
+                            text = UiLocalizer.getString("learn_flashcard_title", uiLang),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         Text(
-                            text = "Tap to flip, test your memory, and rate difficulty",
+                            text = UiLocalizer.getString("learn_flashcard_desc", uiLang),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -237,6 +254,8 @@ fun LearnScreen(
                 WordCard(
                     word = word,
                     isFavorite = favIds.contains(word.id),
+                    uiLanguage = uiLang,
+                    explanationLanguage = expLang,
                     onToggleFavorite = {
                         scope.launch {
                             repo.toggleFavorite(word.id)
@@ -251,6 +270,8 @@ fun LearnScreen(
 @Composable
 fun FlashcardSessionView(
     words: List<Word>,
+    uiLanguage: String,
+    explanationLanguage: String,
     onClose: () -> Unit,
     onWordReviewed: (String, ReviewRating) -> Unit
 ) {
@@ -347,26 +368,46 @@ fun FlashcardSessionView(
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         Text(
-                            text = "💡 Tap card to flip & reveal meaning",
+                            text = UiLocalizer.getString("learn_tap_flip", uiLanguage),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.outline
                         )
                     } else {
-                        currentWord.translation?.let {
+                        // Back of card
+                        if (explanationLanguage == "id") {
+                            currentWord.translation?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = it,
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
+                                text = currentWord.definition,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        } else {
+                            // Direct English Immersion: emphasize definition
+                            Text(
+                                text = UiLocalizer.getString("learn_definition_label", uiLanguage),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = currentWord.definition,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center
                             )
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = currentWord.definition,
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
+
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -412,7 +453,7 @@ fun FlashcardSessionView(
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text(text = "Hard")
+                    Text(text = UiLocalizer.getString("learn_rating_hard", uiLanguage))
                 }
 
                 Button(
@@ -424,7 +465,7 @@ fun FlashcardSessionView(
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Good")
+                    Text(text = UiLocalizer.getString("learn_rating_good", uiLanguage))
                 }
 
                 Button(
@@ -436,7 +477,7 @@ fun FlashcardSessionView(
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
-                    Text(text = "Easy")
+                    Text(text = UiLocalizer.getString("learn_rating_easy", uiLanguage))
                 }
             }
         }
@@ -456,7 +497,7 @@ fun FlashcardSessionView(
                 }
 
                 Button(onClick = { isFlipped = true }) {
-                    Text("Show Meaning")
+                    Text(UiLocalizer.getString("learn_show_meaning", uiLanguage))
                 }
 
                 IconButton(
@@ -465,7 +506,7 @@ fun FlashcardSessionView(
                     },
                     enabled = currentIndex < words.size - 1
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
+                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Next")
                 }
             }
         }
@@ -476,6 +517,8 @@ fun FlashcardSessionView(
 fun WordCard(
     word: Word,
     isFavorite: Boolean,
+    uiLanguage: String = "en",
+    explanationLanguage: String = "id",
     onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -529,11 +572,23 @@ fun WordCard(
                 }
             }
 
-            Text(
-                text = "${word.partOfSpeech.replaceFirstChar { it.uppercase() }} • ${if (word.unitId == "unit_1") "Unit 1: Mindset" else "Unit 2: Life"}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${word.partOfSpeech.replaceFirstChar { it.uppercase() }} • ${if (word.unitId == "unit_1") "Unit 1" else "Unit 2"}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                if (explanationLanguage == "en") {
+                    SuggestionChip(
+                        onClick = {},
+                        label = { Text("Immersion", style = MaterialTheme.typography.labelSmall) }
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(6.dp))
 
@@ -542,13 +597,17 @@ fun WordCard(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            word.translation?.let {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Arti: $it",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            // Show translation only when explanation language is NOT English immersion
+            if (explanationLanguage == "id") {
+                word.translation?.let {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${UiLocalizer.getString("learn_meaning_label", uiLanguage)}$it",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))

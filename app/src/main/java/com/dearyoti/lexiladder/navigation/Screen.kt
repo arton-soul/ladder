@@ -10,16 +10,16 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Home : Screen("home", "Home", Icons.Default.Home)
-    object Learn : Screen("learn", "Learn", Icons.AutoMirrored.Filled.MenuBook)
-    object Practice : Screen("practice", "Practice", Icons.Default.FitnessCenter)
-    object Progress : Screen("progress", "Progress", Icons.Default.BarChart)
-    object Settings : Screen("settings", "Settings", Icons.Default.Settings)
-    object ContentUpdates : Screen("content_updates", "Content Updates", Icons.Default.CloudSync)
-    object Premium : Screen("premium", "LexiLadder Premium", Icons.Default.WorkspacePremium)
-    object PrivacyPolicy : Screen("privacy_policy", "Privacy Policy", Icons.Default.Settings)
-    object MasteryTest : Screen("mastery_test/{levelId}", "Mastery Test", Icons.Default.WorkspacePremium) {
+sealed class Screen(val route: String, val titleKey: String, val title: String, val icon: ImageVector) {
+    object Home : Screen("home", "nav_home", "Home", Icons.Default.Home)
+    object Learn : Screen("learn", "nav_learn", "Learn", Icons.AutoMirrored.Filled.MenuBook)
+    object Practice : Screen("practice", "nav_practice", "Practice", Icons.Default.FitnessCenter)
+    object Progress : Screen("progress", "nav_progress", "Progress", Icons.Default.BarChart)
+    object Settings : Screen("settings", "nav_settings", "Settings", Icons.Default.Settings)
+    object ContentUpdates : Screen("content_updates", "settings_updates_title", "Content Updates", Icons.Default.CloudSync)
+    object Premium : Screen("premium", "settings_premium_title", "LexiLadder Premium", Icons.Default.WorkspacePremium)
+    object PrivacyPolicy : Screen("privacy_policy", "settings_privacy_title", "Privacy Policy", Icons.Default.Settings)
+    object MasteryTest : Screen("mastery_test/{levelId}", "test_specs_title", "Mastery Test", Icons.Default.WorkspacePremium) {
         fun createRoute(levelId: String): String = "mastery_test/$levelId"
     }
 }
