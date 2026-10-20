@@ -577,8 +577,9 @@ fun WordCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val unitDisplay = word.unitId?.replace("_", " ")?.replaceFirstChar { it.uppercase() } ?: "Unit 1"
                 Text(
-                    text = "${word.partOfSpeech.replaceFirstChar { it.uppercase() }} • ${if (word.unitId == "unit_1") "Unit 1" else "Unit 2"}",
+                    text = "${word.partOfSpeech.replaceFirstChar { it.uppercase() }} • $unitDisplay",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
