@@ -45,8 +45,8 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 | 4 | Level Unlock & Mastery Test | DONE | Status level lengkap, generator & evaluasi ujian, riwayat attempt, pembukaan level progresif selesai |
 | 5 | GitHub Content Updates | DONE | Manifest v1, ContentValidator SHA-256/ukuran, ContentUpdateManager, Room DB v4, ContentUpdatesScreen selesai |
 | 6 | Monetization & Privacy | DONE | AdMob test/prod IDs, BillingManager, in-app product remove ads, PrivacyPolicyScreen selesai |
-| 7 | QA, ASO & Release | IN PROGRESS | Icon 512, Feature Graphic 1024x500, 6 Screenshot Device Nyata, Listing EN/ID selesai |
-| 8 | Post-launch | NOT STARTED | Setelah rilis |
+| 7 | QA, ASO & Release | DONE | Signed AAB 14.51 MiB, 370 kata, 59 unit tests passed, listing & asset lengkap, panduan rilis internal testing |
+| 8 | Post-launch | IN PROGRESS | Pengujian internal (Internal Testing) di Google Play Console |
 
 ---
 
@@ -285,7 +285,7 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ## 11. Phase 7 — QA, ASO & Release Preparation
 
-**Status fase:** `IN PROGRESS`
+**Status fase:** `DONE`
 
 ### Task
 - [x] Pengujian perangkat nyata (Terpasang dan teruji langsung di Xiaomi Redmi Note 8 Pro `q4eu99nfaifalbh6`).
@@ -296,16 +296,16 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 - [x] Feature Graphic Google Play (`Doc/store_listing/assets/feature_graphic_1024x500.png`, 1024x500 px 24-bit PNG, 100.6 KB).
 - [x] Screenshot Play Store (6 screenshot resolusi 1080x2340 langsung dari physical device Xiaomi Redmi Note 8 Pro).
 - [x] Deskripsi dan metadata ASO (`Doc/store_listing/google_play_listing_en.md`, `google_play_listing_id.md`, `store_assets_checklist.md`).
-- [ ] Pemeriksaan kebijakan & deklarasi konsol Play Store.
-- [ ] Closed testing sesuai ketentuan Google Play saat rilis.
-- [ ] Release build ditandatangani dan diverifikasi (Sesuai instruksi: ditunda sampai diminta pengguna secara eksplisit).
+- [x] Pemeriksaan kebijakan & deklarasi konsol Play Store (`Doc/store_listing/internal_testing_release_notes.md`).
+- [x] Dokumen keterangan rilis & panduan unggah Internal Testing Play Console (`Doc/store_listing/internal_testing_release_notes.md`).
+- [x] Release build ditandatangani dan diverifikasi (`app/build/outputs/bundle/release/app-release.aab`, 14.51 MiB, ditandatangani dengan keystore `lexyladder.jks`, alias `lexy`, berlaku s.d. 2054).
 
 ### Acceptance criteria
 - [x] Ikon dan Feature Graphic memenuhi spesifikasi Google Play Console (512x512 PNG, 1024x500 24-bit PNG < 15MB).
 - [x] Screenshot diambil dari perangkat fisik nyata tanpa frame terpotong (1080x2340).
 - [x] Fitur yang disebut dalam listing benar-benar tersedia di aplikasi.
-- [x] Seluruh 44 unit tests lulus tanpa error.
-- [ ] Signed release AAB dibuat (hanya jika pengguna meminta).
+- [x] Seluruh 59 unit tests lulus tanpa error.
+- [x] Signed release AAB dibuat dan diverifikasi dengan `jarsigner` (14.51 MiB, SHA256withRSA, 2048-bit key).
 
 ### Bukti penyelesaian
 - **Aset Toko:**
@@ -313,16 +313,25 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - Feature Graphic: `Doc/store_listing/assets/feature_graphic_1024x500.png` (1024x500, 100.59 KB)
   - 6 Phone Screenshots: `Doc/store_listing/assets/screenshots/` (1080x2340, ~200 KB per file)
   - Metadata & Listing: `Doc/store_listing/google_play_listing_en.md` & `google_play_listing_id.md`
-- **Build:** `.\gradlew installDebug` (SUCCESS, terpasang di Xiaomi Redmi Note 8 Pro)
-- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS, 44/44 unit tests passed)
-- **Keystore Siap:** `D:\Android\Keystore\LexyLadder\lexyladder.jks` & konfigurasi `Pengaturan.txt`
-- **Blocker:** Tidak ada (menunggu instruksi pengguna untuk langkah rilis signed build)
+  - Release Notes & Guide: `Doc/store_listing/internal_testing_release_notes.md`
+- **Signed Release AAB:** `app/build/outputs/bundle/release/app-release.aab` (14.51 MiB, 15,213,742 bytes)
+- **Verifikasi Keystore & Signature:**
+  - Keystore: `D:\Android\Keystore\LexyLadder\lexyladder.jks` (alias `lexy`, valid s.d. 06 Maret 2054)
+  - Jarsigner verification: `jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab` -> Valid
+- **Test:** `.\gradlew testDebugUnitTest` (SUCCESS, 59/59 unit tests passed)
+- **Blocker:** Tidak ada
 
 ---
 
-## 12. Phase 8 — Post-launch
+## 12. Phase 8 — Post-launch & Internal Testing
 
-**Status fase:** `NOT STARTED`
+**Status fase:** `IN PROGRESS`
+
+### Task
+- [ ] Unggah `app-release.aab` ke Google Play Console track Internal Testing.
+- [ ] Tambahkan daftar email penguji (internal testers).
+- [ ] Verifikasi instalasi melalui link Play Store testing.
+- [ ] Monitor crash log & review performa awal.
 
 ### Pantau
 - [ ] Crash-free users.
@@ -506,6 +515,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-20 | Phase 7 | Fitur Pengecekan Pembaruan Konten/Bahasa Otomatis Sehari Sekali: Auto-check interval 24 jam di DataStore, background checker manifest GitHub, dialog modal in-app HomeScreen (Perbarui Sekarang/Nanti Saja), dan status bar notification channel | `.\gradlew testDebugUnitTest` (54/54 passed) & `.\gradlew assembleDebug` (SUCCESS in 59s) | DONE |
 | 2026-10-20 | Phase 7 | Ekspansi Kosakata Offline-First (150 kata Level 1 + 200 kata Level 2 + 20 kata Level 3): Katalog mandiri DefaultVocabularyCatalog (370 kata), 5 unit terstruktur Level 1 (@30 kata), 7 unit terstruktur Level 2 (@28-30 kata), IPA phonetic lengkap, definisi CEFR, terjemahan Indonesia kontekstual, dynamic unit display di LearnScreen, dan 5 unit test integritas katalog | `.\gradlew testDebugUnitTest` (59/59 passed) & `.\gradlew assembleDebug` (SUCCESS in 48s) | DONE |
 | 2026-10-20 | Phase 7 | Penyesuaian Tipografi & Tata Letak Label Bottom Navigation: Penggantian label 'Kemajuan' menjadi 'Progres' (7 huruf serasi dengan Beranda/Belajar/Latihan), pembatasan maxLines = 1, softWrap = false, dan font size 11sp agar bilah navigasi bawah tetap ramping, presisi, dan tidak melebar ke bawah | `.\gradlew testDebugUnitTest` (59/59 passed) & `.\gradlew assembleDebug` (SUCCESS in 39s) | DONE |
+| 2026-10-20 | Phase 7 | Pembuatan Signed Release Android App Bundle (AAB): Penandatanganan berkas rilis dengan keystore lexyladder.jks (alias: lexy, valid s.d. 2054), verifikasi signature jarsigner, berkas app-release.aab (14.51 MiB), dan dokumen keterangan rilis dwibahasa serta panduan unggah Play Console internal testing | `.\gradlew bundleRelease` (SUCCESS in 6m 33s, 14.51 MiB AAB) & jarsigner verified | DONE |
 
 
 

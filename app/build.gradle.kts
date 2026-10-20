@@ -1,9 +1,35 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
 }
+
+val localProperties = Properties().apply {
+    val localPropFile = rootProject.file("local.properties")
+    if (localPropFile.exists()) {
+        FileInputStream(localPropFile).use { load(it) }
+    }
+}
+
+val releaseStoreFilePath = localProperties.getProperty("KEYSTORE_PATH")
+    ?: System.getenv("KEYSTORE_PATH")
+    ?: "D:/Android/Keystore/LexyLadder/lexyladder.jks"
+
+val releaseStorePassword = localProperties.getProperty("KEYSTORE_PASSWORD")
+    ?: System.getenv("KEYSTORE_PASSWORD")
+    ?: "lexyladderkey"
+
+val releaseKeyAlias = localProperties.getProperty("KEY_ALIAS")
+    ?: System.getenv("KEY_ALIAS")
+    ?: "lexy"
+
+val releaseKeyPassword = localProperties.getProperty("KEY_PASSWORD")
+    ?: System.getenv("KEY_PASSWORD")
+    ?: "lexyladderkey"
 
 android {
     namespace = "com.dearyoti.lexiladder"
@@ -22,9 +48,22 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            val keyFile = file(releaseStoreFilePath)
+            if (keyFile.exists()) {
+                storeFile = keyFile
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             manifestPlaceholders["admobAppId"] = "ca-app-pub-4098008677804088~2532466359"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
