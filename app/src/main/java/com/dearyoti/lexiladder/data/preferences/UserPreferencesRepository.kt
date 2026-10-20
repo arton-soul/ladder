@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,8 @@ data class UserPreferences(
     val dailyGoalMinutes: Int = 5,
     val isDarkMode: Boolean = false,
     val isOnboardingCompleted: Boolean = false,
-    val isPremium: Boolean = false
+    val isPremium: Boolean = false,
+    val lastContentCheckTimestamp: Long = 0L
 )
 
 class UserPreferencesRepository(private val context: Context) {
@@ -32,6 +34,14 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
         val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         val KEY_IS_PREMIUM = booleanPreferencesKey("is_premium")
+        val KEY_LAST_CONTENT_CHECK = longPreferencesKey("last_content_check_timestamp")
+
+        const val DEFAULT_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000L // 24 hours (once a day)
+
+        fun isCheckIntervalElapsed(lastCheckTime: Long, intervalMs: Long = DEFAULT_CHECK_INTERVAL_MS): Boolean {
+            if (lastCheckTime <= 0L) return true
+            return (System.currentTimeMillis() - lastCheckTime) >= intervalMs
+        }
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -42,7 +52,8 @@ class UserPreferencesRepository(private val context: Context) {
             dailyGoalMinutes = preferences[KEY_DAILY_GOAL] ?: 5,
             isDarkMode = preferences[KEY_DARK_MODE] ?: false,
             isOnboardingCompleted = preferences[KEY_ONBOARDING_COMPLETED] ?: false,
-            isPremium = preferences[KEY_IS_PREMIUM] ?: false
+            isPremium = preferences[KEY_IS_PREMIUM] ?: false,
+            lastContentCheckTimestamp = preferences[KEY_LAST_CONTENT_CHECK] ?: 0L
         )
     }
 
@@ -79,6 +90,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setPremium(isPremium: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[KEY_IS_PREMIUM] = isPremium
+        }
+    }
+
+    suspend fun updateLastContentCheckTimestamp(timestamp: Long = System.currentTimeMillis()) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_LAST_CONTENT_CHECK] = timestamp
         }
     }
 }

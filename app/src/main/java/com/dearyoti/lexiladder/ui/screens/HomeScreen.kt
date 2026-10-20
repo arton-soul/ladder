@@ -10,15 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -30,19 +33,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.core.localization.UiLocalizer
+import com.dearyoti.lexiladder.core.notification.ContentNotificationHelper
+import com.dearyoti.lexiladder.data.content.ContentUpdateResult
+import com.dearyoti.lexiladder.data.preferences.UserPreferencesRepository
 import com.dearyoti.lexiladder.domain.model.LevelStatus
 
 @Composable
@@ -50,10 +59,14 @@ fun HomeScreen(
     onNavigateToLearn: () -> Unit = {},
     onNavigateToPractice: () -> Unit = {},
     onNavigateToMasteryTest: (String) -> Unit = {},
+    onNavigateToContentUpdates: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val repo = LexiLadderApp.instance.vocabularyRepository
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
+    val contentUpdateManager = LexiLadderApp.instance.contentUpdateManager
+
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
 
@@ -79,6 +92,78 @@ fun HomeScreen(
     val totalWords = if (words.isNotEmpty()) words.size else (currentLevel?.totalWords ?: 40)
     val levelMasteredCount = currentLevel?.masteredWords ?: 0
     val progressFraction = if (totalWords > 0) (levelMasteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+
+    // In-App Content Update Popup State
+    var showUpdateDialog by remember { mutableStateOf(false) }
+    var availableUpdateCount by remember { mutableIntStateOf(0) }
+
+    // Automatic Periodic Check: once every 24 hours (1 day)
+    LaunchedEffect(Unit) {
+        val lastCheck = prefs.lastContentCheckTimestamp
+        if (UserPreferencesRepository.isCheckIntervalElapsed(lastCheck)) {
+            prefsRepo.updateLastContentCheckTimestamp()
+            try {
+                val result = contentUpdateManager.checkUpdates(
+                    remoteManifestUrl = "https://raw.githubusercontent.com/arton-soul/ladder/master/content/manifest.json"
+                )
+                if (result is ContentUpdateResult.Success && result.packagesToUpdate.isNotEmpty()) {
+                    availableUpdateCount = result.packagesToUpdate.size
+                    showUpdateDialog = true
+                    ContentNotificationHelper.showUpdateNotification(
+                        context = context,
+                        packageCount = availableUpdateCount,
+                        uiLanguage = lang
+                    )
+                }
+            } catch (_: Exception) {
+                // Silently ignore network failures to maintain 100% offline-first reliability
+            }
+        }
+    }
+
+    if (showUpdateDialog) {
+        val isId = lang == "id"
+        AlertDialog(
+            onDismissRequest = { showUpdateDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.CloudSync,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(36.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = if (isId) "Pembaruan Konten Tersedia 🚀" else "New Content Update Available 🚀",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = if (isId)
+                        "Terdapat $availableUpdateCount pembaruan kosakata atau bahasa baru di GitHub. Unduh sekarang untuk memperkaya materi belajar Anda?"
+                    else
+                        "Found $availableUpdateCount new vocabulary or language updates on GitHub. Download now to enrich your offline study library?"
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showUpdateDialog = false
+                        onNavigateToContentUpdates()
+                    }
+                ) {
+                    Text(if (isId) "Perbarui Sekarang" else "Update Now")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { showUpdateDialog = false }) {
+                    Text(if (isId) "Nanti Saja" else "Later")
+                }
+            }
+        )
+    }
 
     Column(
         modifier = modifier

@@ -105,6 +105,9 @@ fun MainAppNavigation(
                     },
                     onNavigateToMasteryTest = { levelId ->
                         navController.navigate(Screen.MasteryTest.createRoute(levelId))
+                    },
+                    onNavigateToContentUpdates = {
+                        navController.navigate(Screen.ContentUpdates.route)
                     }
                 )
             }
