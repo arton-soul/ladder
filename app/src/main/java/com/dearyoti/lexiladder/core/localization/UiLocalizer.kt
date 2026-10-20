@@ -129,7 +129,7 @@ object UiLocalizer {
         "nav_home" to "Beranda",
         "nav_learn" to "Belajar",
         "nav_practice" to "Latihan",
-        "nav_progress" to "Kemajuan",
+        "nav_progress" to "Progres",
         "nav_settings" to "Pengaturan",
 
         // Home Screen

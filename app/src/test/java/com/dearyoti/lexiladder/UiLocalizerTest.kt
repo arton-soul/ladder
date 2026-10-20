@@ -21,7 +21,7 @@ class UiLocalizerTest {
         assertEquals("Beranda", UiLocalizer.getString("nav_home", "id"))
         assertEquals("Belajar", UiLocalizer.getString("nav_learn", "id"))
         assertEquals("Latihan", UiLocalizer.getString("nav_practice", "id"))
-        assertEquals("Kemajuan", UiLocalizer.getString("nav_progress", "id"))
+        assertEquals("Progres", UiLocalizer.getString("nav_progress", "id"))
         assertEquals("Pengaturan", UiLocalizer.getString("nav_settings", "id"))
     }
 

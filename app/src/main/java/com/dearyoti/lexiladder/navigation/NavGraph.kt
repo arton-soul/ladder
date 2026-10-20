@@ -2,6 +2,7 @@ package com.dearyoti.lexiladder.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -10,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -62,7 +65,19 @@ fun MainAppNavigation(
                     val labelText = com.dearyoti.lexiladder.core.localization.UiLocalizer.getString(screen.titleKey, prefs.uiLanguage)
                     NavigationBarItem(
                         icon = { Icon(screen.icon, contentDescription = labelText) },
-                        label = { Text(labelText) },
+                        label = {
+                            Text(
+                                text = labelText,
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 11.sp,
+                                    letterSpacing = (-0.2).sp
+                                ),
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        alwaysShowLabel = true,
                         selected = currentRoute == screen.route,
                         onClick = {
                             navController.navigate(screen.route) {
