@@ -1,4 +1,4 @@
-# Catatan Rilis Internal Testing — LexiLadder v1.0.1 (Build 2)
+# Catatan Rilis Internal Testing — LexiLadder v1.0.2 (Build 3)
 
 Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*), dan panduan lengkap pengunggahan ke **Google Play Console (Internal Testing)**.
 
@@ -10,11 +10,11 @@ Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*
 |---|---|
 | **Nama Aplikasi** | LexiLadder: English Vocab |
 | **Package Name / Application ID** | `com.dearyoti.lexiladder` |
-| **Version Name** | `1.0.1` |
-| **Version Code** | `2` |
+| **Version Name** | `1.0.2` |
+| **Version Code** | `3` |
 | **Google Play Billing Library** | `8.0.0` *(Memenuhi syarat kebijakan monetisasi terbaru Google Play)* |
 | **Tipe Berkas** | Android App Bundle (`.aab`) |
-| **Ukuran Berkas** | **14.51 MiB** (15,215,368 bytes) *(Batas Play Console: 150 MB)* |
+| **Ukuran Berkas** | **14.62 MiB** (15,326,766 bytes) *(Batas Play Console: 150 MB)* |
 | **Lokasi Berkas di Proyek** | `app/build/outputs/bundle/release/app-release.aab` |
 | **Minimum SDK** | Android 8.0 (API Level 26) |
 | **Target SDK / Compile SDK** | Android 16 (API Level 36) |
@@ -32,36 +32,26 @@ Salin teks berikut ke kolom **Catatan rilis / Release notes** di Google Play Con
 
 ### 🇮🇩 Bahasa Indonesia (`id-ID`):
 ```text
-Rilis Pembaruan LexiLadder (v1.0.1 Build 2):
-- Pembaruan pustaka Google Play Billing Library ke versi 8.0.0 sesuai standar monetisasi terbaru Google Play.
-- 370 Kosakata Terstruktur: 150 kata Level 1 (5 Unit) & 200 kata Level 2 (7 Unit) lengkap dengan transkripsi fonetik IPA, definisi CEFR, kalimat contoh, dan terjemahan.
-- 100% Offline-First: Belajar dan berlatih kapan saja tanpa koneksi internet.
-- Pengucapan Suara Asli: Menggunakan Text-to-Speech (TTS) bawaan Android.
-- Sistem Pengulangan Spasi (SRS): Algoritma pintar untuk memperkuat daya ingat jangka panjang.
-- Kuis Pilihan Ganda & Ujian Level: Uji pemahaman kosakata dengan umpan balik langsung.
-- Pilihan Bahasa Antarmuka & Penjelasan: Dukungan penuh Bahasa Indonesia dan English Immersion.
-- Pembaruan Konten Otomatis: Pemeriksaan pembaruan materi harian dari GitHub.
+Pembaruan Fitur & Konten LexiLadder (v1.0.2 Build 3):
+- Ekspansi Materi Kosakata Level 3 (B1 Intermediate): Penambahan 230 kata baru sehingga genap 250 kata terstruktur dalam 8 unit tematik (total katalog offline kini 600 kata: 150 kata A1, 200 kata A2, 250 kata B1).
+- Desain Baru Layar Ujian Tingkat Level: Tampilan spesifikasi ujian, standar nilai kelulusan, format soal, dan prasyarat yang lebih elegan dan profesional.
+- Peningkatan Standar Ujian Sertifikasi: 25 soal teracak komprehensif dengan nilai kelulusan minimal 80% (minimal 20 dari 25 soal benar).
+- Penguncian Ujian Berbasis Penguasaan (60% Rule): Ujian tingkat level kini terkunci hingga pengguna menguasai minimal 60% kosakata di level tersebut untuk memastikan kesiapan belajar.
+- Notifikasi Milestone Cerdas: Dialog perayaan in-app dan notifikasi Android saat mencapai 60% kata dikuasai, serta pengingat ujian saat mencapai 100% jika belum lulus ujian.
+- Pembaruan Google Play Billing Library ke versi 8.0.0 sesuai standar monetisasi terbaru Google Play.
+- 100% Offline-First: Seluruh fitur belajar, latihan, dan ujian dapat dinikmati tanpa koneksi internet.
 ```
 
 ### 🇺🇸 Bahasa Inggris (`en-US`):
 ```text
-LexiLadder Update Release (v1.0.1 Build 2):
-- Upgraded Google Play Billing Library to version 8.0.0 complying with the latest Google Play monetization policies.
-- 370 Curated Vocabulary Words: 150 Level 1 words (5 Units) & 200 Level 2 words (7 Units) with IPA phonetics, CEFR definitions, context sentences, and translations.
-- 100% Offline-First: Learn and review anytime without needing an active internet connection.
-- Native Pronunciation: Fast, zero-data audio pronunciation powered by Android TTS.
-- Spaced Repetition System (SRS): Scientific review scheduling for rock-solid vocabulary retention.
-- Adaptive Quizzes & Mastery Tests: Interactive challenges and unit mastery milestones.
-- Dual Language Experience: Choose between English Immersion and Indonesian explanations.
-- Automatic Daily Content Updates: Daily background checks for new lessons from GitHub.
-```
-- 370 Curated Vocabulary Words: 150 Level 1 words (5 Units) & 200 Level 2 words (7 Units) with IPA phonetics, CEFR definitions, context sentences, and translations.
-- 100% Offline-First: Learn and review anytime without needing an active internet connection.
-- Native Pronunciation: Fast, zero-data audio pronunciation powered by Android TTS.
-- Spaced Repetition System (SRS): Scientific review scheduling for rock-solid vocabulary retention.
-- Adaptive Quizzes & Mastery Tests: Interactive challenges and unit mastery milestones.
-- Dual Language Experience: Choose between English Immersion and Indonesian explanations.
-- Automatic Daily Content Updates: Daily background checks for new lessons from GitHub.
+LexiLadder Feature & Content Update (v1.0.2 Build 3):
+- Level 3 (B1 Intermediate) Vocabulary Expansion: Added 230 new curated words reaching 250 total words across 8 thematic units (complete 600-word offline catalog: 150 A1, 200 A2, 250 B1).
+- Redesigned Level Mastery Test Screen: Elegant and professional examination dashboard with clear test specifications, passing requirements, and prerequisites.
+- Elevated Certification Standards: 25 comprehensive randomized questions requiring an 80% passing grade (minimum 20 of 25 correct).
+- Mastery-Gated Exams (60% Rule): Level tests are now locked until at least 60% of words in the level are mastered, ensuring true learning progression.
+- Smart Milestone Alerts: Celebratory in-app dialog and status bar notifications upon reaching 60% mastery, and a certification reminder upon reaching 100% mastery.
+- Google Play Billing Library upgraded to version 8.0.0.
+- 100% Offline-First: Learn, practice, and test vocabulary anytime without an internet connection.
 ```
 
 ---
