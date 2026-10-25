@@ -1,6 +1,7 @@
 package com.dearyoti.lexiladder.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,14 +33,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.LevelStatus
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 @Composable
 fun ProgressScreen(
@@ -74,6 +82,15 @@ fun ProgressScreen(
             text = UiLocalizer.getString("progress_title", uiLang),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
+        )
+
+        // Daily Streak & Activity Calendar
+        DailyStreakCard(
+            effectiveStreak = prefs.effectiveStreak,
+            bestStreak = prefs.bestStreak,
+            isStudiedToday = prefs.isStudiedToday,
+            activeDates = prefs.activeDates,
+            uiLanguage = uiLang
         )
 
         // Summary Cards - Row 1
@@ -302,5 +319,183 @@ private fun ProgressLevelBadge(status: LevelStatus, uiLanguage: String = "en") {
             fontWeight = FontWeight.Bold,
             color = textCol
         )
+    }
+}
+
+@Composable
+private fun DailyStreakCard(
+    effectiveStreak: Int,
+    bestStreak: Int,
+    isStudiedToday: Boolean,
+    activeDates: Set<String>,
+    uiLanguage: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            // Header Row: Flame + Streak count, and Best streak chip
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = if (effectiveStreak > 0) "🔥" else "⚡",
+                        fontSize = 28.sp
+                    )
+                    Column {
+                        Text(
+                            text = UiLocalizer.getString("progress_streak_title", uiLanguage),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = if (effectiveStreak > 0) {
+                                UiLocalizer.getString("progress_streak_count", uiLanguage, effectiveStreak)
+                            } else {
+                                UiLocalizer.getString("progress_streak_zero", uiLanguage)
+                            },
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = if (effectiveStreak > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // Best streak badge
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = UiLocalizer.getString("progress_streak_best", uiLanguage, bestStreak),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            // 7-Day Rolling Activity Visualizer
+            val today = remember { LocalDate.now() }
+            val past7Days = remember(today) {
+                (6 downTo 0).map { today.minusDays(it.toLong()) }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                past7Days.forEach { date ->
+                    val isDayActive = activeDates.contains(date.toString())
+                    val isDateToday = date == today
+                    val dayLabel = getShortDayName(date.dayOfWeek, uiLanguage)
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = dayLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isDateToday) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = if (isDateToday) FontWeight.Bold else FontWeight.Normal
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .size(34.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    when {
+                                        isDayActive -> MaterialTheme.colorScheme.primary
+                                        else -> MaterialTheme.colorScheme.surface
+                                    }
+                                )
+                                .then(
+                                    if (isDateToday) {
+                                        Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                                    } else {
+                                        Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                                    }
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (isDayActive) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Active",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = "${date.dayOfMonth}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Status feedback message
+            Text(
+                text = if (isStudiedToday) {
+                    UiLocalizer.getString("progress_streak_done_today", uiLanguage)
+                } else {
+                    UiLocalizer.getString("progress_streak_pending_today", uiLanguage)
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = if (isStudiedToday) Color(0xFF2E7D32) else MaterialTheme.colorScheme.outline
+            )
+        }
+    }
+}
+
+private fun getShortDayName(dayOfWeek: DayOfWeek, uiLanguage: String): String {
+    return if (uiLanguage == "id") {
+        when (dayOfWeek) {
+            DayOfWeek.MONDAY -> "Sen"
+            DayOfWeek.TUESDAY -> "Sel"
+            DayOfWeek.WEDNESDAY -> "Rab"
+            DayOfWeek.THURSDAY -> "Kam"
+            DayOfWeek.FRIDAY -> "Jum"
+            DayOfWeek.SATURDAY -> "Sab"
+            DayOfWeek.SUNDAY -> "Min"
+        }
+    } else {
+        when (dayOfWeek) {
+            DayOfWeek.MONDAY -> "Mon"
+            DayOfWeek.TUESDAY -> "Tue"
+            DayOfWeek.WEDNESDAY -> "Wed"
+            DayOfWeek.THURSDAY -> "Thu"
+            DayOfWeek.FRIDAY -> "Fri"
+            DayOfWeek.SATURDAY -> "Sat"
+            DayOfWeek.SUNDAY -> "Sun"
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.dearyoti.lexiladder.data.local.dao.WordDao
 import com.dearyoti.lexiladder.data.local.entity.LevelEntity
 import com.dearyoti.lexiladder.data.local.entity.MasteryTestAttemptEntity
 import com.dearyoti.lexiladder.data.local.entity.UserProgressEntity
+import com.dearyoti.lexiladder.data.preferences.UserPreferencesRepository
 import com.dearyoti.lexiladder.domain.model.Level
 import com.dearyoti.lexiladder.domain.model.MasteryTestAttempt
 import com.dearyoti.lexiladder.domain.model.ReviewRating
@@ -23,7 +24,8 @@ class VocabularyRepositoryImpl(
     private val wordDao: WordDao,
     private val userProgressDao: UserProgressDao,
     private val levelDao: LevelDao,
-    private val masteryTestDao: MasteryTestDao
+    private val masteryTestDao: MasteryTestDao,
+    private val userPreferencesRepository: UserPreferencesRepository? = null
 ) : VocabularyRepository {
 
     override fun getAllWords(): Flow<List<Word>> {
@@ -128,6 +130,7 @@ class VocabularyRepositoryImpl(
 
     override suspend fun submitMasteryTest(attempt: MasteryTestAttempt): Boolean {
         masteryTestDao.insertAttempt(MasteryTestAttemptEntity.fromDomainModel(attempt))
+        userPreferencesRepository?.recordDailyStudyActivity()
         if (attempt.isPassed) {
             levelDao.setLevelMastered(attempt.levelId, true)
             val currentLevel = levelDao.getLevelById(attempt.levelId)
@@ -151,6 +154,7 @@ class VocabularyRepositoryImpl(
         val currentProgress = existingEntity?.toDomainModel() ?: UserProgress(wordId = wordId)
         val updatedProgress = SpacedRepetitionScheduler.scheduleNextReview(currentProgress, rating, now)
         userProgressDao.saveProgress(UserProgressEntity.fromDomainModel(updatedProgress))
+        userPreferencesRepository?.recordDailyStudyActivity()
     }
 
     override suspend fun recordReviewResult(wordId: String, isCorrect: Boolean) {

@@ -54,4 +54,16 @@ class UiLocalizerTest {
         val missing = UiLocalizer.getString("some_unregistered_key", "id")
         assertEquals("some_unregistered_key", missing)
     }
+
+    @Test
+    fun testStreakLocalizationStrings() {
+        assertEquals("Daily Study Streak", UiLocalizer.getString("progress_streak_title", "en"))
+        assertEquals("Konsistensi Belajar", UiLocalizer.getString("progress_streak_title", "id"))
+
+        assertEquals("5 Days Streak", UiLocalizer.getString("progress_streak_count", "en", 5))
+        assertEquals("5 Hari Berturut-turut", UiLocalizer.getString("progress_streak_count", "id", 5))
+
+        assertEquals("Start Streak Today!", UiLocalizer.getString("progress_streak_zero", "en"))
+        assertEquals("Mulai Streak Hari Ini!", UiLocalizer.getString("progress_streak_zero", "id"))
+    }
 }

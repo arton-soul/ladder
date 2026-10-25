@@ -1,0 +1,1210 @@
+{
+  "schemaVersion": 1,
+  "packageId": "translation.id.en.a2",
+  "contentVersion": 1,
+  "locale": "id",
+  "targetLanguage": "en",
+  "levelId": "level_a2",
+  "entries": [
+    {
+      "wordId": "w_a2_001",
+      "translation": "Menyesuaikan diri / Beradaptasi",
+      "definition": "To adjust to new conditions",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_002",
+      "translation": "Keseimbangan",
+      "definition": "A situation in which different elements are equal",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_003",
+      "translation": "Merayakan",
+      "definition": "To honor a special event or achievement",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_004",
+      "translation": "Memutuskan / Menentukan",
+      "definition": "To make a choice from a number of alternatives",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_005",
+      "translation": "Efisien / Berdaya guna",
+      "definition": "Achieving maximum productivity with minimum wasted effort",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_006",
+      "translation": "Sering / Kerap",
+      "definition": "Occurring or done on many occasions with short intervals",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_007",
+      "translation": "Rasa syukur / Terima kasih",
+      "definition": "The quality of being thankful",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_008",
+      "translation": "Keharmonisan / Keselarasan",
+      "definition": "Agreement or concord",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_009",
+      "translation": "Dampak / Pengaruh",
+      "definition": "A marked effect or influence",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_010",
+      "translation": "Gembira / Penuh sukacita",
+      "definition": "Feeling, expressing, or causing great pleasure and happiness",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_011",
+      "translation": "Karier / Pekerjaan",
+      "definition": "An occupation undertaken for a significant period of a person's life",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_012",
+      "translation": "Proyek / Rencana kerja",
+      "definition": "An individual or collaborative enterprise carefully planned",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_013",
+      "translation": "Solusi / Pemecahan masalah",
+      "definition": "A means of solving a problem or dealing with a difficult situation",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_014",
+      "translation": "Tantangan",
+      "definition": "A task or situation that tests someone's abilities",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_015",
+      "translation": "Kemajuan / Progres",
+      "definition": "Forward or onward movement toward a destination or goal",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_016",
+      "translation": "Rekan kerja",
+      "definition": "A person with whom one works in a profession or business",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_017",
+      "translation": "Jadwal",
+      "definition": "A plan that lists tasks and the times at which they will happen",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_018",
+      "translation": "Berhasil / Sukses",
+      "definition": "To achieve the desired aim or result",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_019",
+      "translation": "Berdialog / Bernegosiasi",
+      "definition": "To obtain or bring about by discussion",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_020",
+      "translation": "Kreatif",
+      "definition": "Relating to or involving the imagination or original ideas",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_021",
+      "translation": "Komunitas / Masyarakat",
+      "definition": "A group of people living in the same place or having shared characteristics",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_022",
+      "translation": "Budaya / Kebudayaan",
+      "definition": "The customs, arts, social institutions, and achievements of a nation",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_023",
+      "translation": "Lingkungan hidup",
+      "definition": "The natural world, as a whole or in a particular geographical area",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_024",
+      "translation": "Melindungi",
+      "definition": "To keep safe from harm or injury",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_025",
+      "translation": "Mendukung / Menopang",
+      "definition": "To give assistance, comfort, or financial help to someone",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_026",
+      "translation": "Menjadi sukarelawan",
+      "definition": "To freely offer to do something without being paid",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_027",
+      "translation": "Global / Seluruh dunia",
+      "definition": "Relating to the whole world; worldwide",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_028",
+      "translation": "Pendapat / Opini",
+      "definition": "A view or judgment formed about something, not necessarily based on fact",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_029",
+      "translation": "Meningkatkan / Memperbaiki",
+      "definition": "To make or become better in quality",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_030",
+      "translation": "Rasa hormat / Menghargai",
+      "definition": "A feeling of deep admiration for someone elicited by their qualities",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_031",
+      "translation": "Penawaran harga / Barang murah",
+      "definition": "An agreement between two parties or something sold very cheaply",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_032",
+      "translation": "Membeli",
+      "definition": "To acquire something by paying money for it; buy",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_033",
+      "translation": "Kuitansi / Struk belanja",
+      "definition": "A printed statement acknowledging that money or goods have been received",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_034",
+      "translation": "Pengembalian dana / Pengembalian uang",
+      "definition": "A repayment of a sum of money to a dissatisfied customer",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_035",
+      "translation": "Diskon / Potongan harga",
+      "definition": "A deduction from the usual cost of something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_036",
+      "translation": "Mampu membeli / Membiayai",
+      "definition": "To have enough money or time to pay for or do something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_037",
+      "translation": "Anggaran / Biaya terencana",
+      "definition": "An estimate of income and expenditure for a set period",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_038",
+      "translation": "Uang tunai",
+      "definition": "Money in coins or notes rather than checks or cards",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_039",
+      "translation": "Kredit / Utang pinjaman",
+      "definition": "The ability of a customer to obtain goods before payment",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_040",
+      "translation": "Harga",
+      "definition": "The amount of money expected, required, or given in payment for something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_041",
+      "translation": "Berharga / Menghabiskan biaya",
+      "definition": "To require the payment of a specified sum of money before acquisition",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_042",
+      "translation": "Dompet",
+      "definition": "A pocket-sized flat folding case for holding money and cards",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_043",
+      "translation": "Pelanggan / Pembeli",
+      "definition": "A person who buys goods or services from a shop or business",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_044",
+      "translation": "Pakaian / Baju",
+      "definition": "Items worn to cover the body",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_045",
+      "translation": "Kemeja",
+      "definition": "A garment for the upper body made of cotton or similar fabric",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_046",
+      "translation": "Celana panjang",
+      "definition": "An outer garment covering the body from the waist to the ankles",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_047",
+      "translation": "Sepatu",
+      "definition": "Coverings for the foot, typically made of leather with a sturdy sole",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_048",
+      "translation": "Jaket",
+      "definition": "An outer garment extending either to the waist or the hips",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_049",
+      "translation": "Mantel",
+      "definition": "An outer garment worn outdoors having sleeves and extending below hips",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_050",
+      "translation": "Ukuran",
+      "definition": "The relative extent or dimensions of something; standard garment measurement",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_051",
+      "translation": "Memakai / Mengenakan",
+      "definition": "To have on one's person as clothing, decoration, or protection",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_052",
+      "translation": "Mahal",
+      "definition": "Costing a lot of money",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_053",
+      "translation": "Murah",
+      "definition": "Costing very little; relatively low in price",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_054",
+      "translation": "Penjualan / Cuci gudang",
+      "definition": "The exchange of a commodity for money; a period of reduced prices",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_055",
+      "translation": "Kualitas / Mutu",
+      "definition": "The standard of something as measured against other things of a similar kind",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_056",
+      "translation": "Mengembalikan",
+      "definition": "To give back or restore something to a shop or owner",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_057",
+      "translation": "Obat",
+      "definition": "A substance or preparation used in treating disease or illness",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_058",
+      "translation": "Dokter",
+      "definition": "A qualified practitioner of medicine; a physician",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_059",
+      "translation": "Dokter gigi",
+      "definition": "A person qualified to treat diseases and conditions that affect the teeth",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_060",
+      "translation": "Perawat",
+      "definition": "A person trained to care for the sick or infirm",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_061",
+      "translation": "Penyakit",
+      "definition": "A disease or period of sickness affecting the body or mind",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_062",
+      "translation": "Demam",
+      "definition": "An abnormally high body temperature, usually accompanied by shivering",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_063",
+      "translation": "Sakit kepala",
+      "definition": "A continuous pain in the head",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_064",
+      "translation": "Perut / Lambung",
+      "definition": "The internal organ in which the first major part of digestion occurs",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_065",
+      "translation": "Otot",
+      "definition": "A band of fibrous tissue that has the ability to contract and move body parts",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_066",
+      "translation": "Jantung / Hati",
+      "definition": "The hollow muscular organ that pumps blood throughout the circulatory system",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_067",
+      "translation": "Darah",
+      "definition": "The red liquid that circulates in the arteries and veins",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_068",
+      "translation": "Cedera / Luka",
+      "definition": "Physical harm or damage to someone's body",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_069",
+      "translation": "Rasa sakit / Nyeri",
+      "definition": "Physical suffering or discomfort caused by illness or injury",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_070",
+      "translation": "Menyembuhkan / Mengobati",
+      "definition": "To relieve a person or animal of the symptoms of a disease or condition",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_071",
+      "translation": "Sembuh / Memulihkan",
+      "definition": "To become sound or healthy again; cause to heal",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_072",
+      "translation": "Energi / Tenaga",
+      "definition": "The strength and vitality required for sustained mental or physical activity",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_073",
+      "translation": "Pola makan / Diet",
+      "definition": "The kinds of food that a person, animal, or community habitually eats",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_074",
+      "translation": "Berat / Berat badan",
+      "definition": "A body's relative mass or the quantity of matter contained by it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_075",
+      "translation": "Bernapas",
+      "definition": "To take air into the lungs and expel it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_076",
+      "translation": "Penglihatan",
+      "definition": "The faculty or state of being able to see",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_077",
+      "translation": "Pendengaran",
+      "definition": "The faculty of perceiving sounds",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_078",
+      "translation": "Mental / Kejiwaan",
+      "definition": "Relating to the mind rather than the body",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_079",
+      "translation": "Fisik / Jasmani",
+      "definition": "Relating to the body as opposed to the mind",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_080",
+      "translation": "Kuat",
+      "definition": "Having the power to move heavy weights or perform other physically demanding tasks",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_081",
+      "translation": "Lemah",
+      "definition": "Lacking the power to perform physically demanding tasks; lacking strength",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_082",
+      "translation": "Kebugaran",
+      "definition": "The condition of being physically fit and healthy",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_083",
+      "translation": "Perawatan / Pengobatan",
+      "definition": "Medical care given to a patient for an illness or injury",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_084",
+      "translation": "Apotek / Farmasi",
+      "definition": "A shop or hospital dispensary where medicinal drugs are prepared or sold",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_085",
+      "translation": "Cuaca",
+      "definition": "The state of the atmosphere at a place and time regarding heat, cloudiness, etc.",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_086",
+      "translation": "Iklim",
+      "definition": "The weather conditions prevailing in an area over a long period",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_087",
+      "translation": "Musim",
+      "definition": "Each of the four divisions of the year marked by particular weather patterns",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_088",
+      "translation": "Suhu / Temperatur",
+      "definition": "The degree of internal heat of a person's body or the atmosphere",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_089",
+      "translation": "Badai",
+      "definition": "A violent disturbance of the atmosphere with strong winds, rain, or thunder",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_090",
+      "translation": "Berhujan / Musim hujan",
+      "definition": "Characterized by frequent or heavy rainfall",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_091",
+      "translation": "Cerah / Terik matahari",
+      "definition": "Bright with sunlight",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_092",
+      "translation": "Berawan / Mendung",
+      "definition": "Covered with or characterized by clouds; overcast",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_093",
+      "translation": "Berangin",
+      "definition": "Marked by or exposed to strong winds",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_094",
+      "translation": "Salju",
+      "definition": "Atmospheric water vapor frozen into ice crystals and falling in light flakes",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_095",
+      "translation": "Sungai",
+      "definition": "A large natural stream of water flowing in a channel to the sea or lake",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_096",
+      "translation": "Danau",
+      "definition": "A large body of water surrounded by land",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_097",
+      "translation": "Samudra / Laut lepas",
+      "definition": "A very large expanse of sea, in particular each of the main areas",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_098",
+      "translation": "Laut",
+      "definition": "The expanse of salt water that covers most of the earth's surface",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_099",
+      "translation": "Pantai",
+      "definition": "A pebbly or sandy shore, especially by the ocean between high- and low-water marks",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_100",
+      "translation": "Pulau",
+      "definition": "A piece of land surrounded entirely by water",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_101",
+      "translation": "Hutan",
+      "definition": "A large area covered chiefly with trees and undergrowth",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_102",
+      "translation": "Gunung",
+      "definition": "A large natural elevation of the earth's surface rising abruptly from the surrounding level",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_103",
+      "translation": "Lembah",
+      "definition": "A low area of land between hills or mountains, typically with a river running through it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_104",
+      "translation": "Hewan / Binatang",
+      "definition": "A living organism that feeds on organic matter, typically having specialized sense organs",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_105",
+      "translation": "Tanaman / Tumbuhan",
+      "definition": "A living organism of the kind exemplified by trees, shrubs, herbs, and mosses",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_106",
+      "translation": "Bunga",
+      "definition": "The seed-bearing part of a plant, consisting of reproductive organs",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_107",
+      "translation": "Pohon",
+      "definition": "A woody perennial plant, typically having a single stem or trunk growing to a considerable height",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_108",
+      "translation": "Rumput",
+      "definition": "Vegetation consisting of typically short plants with long, narrow leaves",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_109",
+      "translation": "Tanah / Lapisan tanah",
+      "definition": "The upper layer of earth in which plants grow, a black or dark brown material",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_110",
+      "translation": "Polusi / Pencemaran",
+      "definition": "The presence in or introduction into the environment of a substance with harmful effects",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_111",
+      "translation": "Mendaur ulang",
+      "definition": "To convert waste into reusable material",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_112",
+      "translation": "Sumber daya",
+      "definition": "A stock or supply of money, materials, staff, and other assets",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_113",
+      "translation": "Pesan",
+      "definition": "A verbal, written, or recorded communication sent from one person to another",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_114",
+      "translation": "Email / Surat elektronik",
+      "definition": "Messages distributed by electronic means from one computer user to one or more recipients",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_115",
+      "translation": "Internet",
+      "definition": "A global computer network providing a variety of information and communication facilities",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_116",
+      "translation": "Situs web",
+      "definition": "A set of related web pages located under a single domain name",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_117",
+      "translation": "Akun",
+      "definition": "An arrangement by which an organization accepts a customer's financial cash or profile",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_118",
+      "translation": "Kata sandi / Password",
+      "definition": "A secret word or phrase that must be used to gain admission to a place or computer",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_119",
+      "translation": "Perangkat / Alat elektronik",
+      "definition": "A thing made or adapted for a particular purpose, especially a piece of electronic equipment",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_120",
+      "translation": "Layar",
+      "definition": "A flat panel or area on an electronic device on which images and data are displayed",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_121",
+      "translation": "Baterai",
+      "definition": "A container consisting of one or more cells in which chemical energy is converted into electricity",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_122",
+      "translation": "Mengisi daya / Mengecas",
+      "definition": "To store electrical energy in a battery or device",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_123",
+      "translation": "Mengunduh / Mendownload",
+      "definition": "To copy data from one computer system to another, typically over the internet",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_124",
+      "translation": "Mengunggah / Mengupload",
+      "definition": "To transfer data from one computer to another, typically to a larger central system",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_125",
+      "translation": "Menghubungkan / Tersambung",
+      "definition": "To bring together or into contact so that a real or notional link is established",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_126",
+      "translation": "Jaringan",
+      "definition": "A group of interconnected people, computers, or operations",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_127",
+      "translation": "Perangkat lunak / Software",
+      "definition": "The programs and other operating information used by a computer",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_128",
+      "translation": "Digital",
+      "definition": "Expressed in numerical digits, especially using computerized technology",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_129",
+      "translation": "Sosial",
+      "definition": "Relating to society or its organization; seeking companionship",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_130",
+      "translation": "Media",
+      "definition": "The main means of mass communication regarded collectively",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_131",
+      "translation": "Berita",
+      "definition": "Newly received or noteworthy information, especially about recent events",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_132",
+      "translation": "Artikel",
+      "definition": "A piece of writing included with others in a newspaper, magazine, or other publication",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_133",
+      "translation": "Wawancara",
+      "definition": "A meeting of people face to face, especially for consultation or assessment",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_134",
+      "translation": "Laporan",
+      "definition": "An account given of a particular matter, especially in the form of an official document",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_135",
+      "translation": "Menerbitkan / Memublikasikan",
+      "definition": "To prepare and issue for public sale, distribution, or readership",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_136",
+      "translation": "Mencari / Menelusuri",
+      "definition": "To try to find something by looking or otherwise seeking carefully and thoroughly",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_137",
+      "translation": "Pemberitahuan / Pengumuman",
+      "definition": "The fact of observing or paying attention to something; a written notification",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_138",
+      "translation": "Informasi",
+      "definition": "Facts provided or learned about something or someone",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_139",
+      "translation": "Menghubungi",
+      "definition": "To communicate with someone, typically in order to give or receive information",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_140",
+      "translation": "Privasi",
+      "definition": "The state or condition of being free from being observed or disturbed by others",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_141",
+      "translation": "Paspor",
+      "definition": "An official document issued by a government certifying holder's identity and citizenship",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_142",
+      "translation": "Bagasi / Barang bawaan",
+      "definition": "Suitcases or other bags in which to pack personal belongings for traveling",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_143",
+      "translation": "Koper",
+      "definition": "A case with a handle and a hinged lid, used for carrying clothes and belongings",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_144",
+      "translation": "Penerbangan",
+      "definition": "An act or process of flying through the air, especially a scheduled journey by plane",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_145",
+      "translation": "Penumpang",
+      "definition": "A traveler on a public or private conveyance other than the driver, pilot, or crew",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_146",
+      "translation": "Reservasi / Pemesanan",
+      "definition": "An arrangement by which something, such as a room or seat, is booked in advance",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_147",
+      "translation": "Resepsionis / Meja penerimaan",
+      "definition": "The area in a hotel or office building where visitors are initially greeted",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_148",
+      "translation": "Keberangkatan",
+      "definition": "The action of leaving, especially to start a journey",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_149",
+      "translation": "Kedatangan",
+      "definition": "The action or process of arriving somewhere",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_150",
+      "translation": "Keterlambatan / Penundaan",
+      "definition": "A period of time by which something is late or postponed",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_151",
+      "translation": "Membatalkan",
+      "definition": "To decide or announce that a planned event will not take place",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_152",
+      "translation": "Asing / Luar negeri",
+      "definition": "Of, from, in, or characteristic of a country or language other than one's own",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_153",
+      "translation": "Di luar negeri / Ke luar negeri",
+      "definition": "In or to a foreign country or countries",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_154",
+      "translation": "Mata uang",
+      "definition": "A system of money in general use in a particular country",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_155",
+      "translation": "Oleh-oleh / Cendera mata",
+      "definition": "A thing that is kept as a reminder of a person, place, or event",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_156",
+      "translation": "Turis / Wisatawan",
+      "definition": "A person who is traveling or visiting a place for pleasure",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_157",
+      "translation": "Pemandu / Petunjuk",
+      "definition": "A person who advises or shows the way to others",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_158",
+      "translation": "Museum",
+      "definition": "A building in which objects of historical, scientific, or artistic interest are stored",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_159",
+      "translation": "Galeri seni / Galeri",
+      "definition": "A room or building for the display or sale of works of art",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_160",
+      "translation": "Monumen",
+      "definition": "A statue, building, or other structure erected to commemorate a notable person or event",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_161",
+      "translation": "Jembatan",
+      "definition": "A structure carrying a road, path, or railway across a river, ravine, or road",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_162",
+      "translation": "Kastel / Istana benteng",
+      "definition": "A large building, typically of the medieval period, fortified against attack",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_163",
+      "translation": "Istana",
+      "definition": "A large and impressive building forming the official residence of a ruler or dignitary",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_164",
+      "translation": "Berkemah",
+      "definition": "To live for a time in a tent, especially while on holiday",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_165",
+      "translation": "Mendaki / Berjalan jauh",
+      "definition": "To go on a long walk, especially in the country or woods",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_166",
+      "translation": "Pemandangan / Sudut pandang",
+      "definition": "The sight or prospect of picturesque scenery",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_167",
+      "translation": "Pemandangan / Tempat wisata",
+      "definition": "A thing that one sees or that can be seen; places of interest",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_168",
+      "translation": "Mengemas / Membungkus",
+      "definition": "To fill a suitcase or bag with clothes and other items needed for travel",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_169",
+      "translation": "Menjelajahi",
+      "definition": "To travel through an unfamiliar area in order to learn about it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_170",
+      "translation": "Pelayaran / Perjalanan panjang",
+      "definition": "A long journey involving travel by sea or in space",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_171",
+      "translation": "Ambisi / Cita-cita luhur",
+      "definition": "A strong desire to do or to achieve something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_172",
+      "translation": "Tujuan / Sasaran",
+      "definition": "The object of a person's ambition or effort; an aim or desired result",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_173",
+      "translation": "Tujuan / Maksud",
+      "definition": "The reason for which something is done or created or for which something exists",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_174",
+      "translation": "Keputusan",
+      "definition": "A conclusion or resolution reached after consideration",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_175",
+      "translation": "Pilihan",
+      "definition": "An act of selecting or making a decision when faced with two or more possibilities",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_176",
+      "translation": "Alasan",
+      "definition": "A cause, explanation, or justification for an action or event",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_177",
+      "translation": "Hasil / Akibat",
+      "definition": "A thing that is caused or produced by something else; an outcome",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_178",
+      "translation": "Dampak / Pengaruh",
+      "definition": "A change that is a result or consequence of an action or other cause",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_179",
+      "translation": "Penyebab / Sebab",
+      "definition": "A person or thing that gives rise to an action, phenomenon, or condition",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_180",
+      "translation": "Percaya / Meyakini",
+      "definition": "To accept that something is true, especially without proof",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_181",
+      "translation": "Keraguan / Rasa ragu",
+      "definition": "A feeling of uncertainty or lack of conviction",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_182",
+      "translation": "Kepercayaan",
+      "definition": "Firm belief in the reliability, truth, ability, or strength of someone or something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_183",
+      "translation": "Berjanji",
+      "definition": "To assure someone that one will definitely do, give, or arrange something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_184",
+      "translation": "Aturan / Peraturan",
+      "definition": "One of a set of explicit regulations or principles governing conduct",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_185",
+      "translation": "Hukum / Undang-undang",
+      "definition": "The system of rules which a particular country recognizes as regulating actions",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_186",
+      "translation": "Hak",
+      "definition": "A moral or legal entitlement to have or obtain something or to act in a certain way",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_187",
+      "translation": "Kewajiban / Tugas",
+      "definition": "A moral or legal obligation; a task required by one's position or occupation",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_188",
+      "translation": "Perdamaian / Ketenangan",
+      "definition": "Freedom from disturbance; tranquility; state of mutual harmony",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_189",
+      "translation": "Keselamatan / Keamanan",
+      "definition": "The condition of being protected from or unlikely to cause danger, risk, or injury",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_190",
+      "translation": "Bahaya",
+      "definition": "The possibility of suffering harm or injury",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_191",
+      "translation": "Risiko",
+      "definition": "A situation involving exposure to danger or loss",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_192",
+      "translation": "Peluang / Kesempatan",
+      "definition": "A possibility of something happening; an opportunity",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_193",
+      "translation": "Perubahan",
+      "definition": "The act or instance of making or becoming different",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_194",
+      "translation": "Rencana / Rancangan",
+      "definition": "A detailed proposal for doing or achieving something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_195",
+      "translation": "Masa depan",
+      "definition": "A period of time following the moment of speaking or writing; time regarded as still to come",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_196",
+      "translation": "Masa lalu",
+      "definition": "The time or a period of time before the moment of speaking or writing",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_197",
+      "translation": "Masa kini / Saat ini",
+      "definition": "The period of time now occurring",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_198",
+      "translation": "Nilai / Kegunaan",
+      "definition": "The regard that something is held to deserve; the importance or usefulness",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_199",
+      "translation": "Tindakan / Aksi",
+      "definition": "The fact or process of doing something, typically to achieve an aim",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a2_200",
+      "translation": "Kesuksesan / Keberhasilan",
+      "definition": "The accomplishment of an aim or purpose",
+      "exampleTranslation": null
+    }
+  ]
+}

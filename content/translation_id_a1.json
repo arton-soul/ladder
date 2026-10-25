@@ -1,0 +1,910 @@
+{
+  "schemaVersion": 1,
+  "packageId": "translation.id.en.a1",
+  "contentVersion": 1,
+  "locale": "id",
+  "targetLanguage": "en",
+  "levelId": "level_a1",
+  "entries": [
+    {
+      "wordId": "w_a1_001",
+      "translation": "Mencapai / Meraih",
+      "definition": "To successfully complete something with effort or skill",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_002",
+      "translation": "Singkat / Ringkas",
+      "definition": "Lasting only a short period of time",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_003",
+      "translation": "Keberanian",
+      "definition": "The ability to do something that frightens someone",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_004",
+      "translation": "Rajin / Tekun",
+      "definition": "Having or showing care and conscientiousness in one's work",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_005",
+      "translation": "Menjelajahi / Mengeksplorasi",
+      "definition": "To travel around a new place to learn about it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_006",
+      "translation": "Fokus / Memusatkan perhatian",
+      "definition": "To pay particular attention to something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_007",
+      "translation": "Pertumbuhan / Perkembangan",
+      "definition": "The process of developing or maturing",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_008",
+      "translation": "Kebiasaan",
+      "definition": "A settled or regular tendency or practice",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_009",
+      "translation": "Menginspirasi / Mengilhami",
+      "definition": "To fill someone with the urge or ability to do something creative",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_010",
+      "translation": "Perjalanan",
+      "definition": "An act of traveling from one place to another",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_011",
+      "translation": "Pengetahuan",
+      "definition": "Facts, information, and skills acquired through experience or education",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_012",
+      "translation": "Mendengarkan",
+      "definition": "To give attention to sound or action",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_013",
+      "translation": "Ingatan / Memori",
+      "definition": "The faculty by which the mind stores and remembers information",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_014",
+      "translation": "Alam / Alam sekitar",
+      "definition": "The physical world collective, including plants and animals",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_015",
+      "translation": "Peluang / Kesempatan",
+      "definition": "A set of circumstances that makes it possible to do something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_016",
+      "translation": "Kesabaran",
+      "definition": "The capacity to accept delay or suffering without getting angry",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_017",
+      "translation": "Tenang / Sunyi",
+      "definition": "Making little or no noise",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_018",
+      "translation": "Dapat diandalkan",
+      "definition": "Consistently good in quality or performance; able to be trusted",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_019",
+      "translation": "Sederhana / Mudah",
+      "definition": "Easily understood or done; presenting no difficulty",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_020",
+      "translation": "Harta berharga / Harta karun",
+      "definition": "A quantity of precious items or a prized possession",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_021",
+      "translation": "Sarapan",
+      "definition": "The first meal of the day eaten after waking up",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_022",
+      "translation": "Mempersiapkan / Menyiapkan",
+      "definition": "To make something ready for use or consideration",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_023",
+      "translation": "Segar",
+      "definition": "Recently made, produced, or harvested; not stale",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_024",
+      "translation": "Sehat",
+      "definition": "Indicating or promoting good physical or mental health",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_025",
+      "translation": "Latihan / Olahraga",
+      "definition": "Physical or mental activity that enhances fitness or skill",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_026",
+      "translation": "Bersantai / Rileks",
+      "definition": "To rest from work or anxiety",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_027",
+      "translation": "Bersih",
+      "definition": "Free from dirt, marks, or unwanted matter",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_028",
+      "translation": "Pasar",
+      "definition": "A regular gathering of people for buying and selling provisions",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_029",
+      "translation": "Lezat / Enak",
+      "definition": "Highly pleasing to the sense of taste",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_030",
+      "translation": "Rutinitas",
+      "definition": "A regular sequence of actions or tasks",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_031",
+      "translation": "Ramah / Bersahabat",
+      "definition": "Kind, pleasant, or affectionate toward others",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_032",
+      "translation": "Menyambut",
+      "definition": "To greet someone arriving with pleasure or hospitality",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_033",
+      "translation": "Arah / Petunjuk arah",
+      "definition": "A course along which someone or something moves",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_034",
+      "translation": "Tiket / Karcis",
+      "definition": "A printed slip entitling the holder to travel or enter an event",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_035",
+      "translation": "Stasiun",
+      "definition": "A regular stopping place along a route where passengers board",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_036",
+      "translation": "Tetangga",
+      "definition": "A person living near or next door to you",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_037",
+      "translation": "Berkumpul",
+      "definition": "To come together or collect into one group",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_038",
+      "translation": "Berbagi",
+      "definition": "To give a portion of something to another person",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_039",
+      "translation": "Senyuman",
+      "definition": "A pleased, kind, or amused facial expression",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_040",
+      "translation": "Bersama-sama",
+      "definition": "With or in proximity to another person or people",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_041",
+      "translation": "Pagi",
+      "definition": "The early part of the day from sunrise to noon",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_042",
+      "translation": "Sore / Siang menjelang sore",
+      "definition": "The time from noon until evening",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_043",
+      "translation": "Malam / Petang",
+      "definition": "The close of the day and early part of the night",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_044",
+      "translation": "Malam ini",
+      "definition": "On the present night or during this night",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_045",
+      "translation": "Kalender",
+      "definition": "A chart showing days, weeks, and months of the year",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_046",
+      "translation": "Jadwal",
+      "definition": "A plan that lists times when things are supposed to happen",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_047",
+      "translation": "Bangun / Membangunkan",
+      "definition": "To emerge or cause someone to emerge from sleep",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_048",
+      "translation": "Tidur",
+      "definition": "To rest in a natural state of reduced consciousness",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_049",
+      "translation": "Mandi pancuran / Mandi",
+      "definition": "A device or booth for washing oneself with sprayed water",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_050",
+      "translation": "Berpakaian / Mengenakan baju",
+      "definition": "To put on clothes",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_051",
+      "translation": "Jam / Jam dinding",
+      "definition": "An instrument for measuring and displaying time",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_052",
+      "translation": "Jam tangan",
+      "definition": "A small timepiece worn typically on a strap on the wrist",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_053",
+      "translation": "Selalu",
+      "definition": "At all times or on all occasions",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_054",
+      "translation": "Biasanya",
+      "definition": "Under normal conditions; generally",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_055",
+      "translation": "Kadang-kadang",
+      "definition": "Occasionally, rather than all of the time",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_056",
+      "translation": "Tidak pernah",
+      "definition": "At no time in the past, present, or future",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_057",
+      "translation": "Awal / Lebih awal",
+      "definition": "Happening or arriving before the expected time",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_058",
+      "translation": "Terlambat",
+      "definition": "Doing something or arriving after the expected time",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_059",
+      "translation": "Buru-buru / Bergegas",
+      "definition": "To move or act with great speed",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_060",
+      "translation": "Istirahat",
+      "definition": "Ceasing work or movement in order to relax",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_061",
+      "translation": "Air",
+      "definition": "A clear liquid essential for all plant and animal life",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_062",
+      "translation": "Roti",
+      "definition": "Food made of flour, water, and yeast baked together",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_063",
+      "translation": "Beras / Nasi",
+      "definition": "Grains of a cereal plant used widely as food",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_064",
+      "translation": "Buah",
+      "definition": "The sweet and fleshy product of a tree or plant",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_065",
+      "translation": "Sayuran",
+      "definition": "A plant or part of a plant used as food",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_066",
+      "translation": "Susu",
+      "definition": "An opaque white fluid rich in fat and protein",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_067",
+      "translation": "Teh",
+      "definition": "A hot drink made by infusing dried crushed leaves",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_068",
+      "translation": "Kopi",
+      "definition": "A hot drink made from roasted and ground coffee beans",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_069",
+      "translation": "Telur",
+      "definition": "An oval body produced by a female bird used as food",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_070",
+      "translation": "Ayam / Daging ayam",
+      "definition": "A domestic fowl kept for its eggs or meat",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_071",
+      "translation": "Ikan",
+      "definition": "A limbless cold-blooded vertebrate animal living in water",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_072",
+      "translation": "Dapur",
+      "definition": "A room or area where food is prepared and cooked",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_073",
+      "translation": "Memasak",
+      "definition": "To prepare food by heating it",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_074",
+      "translation": "Mencicipi / Merasakan",
+      "definition": "To perceive or test the flavor of something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_075",
+      "translation": "Manis",
+      "definition": "Having the pleasant taste characteristic of sugar or honey",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_076",
+      "translation": "Asin",
+      "definition": "Tasting of or containing salt",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_077",
+      "translation": "Meja",
+      "definition": "A piece of furniture with a flat top and legs",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_078",
+      "translation": "Kursi",
+      "definition": "A separate seat for one person with a back and legs",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_079",
+      "translation": "Piring",
+      "definition": "A flat dish from which food is eaten or served",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_080",
+      "translation": "Gelas",
+      "definition": "A drinking container made from glass",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_081",
+      "translation": "Cangkir",
+      "definition": "A small bowl-shaped container for drinking, typically with a handle",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_082",
+      "translation": "Garpu",
+      "definition": "An implement with two or more prongs used for lifting food",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_083",
+      "translation": "Sendok",
+      "definition": "An implement consisting of a small shallow bowl on a handle",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_084",
+      "translation": "Pisau",
+      "definition": "An instrument composed of a blade fixed into a handle",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_085",
+      "translation": "Ruangan / Kamar",
+      "definition": "Part or division of a building enclosed by walls",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_086",
+      "translation": "Pintu",
+      "definition": "A hinged barrier used to close off an entrance",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_087",
+      "translation": "Jendela",
+      "definition": "An opening in a wall to admit light or air",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_088",
+      "translation": "Tempat tidur / Ranjang",
+      "definition": "A piece of furniture for sleep or rest",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_089",
+      "translation": "Rumah",
+      "definition": "A building for human habitation",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_090",
+      "translation": "Rumah / Tempat tinggal",
+      "definition": "The place where one lives permanently, especially as a family",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_091",
+      "translation": "Keluarga",
+      "definition": "A group of one or more parents and their children living together",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_092",
+      "translation": "Orang tua",
+      "definition": "A father or mother",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_093",
+      "translation": "Ayah / Bapak",
+      "definition": "A man in relation to his natural or adopted child",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_094",
+      "translation": "Ibu",
+      "definition": "A female parent",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_095",
+      "translation": "Saudara laki-laki",
+      "definition": "A man or boy in relation to other sons and daughters of his parents",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_096",
+      "translation": "Saudara perempuan",
+      "definition": "A woman or girl in relation to other daughters and sons of her parents",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_097",
+      "translation": "Anak",
+      "definition": "A young human being below the age of puberty",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_098",
+      "translation": "Teman / Sahabat",
+      "definition": "A person whom one knows and with whom one has a bond of mutual affection",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_099",
+      "translation": "Orang-orang / Masyarakat",
+      "definition": "Human beings in general or considered collectively",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_100",
+      "translation": "Orang / Pribadi",
+      "definition": "A human being regarded as an individual",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_101",
+      "translation": "Bahagia / Senang",
+      "definition": "Feeling or showing pleasure or contentment",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_102",
+      "translation": "Sedih",
+      "definition": "Feeling or showing sorrow; unhappy",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_103",
+      "translation": "Marah",
+      "definition": "Having a strong feeling of annoyance or hostility",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_104",
+      "translation": "Lelah / Capek",
+      "definition": "In need of sleep or rest; weary",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_105",
+      "translation": "Takut",
+      "definition": "Feeling fear or anxiety; frightened",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_106",
+      "translation": "Berani",
+      "definition": "Ready to face and endure danger or pain",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_107",
+      "translation": "Baik hati / Ramah",
+      "definition": "Having or showing a friendly, generous, and considerate nature",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_108",
+      "translation": "Jujur",
+      "definition": "Free of deceit and untruthfulness; sincere",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_109",
+      "translation": "Sopan",
+      "definition": "Having or showing behavior that is respectful of others",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_110",
+      "translation": "Membantu / Bermanfaat",
+      "definition": "Giving or ready to give help",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_111",
+      "translation": "Mencintai / Menyukai",
+      "definition": "To feel deep affection or passion for someone or something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_112",
+      "translation": "Menyukai / Suka",
+      "definition": "To find agreeable, enjoyable, or satisfactory",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_113",
+      "translation": "Membenci / Tidak suka",
+      "definition": "To feel intense or passionate dislike for",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_114",
+      "translation": "Peduli / Merawat",
+      "definition": "To feel concern or interest; attach importance to something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_115",
+      "translation": "Berharap",
+      "definition": "To want something to happen and think that it is possible",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_116",
+      "translation": "Mimpi / Cita-cita",
+      "definition": "A cherished aspiration, ambition, or ideal",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_117",
+      "translation": "Berharap / Mendoakan",
+      "definition": "To feel or express a strong desire for something",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_118",
+      "translation": "Tertawa",
+      "definition": "To make spontaneous sounds expressing amusement",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_119",
+      "translation": "Menangis",
+      "definition": "To shed tears, typically as an expression of distress or pain",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_120",
+      "translation": "Berbicara / Mengobrol",
+      "definition": "To speak in order to give information or express ideas",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_121",
+      "translation": "Kota / Kota besar",
+      "definition": "A large town with many buildings and inhabitants",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_122",
+      "translation": "Kota kecil",
+      "definition": "An urban area smaller than a city but larger than a village",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_123",
+      "translation": "Jalan / Jalan raya",
+      "definition": "A public road in a city or town with houses on sides",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_124",
+      "translation": "Jalanan / Jalur",
+      "definition": "A wide way leading from one place to another",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_125",
+      "translation": "Sekolah",
+      "definition": "An institution for educating children or students",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_126",
+      "translation": "Rumah sakit",
+      "definition": "An institution providing medical treatment and nursing care",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_127",
+      "translation": "Taman",
+      "definition": "A large public green area used for recreation",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_128",
+      "translation": "Toko",
+      "definition": "A shop where goods are kept and sold to customers",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_129",
+      "translation": "Bank",
+      "definition": "A financial institution that receives deposits and channels money",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_130",
+      "translation": "Perpustakaan",
+      "definition": "A building containing collections of books and periodicals",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_131",
+      "translation": "Hotel",
+      "definition": "An establishment providing accommodation and meals for travelers",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_132",
+      "translation": "Bandara / Bandara udara",
+      "definition": "A complex where airplanes take off and land",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_133",
+      "translation": "Mobil",
+      "definition": "A road vehicle, typically with four wheels, powered by an engine",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_134",
+      "translation": "Bus",
+      "definition": "A large motor vehicle carrying passengers by road",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_135",
+      "translation": "Kereta api",
+      "definition": "A series of railway carriages moved by a locomotive",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_136",
+      "translation": "Sepeda",
+      "definition": "A vehicle composed of two wheels held in a frame",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_137",
+      "translation": "Berjalan / Berjalan kaki",
+      "definition": "To move at a regular pace by lifting and setting down each foot",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_138",
+      "translation": "Mengemudi / Menyetir",
+      "definition": "To operate and control the direction and speed of a motor vehicle",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_139",
+      "translation": "Bepergian / Menjelajah",
+      "definition": "To make a journey, typically of some length",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_140",
+      "translation": "Peta",
+      "definition": "A diagrammatic representation of an area of land or sea",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_141",
+      "translation": "Kiri",
+      "definition": "On or toward the side of the human body towards the west when facing north",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_142",
+      "translation": "Kanan",
+      "definition": "On or toward the side of the human body towards the east when facing north",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_143",
+      "translation": "Lurus",
+      "definition": "In a continuous line without bending or turning",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_144",
+      "translation": "Dekat",
+      "definition": "At or to only a short distance away",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_145",
+      "translation": "Jauh",
+      "definition": "At, to, or by a great distance",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_146",
+      "translation": "Di sini",
+      "definition": "In, at, or to this place or position",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_147",
+      "translation": "Di sana",
+      "definition": "In, at, or to that place or position",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_148",
+      "translation": "Di mana / Ke mana",
+      "definition": "In or to what place or position",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_149",
+      "translation": "Pojok / Sudut jalan",
+      "definition": "A place or angle where two sides or edges meet",
+      "exampleTranslation": null
+    },
+    {
+      "wordId": "w_a1_150",
+      "translation": "Tempat / Lokasi",
+      "definition": "A particular position or point in space; a location",
+      "exampleTranslation": null
+    }
+  ]
+}

@@ -79,6 +79,13 @@ object UiLocalizer {
         "progress_study_progress" to "Study Progress (%d/%d words)",
         "progress_retake_test" to "Retake Mastery Test",
         "progress_take_test" to "Take Mastery Test",
+        "progress_streak_title" to "Daily Study Streak",
+        "progress_streak_count" to "%d Days Streak",
+        "progress_streak_zero" to "Start Streak Today!",
+        "progress_streak_best" to "Best: %d days",
+        "progress_streak_done_today" to "✓ Great job! You've studied today.",
+        "progress_streak_pending_today" to "⚡ Review or study today to maintain your streak!",
+        "progress_activity_7days" to "Past 7 Days Activity",
 
         // Settings Screen
         "settings_title" to "Settings",
@@ -194,6 +201,13 @@ object UiLocalizer {
         "progress_study_progress" to "Progres Belajar (%d/%d kata)",
         "progress_retake_test" to "Ulangi Ujian Level",
         "progress_take_test" to "Ikuti Ujian Level",
+        "progress_streak_title" to "Konsistensi Belajar",
+        "progress_streak_count" to "%d Hari Berturut-turut",
+        "progress_streak_zero" to "Mulai Streak Hari Ini!",
+        "progress_streak_best" to "Rekor: %d hari",
+        "progress_streak_done_today" to "✓ Hebat! Kamu sudah belajar hari ini.",
+        "progress_streak_pending_today" to "⚡ Selesaikan kartu atau kuis hari ini untuk jaga streak!",
+        "progress_activity_7days" to "Aktivitas 7 Hari Terakhir",
 
         // Settings Screen
         "settings_title" to "Pengaturan",

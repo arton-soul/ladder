@@ -43,13 +43,14 @@ class LexiLadderApp : Application() {
         instance = this
 
         database = AppDatabase.getInstance(this)
+        userPreferencesRepository = UserPreferencesRepository(this)
         vocabularyRepository = VocabularyRepositoryImpl(
             wordDao = database.wordDao(),
             userProgressDao = database.userProgressDao(),
             levelDao = database.levelDao(),
-            masteryTestDao = database.masteryTestDao()
+            masteryTestDao = database.masteryTestDao(),
+            userPreferencesRepository = userPreferencesRepository
         )
-        userPreferencesRepository = UserPreferencesRepository(this)
         billingManager = BillingManager(
             context = this,
             userPreferencesRepository = userPreferencesRepository,
@@ -58,7 +59,7 @@ class LexiLadderApp : Application() {
         contentUpdateManager = ContentUpdateManager(
             context = this,
             database = database,
-            currentAppVersion = 1
+            currentAppVersion = BuildConfig.VERSION_CODE
         )
 
         // Initialize AdMob MobileAds with safe test/prod IDs

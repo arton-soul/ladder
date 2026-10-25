@@ -8,17 +8,17 @@
 ## 1. Status Proyek Saat Ini
 
 - **Status keseluruhan:** `IN PROGRESS`
-- **Fase aktif:** Phase 7 — QA, ASO & Release Preparation
-- **Fase terakhir selesai:** Phase 6 — Monetization & Privacy
-- **Build terakhir:** `.\gradlew installDebug` (SUCCESS - installed & running on Xiaomi Redmi Note 8 Pro `q4eu99nfaifalbh6`)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 54/54 unit tests passed)
+- **Fase aktif:** Phase 8 — Post-launch & Retention Features
+- **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
+- **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS in 1m 32s) & `.\gradlew bundleRelease` (SUCCESS AAB v1.0.1 14.51 MiB)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 72/72 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
-- **Versi aplikasi:** `1.0.0` (Build 1)
+- **Versi aplikasi:** `1.0.1` (Build 2)
 - **Package name:** `com.dearyoti.lexiladder` (Display: `LexiLadder: English Vocab`)
 - **Repository aplikasi:** `https://github.com/arton-soul/ladder.git` (Akun: `arton.79@gmail.com`)
 - **Developer Play Store:** `dearyoti` (Email: `made.sudi@gmail.com`)
-- **Repository konten:** Belum ditetapkan (akan disiapkan terpisah)
+- **Repository konten:** Tersedia di folder `content/` (`https://raw.githubusercontent.com/arton-soul/ladder/master/content/`)
 
 > Penting: dokumen master plan sudah dibuat, tetapi ini tidak berarti kode aplikasi telah dibuat, dibangun, atau diuji. Semua status implementasi harus didasarkan pada repository aktual.
 
@@ -57,16 +57,16 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 ### Task
 - [x] Periksa apakah repository Android sudah ada.
 - [x] Tetapkan package name (`com.dearyoti.lexiladder`, display name: `LexiLadder: English Vocab`).
-- [x] Tetapkan versi Android minimum dan target (minSdk: 26, compileSdk: 36, targetSdk: 36, versionName: 1.0.0, versionCode: 1).
+- [x] Tetapkan versi Android minimum dan target (minSdk: 26, compileSdk: 36, targetSdk: 36, versionName: 1.0.1, versionCode: 2).
 - [x] Buat/konfirmasi repository Git aplikasi (`https://github.com/arton-soul/ladder.git`, `arton.79@gmail.com`).
-- [ ] Buat/konfirmasi repository GitHub konten.
-- [ ] Tetapkan lisensi dan sumber konten kosakata.
-- [ ] Pilih bahasa terjemahan pertama.
-- [ ] Tetapkan jumlah kata dan unit untuk Level 1.
-- [ ] Tentukan format `manifest.json`.
-- [ ] Tentukan schema JSON untuk level, unit, kata, dan soal.
-- [ ] Buat contoh konten kecil untuk validasi.
-- [ ] Buat skrip atau tes validasi konten.
+- [x] Buat/konfirmasi repository GitHub konten (Folder `content/` siap dipublish ke `https://github.com/arton-soul/ladder.git`).
+- [x] Tetapkan lisensi dan sumber konten kosakata (Kosakata terkurasi A1 150 kata & A2 200 kata).
+- [x] Pilih bahasa terjemahan pertama (`id` / Bahasa Indonesia).
+- [x] Tetapkan jumlah kata dan unit untuk Level 1 (150 kata, 5 unit) & Level 2 (200 kata, 7 unit).
+- [x] Tentukan format `manifest.json` (Manifest schema v1, manifest version 2).
+- [x] Tentukan schema JSON untuk level, unit, kata, dan terjemahan (`learning-package`, `translation-package`, `ui-catalog`).
+- [x] Buat contoh konten kecil untuk validasi (`learning_a1.json`, `learning_a2.json`, `translation_id_a1.json`, `translation_id_a2.json`, `ui_id.json`).
+- [x] Buat skrip atau tes validasi konten (`ContentRepositoryIntegrityTest.kt` & `ContentValidatorTest.kt`).
 - [x] Pastikan `rancangan.md` dan `progress.md` berada di root repository aplikasi.
 
 ### Acceptance criteria
@@ -323,12 +323,28 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 ---
 
-## 12. Phase 8 — Post-launch & Internal Testing
+## 12. Phase 8 — Post-launch, Internal Testing & Retention Features
 
 **Status fase:** `IN PROGRESS`
 
 ### Task
 - [x] Unggah `app-release.aab` ke Google Play Console track Internal Testing (v1.0.1 Build 2 berhasil diunggah).
+- [x] Siapkan Remote Content System di GitHub (`content/` repo package):
+  - [x] Paket kosakata Level 1 A1: `learning_a1.json` (150 kata, 5 unit).
+  - [x] Paket kosakata Level 2 A2: `learning_a2.json` (200 kata, 7 unit).
+  - [x] Paket terjemahan Bahasa Indonesia: `translation_id_a1.json` (150 entri) & `translation_id_a2.json` (200 entri).
+  - [x] Paket katalog antarmuka: `ui_id.json` (106 string UI).
+  - [x] `manifest.json` v2 dengan kalkulasi exact byte size dan SHA-256 hash.
+  - [x] Sinkronisasi aset bundled `app/src/main/assets/content/` dan remote repo `content/`.
+  - [x] Validasi otomatis melalui `ContentRepositoryIntegrityTest` (6 tes integritas lolos).
+  - [x] Integrasi `BuildConfig.VERSION_CODE` ke `ContentUpdateManager`.
+- [x] Implementasi Daily Study Streak & Activity Calendar:
+  - [x] Tambahkan `currentStreak`, `bestStreak`, `lastActiveDate`, dan `activeDates` di DataStore `UserPreferencesRepository`.
+  - [x] Metode pintar `calculateStreak` dan `calculateEffectiveStreak` (mengecek jeda tanggal tanpa menghapus streak sebelum hari ini terlewati).
+  - [x] Catat aktivitas belajar harian saat rating kartu flashcard atau evaluasi kuis di `VocabularyRepositoryImpl` (`recordReviewRating` & `submitMasteryTest`).
+  - [x] Tampilan kartu `DailyStreakCard` di `ProgressScreen`: ikon 🔥/⚡, hitungan streak hari, badge rekor terbaik, kalender bergulir 7 hari terakhir (rolling 7 days) dengan penanda hari aktif & hari ini, serta feedback dinamis.
+  - [x] String lokalisasi antarmuka EN dan ID lengkap di `UiLocalizer`.
+  - [x] Unit test `DailyStreakTest` (6 tes lolos) & `UiLocalizerTest`.
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.
