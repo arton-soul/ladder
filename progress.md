@@ -328,7 +328,7 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 **Status fase:** `IN PROGRESS`
 
 ### Task
-- [ ] Unggah `app-release.aab` ke Google Play Console track Internal Testing.
+- [x] Unggah `app-release.aab` ke Google Play Console track Internal Testing (v1.0.1 Build 2 berhasil diunggah).
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.
@@ -517,6 +517,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-20 | Phase 7 | Penyesuaian Tipografi & Tata Letak Label Bottom Navigation: Penggantian label 'Kemajuan' menjadi 'Progres' (7 huruf serasi dengan Beranda/Belajar/Latihan), pembatasan maxLines = 1, softWrap = false, dan font size 11sp agar bilah navigasi bawah tetap ramping, presisi, dan tidak melebar ke bawah | `.\gradlew testDebugUnitTest` (59/59 passed) & `.\gradlew assembleDebug` (SUCCESS in 39s) | DONE |
 | 2026-10-20 | Phase 7 | Pembuatan Signed Release Android App Bundle (AAB): Penandatanganan berkas rilis dengan keystore lexyladder.jks (alias: lexy, valid s.d. 2054), verifikasi signature jarsigner, berkas app-release.aab (14.51 MiB), dan dokumen keterangan rilis dwibahasa serta panduan unggah Play Console internal testing | `.\gradlew bundleRelease` (SUCCESS in 6m 33s, 14.51 MiB AAB) & jarsigner verified | DONE |
 | 2026-10-20 | Phase 8 | Pembaruan Google Play Billing 8.0.0 & Kenaikan Versi (v1.0.1 Build 2): Upgrade pustaka com.android.billingclient:billing-ktx ke 8.0.0, adaptasi QueryProductDetailsResult di BillingManager, kenaikan versionCode = 2 dan versionName = '1.0.1', perakitan ulang signed bundle app-release.aab (14.51 MiB), dan verifikasi jarsigner sukses | `.\gradlew bundleRelease` (SUCCESS in 2m 51s) & `.\gradlew testDebugUnitTest` (59/59 passed) | DONE |
+| 2026-10-25 | Phase 8 | Pengunggahan Berhasil ke Google Play Console (Internal Testing): Versi 1.0.1 (Build 2) dengan Billing Library 8.0.0 berhasil diunggah ke track pengujian internal akun pengembang dearyoti | Dikonfirmasi pengguna di Google Play Console | IN PROGRESS |
 
 
 
