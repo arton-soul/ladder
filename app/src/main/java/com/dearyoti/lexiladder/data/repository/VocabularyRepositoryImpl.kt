@@ -204,7 +204,7 @@ class VocabularyRepositoryImpl(
             )
         }
 
-        // Populate/update built-in vocabulary catalog (370 words: A1 = 150, A2 = 200, B1 = 20)
+        // Populate/update built-in vocabulary catalog (600 words: A1 = 150, A2 = 200, B1 = 250)
         wordDao.insertWords(DefaultVocabularyCatalog.allWords)
     }
 }

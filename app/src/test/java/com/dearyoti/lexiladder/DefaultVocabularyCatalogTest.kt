@@ -11,15 +11,15 @@ class DefaultVocabularyCatalogTest {
     fun defaultCatalog_wordCountsMatchTarget() {
         assertEquals("Level 1 (A1) must have exactly 150 words", 150, DefaultVocabularyCatalog.levelA1Words.size)
         assertEquals("Level 2 (A2) must have exactly 200 words", 200, DefaultVocabularyCatalog.levelA2Words.size)
-        assertEquals("Level 3 (B1) must have exactly 20 words", 20, DefaultVocabularyCatalog.levelB1Words.size)
-        assertEquals("Total words in catalog must be 370", 370, DefaultVocabularyCatalog.allWords.size)
+        assertEquals("Level 3 (B1) must have exactly 250 words", 250, DefaultVocabularyCatalog.levelB1Words.size)
+        assertEquals("Total words in catalog must be 600", 600, DefaultVocabularyCatalog.allWords.size)
     }
 
     @Test
     fun defaultCatalog_allWordIdsAreUnique() {
         val allIds = DefaultVocabularyCatalog.allWords.map { it.id }
         val uniqueIds = allIds.toSet()
-        assertEquals("All 370 word IDs must be globally unique", allIds.size, uniqueIds.size)
+        assertEquals("All 600 word IDs must be globally unique", allIds.size, uniqueIds.size)
     }
 
     @Test
@@ -59,5 +59,8 @@ class DefaultVocabularyCatalogTest {
 
         val a2Units = DefaultVocabularyCatalog.levelA2Words.groupBy { it.unitId }
         assertEquals("Level A2 must have 7 units", 7, a2Units.size)
+
+        val b1Units = DefaultVocabularyCatalog.levelB1Words.groupBy { it.unitId }
+        assertEquals("Level B1 must have 8 units", 8, b1Units.size)
     }
 }

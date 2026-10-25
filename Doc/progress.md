@@ -357,6 +357,10 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Wadah khusus (Surface) modern untuk Progres Materi Level di HomeScreen dengan label PROGRES MATERI, pill badge piala kata dikuasai, persentase terselesaikan, dan kata tersisa.
   - [x] Sinkronisasi level terpilih secara global via DataStore `selectedLevelId` antar Beranda, Belajar, dan Latihan agar pengguna tetap pada program latihan level yang dipilih.
   - [x] Peningkatan standar kelulusan ujian level dari 10 soal menjadi 25 soal teracak komprehensif (`DEFAULT_QUESTION_COUNT = 25`, passing score 80% = minimal 20/25 benar).
+- [x] Ekspansi Kosakata Level 3 (B1) 250 Kata & Redesain Spesifikasi Ujian:
+  - [x] Penambahan 230 kata baru terkurasi CEFR B1 sehingga Level 3 genap 250 kata dalam 8 unit tematik (total 600 kata offline-first catalog).
+  - [x] Redesain menyeluruh layar Intro Ujian Level dengan Hero Card membulat 20dp, quick highlights (jumlah kata & passing score), dan komponen `SpecTile` terstruktur untuk spesifikasi ujian, nilai kelulusan, format, prasyarat, dan hasil sertifikasi.
+  - [x] Tombol CTA aksi ujian dengan ikon, status dinamis, dan riwayat attempt visual.
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.

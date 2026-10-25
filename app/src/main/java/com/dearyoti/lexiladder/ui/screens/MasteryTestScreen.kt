@@ -1,5 +1,6 @@
 package com.dearyoti.lexiladder.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Button
@@ -31,6 +33,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -38,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -231,30 +235,49 @@ private fun MasteryTestIntroView(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Hero Card
+        val isId = uiLanguage == "id"
+        val targetCount = MasteryTestEngine.DEFAULT_QUESTION_COUNT
+        val actualCount = if (wordsCount >= targetCount) targetCount else wordsCount.coerceAtLeast(3)
+        val passingScore = level?.requiredPassingScore ?: MasteryTestEngine.DEFAULT_PASSING_PERCENTAGE
+        val minCorrect = kotlin.math.ceil(actualCount * (passingScore / 100.0)).toInt()
+
         Card(
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(
                 containerColor = if (level?.isMastered == true)
-                    MaterialTheme.colorScheme.primaryContainer
+                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.85f)
                 else
-                    MaterialTheme.colorScheme.surfaceVariant
-            )
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            ),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(22.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = if (isLocked) Icons.Default.Lock else Icons.Default.WorkspacePremium,
-                    contentDescription = null,
-                    modifier = Modifier.size(56.dp),
-                    tint = if (isLocked) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(12.dp))
+                Surface(
+                    shape = CircleShape,
+                    color = if (isLocked)
+                        MaterialTheme.colorScheme.surfaceVariant
+                    else
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                    modifier = Modifier.size(68.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = if (isLocked) Icons.Default.Lock else Icons.Default.WorkspacePremium,
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp),
+                            tint = if (isLocked) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(14.dp))
                 Text(
                     text = level?.title ?: "Mastery Test",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -264,53 +287,138 @@ private fun MasteryTestIntroView(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 StatusChip(status = level?.status ?: LevelStatus.LOCKED, uiLanguage = uiLanguage)
+
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            text = "📚 $wordsCount ${if (isId) "Kata Materi" else "Words"}",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            text = "🎯 ${passingScore}% ${if (isId) "Syarat Lulus" else "Passing"}",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
             }
         }
 
-        // Test Rules Card
-        val isId = uiLanguage == "id"
-        val targetCount = MasteryTestEngine.DEFAULT_QUESTION_COUNT
-        val actualCount = if (wordsCount >= targetCount) targetCount else wordsCount.coerceAtLeast(3)
-        val passingScore = level?.requiredPassingScore ?: MasteryTestEngine.DEFAULT_PASSING_PERCENTAGE
-        val minCorrect = kotlin.math.ceil(actualCount * (passingScore / 100.0)).toInt()
-
+        // Test Specifications Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.padding(18.dp)
             ) {
-                Text(
-                    text = UiLocalizer.getString("test_specs_title", uiLanguage),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(text = "📋", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = UiLocalizer.getString("test_specs_title", uiLanguage),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Item 1: Questions count
+                SpecTile(
+                    icon = "📝",
+                    title = if (isId) "Jumlah Pertanyaan" else "Number of Questions",
+                    subtitle = if (isId) "$actualCount Soal Teracak Komprehensif" else "$actualCount Comprehensive Questions",
+                    badgeText = "$actualCount Soal",
+                    badgeColor = MaterialTheme.colorScheme.primaryContainer,
+                    badgeTextColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-                RuleItem(
-                    label = UiLocalizer.getString("test_specs_questions", uiLanguage),
-                    value = if (isId) "$actualCount Soal Teracak (Komprehensif)" else "$actualCount Randomized Questions (Comprehensive)"
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
                 )
-                RuleItem(
-                    label = UiLocalizer.getString("test_specs_passing", uiLanguage),
-                    value = if (isId) "$passingScore% (Minimal $minCorrect dari $actualCount benar)" else "$passingScore% (Minimum $minCorrect of $actualCount correct)"
+
+                // Item 2: Passing score
+                SpecTile(
+                    icon = "🎯",
+                    title = if (isId) "Standar Nilai Kelulusan" else "Passing Requirement",
+                    subtitle = if (isId) "Minimal $minCorrect dari $actualCount soal benar" else "Minimum $minCorrect of $actualCount correct",
+                    badgeText = "$passingScore% Min",
+                    badgeColor = Color(0xFFE8F5E9),
+                    badgeTextColor = Color(0xFF2E7D32)
                 )
-                RuleItem(
-                    label = UiLocalizer.getString("test_specs_format", uiLanguage),
-                    value = UiLocalizer.getString("test_specs_format_val", uiLanguage)
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
                 )
-                RuleItem(
-                    label = if (uiLanguage == "id") "Prasyarat" else "Prerequisite",
-                    value = if (isLocked)
-                        (if (uiLanguage == "id") "Selesaikan level sebelumnya" else "Prerequisite level must be completed")
+
+                // Item 3: Format
+                SpecTile(
+                    icon = "🧩",
+                    title = if (isId) "Format Ujian" else "Question Format",
+                    subtitle = if (isId) "Kosakata, Terjemahan & Kalimat" else "Meaning, Translation & Fill-in-Blank",
+                    badgeText = if (isId) "Pilihan Ganda" else "Multiple Choice",
+                    badgeColor = MaterialTheme.colorScheme.secondaryContainer,
+                    badgeTextColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                )
+
+                // Item 4: Prerequisite
+                SpecTile(
+                    icon = "🔑",
+                    title = if (isId) "Prasyarat Level" else "Prerequisites",
+                    subtitle = if (isLocked)
+                        (if (isId) "Selesaikan level sebelumnya terlebih dahulu" else "Complete prerequisite level first")
                     else
-                        (if (uiLanguage == "id") "Siap diikuti" else "Ready to take")
+                        (if (isId) "Semua prasyarat telah terpenuhi" else "All prerequisites are completed"),
+                    badgeText = if (isLocked) (if (isId) "Terkunci 🔒" else "Locked 🔒") else (if (isId) "Siap ✓" else "Ready ✓"),
+                    badgeColor = if (isLocked) Color(0xFFEEEEEE) else Color(0xFFE8F5E9),
+                    badgeTextColor = if (isLocked) Color(0xFF757575) else Color(0xFF2E7D32)
                 )
-                RuleItem(
-                    label = UiLocalizer.getString("test_specs_outcome", uiLanguage),
-                    value = UiLocalizer.getString("test_specs_outcome_val", uiLanguage)
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                )
+
+                // Item 5: Outcome
+                SpecTile(
+                    icon = "🏆",
+                    title = if (isId) "Hasil & Hak Istimewa" else "Certification Outcome",
+                    subtitle = if (isId) "Membuka level berikutnya & lencana sertifikasi" else "Unlocks next level & mastery badge",
+                    badgeText = if (isId) "Sertifikasi" else "Certified",
+                    badgeColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    badgeTextColor = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
         }
@@ -322,13 +430,18 @@ private fun MasteryTestIntroView(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(14.dp)
         ) {
+            Icon(
+                imageVector = if (level?.isMastered == true) Icons.Default.Refresh else Icons.Default.PlayArrow,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = when {
-                    isLocked -> if (uiLanguage == "id") "Level Terkunci" else "Level Locked"
+                    isLocked -> if (uiLanguage == "id") "Level Masih Terkunci 🔒" else "Level Locked 🔒"
                     level?.isMastered == true -> UiLocalizer.getString("test_retake_btn", uiLanguage)
-                    else -> UiLocalizer.getString("test_start_btn", uiLanguage)
+                    else -> if (uiLanguage == "id") "Mulai Ujian Sertifikasi Level 🚀" else "Start Level Mastery Test 🚀"
                 },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
@@ -415,13 +528,66 @@ private fun StatusChip(status: LevelStatus, uiLanguage: String = "en") {
 }
 
 @Composable
-private fun RuleItem(label: String, value: String) {
+private fun SpecTile(
+    icon: String,
+    title: String,
+    subtitle: String,
+    badgeText: String? = null,
+    badgeColor: Color? = null,
+    badgeTextColor: Color? = null
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(10.dp),
+                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                modifier = Modifier.size(38.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(text = icon, style = MaterialTheme.typography.titleMedium)
+                }
+            }
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+        if (badgeText != null) {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = badgeColor ?: MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                Text(
+                    text = badgeText,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = badgeTextColor ?: MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+        }
     }
 }
 
