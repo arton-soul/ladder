@@ -12,14 +12,44 @@ object MasteryTestEngine {
 
     const val DEFAULT_PASSING_PERCENTAGE = 80
     const val DEFAULT_QUESTION_COUNT = 25
-    const val REQUIRED_STUDY_RATIO = 0.75f // 75% of words must be studied to be ready for test
+    const val REQUIRED_MASTERY_PERCENTAGE_FOR_TEST = 60
+    const val REQUIRED_MASTERY_RATIO_FOR_TEST = 0.60f
+    const val REQUIRED_STUDY_RATIO = 0.75f // Legacy reference
+
+    fun calculateRequiredMasteryCount(totalWords: Int): Int {
+        if (totalWords <= 0) return 0
+        return kotlin.math.ceil((totalWords * REQUIRED_MASTERY_PERCENTAGE_FOR_TEST) / 100.0).toInt()
+    }
+
+    fun isTestEligible(level: Level): Boolean {
+        return isTestEligible(
+            isUnlocked = level.isUnlocked,
+            isMastered = level.isMastered,
+            totalWords = level.totalWords,
+            masteredWords = level.masteredWords
+        )
+    }
+
+    fun isTestEligible(
+        isUnlocked: Boolean,
+        isMastered: Boolean,
+        totalWords: Int,
+        masteredWords: Int
+    ): Boolean {
+        if (!isUnlocked) return false
+        if (isMastered) return true
+        if (totalWords <= 0) return false
+        val reqCount = calculateRequiredMasteryCount(totalWords)
+        return masteredWords >= reqCount
+    }
 
     fun determineLevelStatus(
         isUnlocked: Boolean,
         isMastered: Boolean,
         totalWords: Int,
-        studiedWords: Int,
-        requiredRatio: Float = REQUIRED_STUDY_RATIO
+        studiedWords: Int = 0,
+        masteredWords: Int = 0,
+        requiredMasteryRatio: Float = REQUIRED_MASTERY_RATIO_FOR_TEST
     ): LevelStatus {
         if (!isUnlocked) {
             return LevelStatus.LOCKED
@@ -27,10 +57,10 @@ object MasteryTestEngine {
         if (isMastered) {
             return LevelStatus.MASTERED
         }
-        if (totalWords > 0 && (studiedWords.toFloat() / totalWords.toFloat()) >= requiredRatio) {
+        if (totalWords > 0 && masteredWords >= calculateRequiredMasteryCount(totalWords)) {
             return LevelStatus.READY_FOR_TEST
         }
-        if (studiedWords > 0) {
+        if (masteredWords > 0 || studiedWords > 0) {
             return LevelStatus.IN_PROGRESS
         }
         return LevelStatus.AVAILABLE

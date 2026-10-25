@@ -128,7 +128,11 @@ object UiLocalizer {
         "test_prev_attempts" to "Previous Attempts (%d)",
         "test_passed_badge" to "PASSED",
         "test_failed_badge" to "NEEDS REVIEW",
-        "test_mastered_badge" to "MASTERED"
+        "test_mastered_badge" to "MASTERED",
+        "test_locked_prereq_title" to "Level Prerequisites",
+        "test_locked_prereq_desc" to "Complete prerequisite level first",
+        "test_locked_mastery_title" to "Exam Prerequisites (Min 60% Words)",
+        "test_locked_mastery_desc" to "Master at least 60% of words (%d words). Current: %d/%d (%d%%)"
     )
 
     private val idStrings: Map<String, String> = mapOf(
@@ -250,7 +254,11 @@ object UiLocalizer {
         "test_prev_attempts" to "Percobaan Sebelumnya (%d)",
         "test_passed_badge" to "LULUS",
         "test_failed_badge" to "BELUM LULUS",
-        "test_mastered_badge" to "DIKUASAI"
+        "test_mastered_badge" to "DIKUASAI",
+        "test_locked_prereq_title" to "Prasyarat Level",
+        "test_locked_prereq_desc" to "Selesaikan ujian level sebelumnya terlebih dahulu",
+        "test_locked_mastery_title" to "Prasyarat Ujian (Min. 60% Kata)",
+        "test_locked_mastery_desc" to "Kuasai minimal 60% kata (%d kata). Saat ini: %d/%d (%d%%)"
     )
 
     /**

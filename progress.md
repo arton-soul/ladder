@@ -11,7 +11,7 @@
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
 - **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS in 1m 32s) & `.\gradlew bundleRelease` (SUCCESS AAB v1.0.1 14.51 MiB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 74/74 unit tests passed)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 77/77 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.1` (Build 2)
@@ -544,6 +544,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-25 | Phase 8 | Penyelesaian 3 Isu Pengujian Fisik Xiaomi Redmi Note 8 Pro: (1) Perhitungan Target Harian reaktif berdasarkan `todayStudyCount` dan target harian kata, (2) Seeding paket bawaan ke DB (`seedBundledPackagesIfEmpty`) dan penyimpanan timestamp pada 'Nanti Saja' agar dialog update konten tidak muncul terus, (3) Tampilan kata dipelajari & kata dikuasai reaktif (`combine(levelDao, userProgressDao)`) di HomeScreen | `.\gradlew testDebugUnitTest` (73/73 passed) | DONE |
 | 2026-10-25 | Phase 8 | Penyempurnaan UI Profesional & Standar Ujian: (1) Redesain kartu Target Harian & Progres Materi Level di HomeScreen (badge pil, tipografi headline, progress bar bulat 8dp, indikator persentase & sisa kata), (2) Sinkronisasi level aktif (Home, Learn, Practice) via DataStore `selectedLevelId`, (3) Peningkatan ujian sertifikasi level menjadi 25 soal teracak (DEFAULT_QUESTION_COUNT = 25, passing score 80% = minimal 20/25) | `.\gradlew testDebugUnitTest` (74/74 passed) | DONE |
 | 2026-10-25 | Phase 8 | Ekspansi Kosakata Level 3 (B1) 250 Kata & Redesain Spesifikasi Ujian Level: (1) Penambahan 230 kata terkurasi CEFR B1 sehingga Level 3 genap 250 kata dalam 8 unit tematik (total 600 kata offline-first catalog), (2) Redesain menyeluruh layar Intro Ujian Level (Hero card modern 20dp, pill highlight, komponen `SpecTile` elegan untuk jumlah soal, standar nilai kelulusan 80%, format soal, prasyarat, dan hasil sertifikasi, serta tombol aksi CTA memikat) | `.\gradlew testDebugUnitTest` (74/74 passed) | DONE |
+| 2026-10-25 | Phase 8 | Penguncian Ujian Level (Syarat Min. 60% Kata Dikuasai) & Sistem Notifikasi Milestone (60% & 100%): (1) Penguncian akses ujian level hingga kata yang dikuasai mencapai minimal 60% (`REQUIRED_MASTERY_PERCENTAGE_FOR_TEST = 60`), (2) Penyesuaian tombol di Home/Progress/MasteryTest dengan status kunci & indikator sisa kata, (3) Notifikasi milestone in-app AlertDialog dan Android push notification via `ExamNotificationHelper` saat mencapai 60% (muncul sekali per level) dan saat mencapai 100% jika belum lulus ujian level (muncul sekali per level) dengan persistensi DataStore | `.\gradlew testDebugUnitTest` (77/77 passed) & `.\gradlew installDebug` di Xiaomi Redmi Note 8 Pro | DONE |
 
 
 

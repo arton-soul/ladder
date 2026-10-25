@@ -44,25 +44,53 @@ class MasteryTestEngineTest {
     }
 
     @Test
-    fun `determineLevelStatus returns READY_FOR_TEST when study ratio reaches 75 percent`() {
+    fun `determineLevelStatus returns READY_FOR_TEST when mastered words reaches 60 percent`() {
         val status = MasteryTestEngine.determineLevelStatus(
             isUnlocked = true,
             isMastered = false,
             totalWords = 20,
-            studiedWords = 15 // 15/20 = 75%
+            studiedWords = 15,
+            masteredWords = 12 // 12/20 = 60%
         )
         assertEquals(LevelStatus.READY_FOR_TEST, status)
     }
 
     @Test
-    fun `determineLevelStatus returns IN_PROGRESS when some words studied but less than 75 percent`() {
+    fun `determineLevelStatus returns IN_PROGRESS when mastered words less than 60 percent`() {
         val status = MasteryTestEngine.determineLevelStatus(
             isUnlocked = true,
             isMastered = false,
             totalWords = 20,
-            studiedWords = 5 // 5/20 = 25%
+            studiedWords = 10,
+            masteredWords = 11 // 11/20 = 55% (< 60%)
         )
         assertEquals(LevelStatus.IN_PROGRESS, status)
+    }
+
+    @Test
+    fun `isTestEligible enforces 60 percent mastery requirement`() {
+        // Locked level is never eligible
+        assertFalse(MasteryTestEngine.isTestEligible(isUnlocked = false, isMastered = false, totalWords = 100, masteredWords = 100))
+
+        // Level unlocked but below 60%
+        assertFalse(MasteryTestEngine.isTestEligible(isUnlocked = true, isMastered = false, totalWords = 150, masteredWords = 89))
+
+        // Level unlocked and reached 60% (150 * 0.6 = 90)
+        assertTrue(MasteryTestEngine.isTestEligible(isUnlocked = true, isMastered = false, totalWords = 150, masteredWords = 90))
+
+        // Level unlocked and reached 100%
+        assertTrue(MasteryTestEngine.isTestEligible(isUnlocked = true, isMastered = false, totalWords = 150, masteredWords = 150))
+
+        // Mastered level is always eligible for retake
+        assertTrue(MasteryTestEngine.isTestEligible(isUnlocked = true, isMastered = true, totalWords = 150, masteredWords = 0))
+    }
+
+    @Test
+    fun `calculateRequiredMasteryCount returns 60 percent ceil`() {
+        assertEquals(90, MasteryTestEngine.calculateRequiredMasteryCount(150)) // 150 * 0.6 = 90
+        assertEquals(120, MasteryTestEngine.calculateRequiredMasteryCount(200)) // 200 * 0.6 = 120
+        assertEquals(150, MasteryTestEngine.calculateRequiredMasteryCount(250)) // 250 * 0.6 = 150
+        assertEquals(0, MasteryTestEngine.calculateRequiredMasteryCount(0))
     }
 
     @Test

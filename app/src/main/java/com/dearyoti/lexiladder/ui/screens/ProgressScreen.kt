@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,6 +44,7 @@ import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.data.preferences.UserPreferences
 import com.dearyoti.lexiladder.domain.model.LevelStatus
+import com.dearyoti.lexiladder.domain.service.MasteryTestEngine
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -255,23 +257,35 @@ fun ProgressScreen(
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
+                        val isEligible = MasteryTestEngine.isTestEligible(level)
+                        val req60 = MasteryTestEngine.calculateRequiredMasteryCount(level.totalWords)
                         Button(
                             onClick = { onNavigateToMasteryTest(level.id) },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (level.isMastered)
-                                    MaterialTheme.colorScheme.secondary
-                                else
-                                    MaterialTheme.colorScheme.primary
+                                containerColor = when {
+                                    level.isMastered -> MaterialTheme.colorScheme.secondary
+                                    isEligible -> MaterialTheme.colorScheme.primary
+                                    else -> MaterialTheme.colorScheme.surfaceVariant
+                                },
+                                contentColor = when {
+                                    level.isMastered -> MaterialTheme.colorScheme.onSecondary
+                                    isEligible -> MaterialTheme.colorScheme.onPrimary
+                                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                }
                             )
                         ) {
-                            Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
+                            Icon(
+                                imageVector = if (!isEligible && !level.isMastered) Icons.Default.Lock else Icons.Default.WorkspacePremium,
+                                contentDescription = null
+                            )
                             Spacer(modifier = Modifier.padding(4.dp))
                             Text(
-                                text = if (level.isMastered)
-                                    (if (uiLang == "id") "Ulangi Ujian Level 🏆" else "Retake Mastery Test 🏆")
-                                else
-                                    (if (uiLang == "id") "Ikuti Ujian Level (Lulus ${level.requiredPassingScore}%) 🎯" else "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯")
+                                text = when {
+                                    level.isMastered -> if (uiLang == "id") "Ulangi Ujian Level 🏆" else "Retake Mastery Test 🏆"
+                                    isEligible -> if (uiLang == "id") "Ikuti Ujian Level (Lulus ${level.requiredPassingScore}%) 🎯" else "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯"
+                                    else -> if (uiLang == "id") "Ujian Terkunci (Kuasai 60% Kata: ${level.masteredWords}/$req60) 🔒" else "Exam Locked (Master 60% Words: ${level.masteredWords}/$req60) 🔒"
+                                }
                             )
                         }
                     } else {

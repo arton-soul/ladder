@@ -67,7 +67,8 @@ class VocabularyRepositoryImpl(
                     isUnlocked = levelEntity.isUnlocked,
                     isMastered = isMastered,
                     totalWords = total,
-                    studiedWords = studied
+                    studiedWords = studied,
+                    masteredWords = mastered
                 )
                 levelEntity.toDomainModel(
                     totalWords = total,

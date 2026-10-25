@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.AlertDialog
@@ -55,9 +56,11 @@ import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.core.localization.UiLocalizer
 import com.dearyoti.lexiladder.core.notification.ContentNotificationHelper
+import com.dearyoti.lexiladder.core.notification.ExamNotificationHelper
 import com.dearyoti.lexiladder.data.content.ContentUpdateResult
 import com.dearyoti.lexiladder.data.preferences.UserPreferencesRepository
 import com.dearyoti.lexiladder.domain.model.LevelStatus
+import com.dearyoti.lexiladder.domain.service.MasteryTestEngine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -106,6 +109,44 @@ fun HomeScreen(
     // In-App Content Update Popup State
     var showUpdateDialog by remember { mutableStateOf(false) }
     var availableUpdateCount by remember { mutableIntStateOf(0) }
+
+    // Exam Readiness Milestone Notification (60% and 100%)
+    var pendingExamNotification by remember { mutableStateOf<Pair<com.dearyoti.lexiladder.domain.model.Level, Boolean>?>(null) } // Pair(Level, isHundredPercent)
+
+    LaunchedEffect(levels, prefs.notifiedExam60LevelIds, prefs.notifiedExam100LevelIds) {
+        // Priority 1: Check 100% milestone if not yet notified and level not yet mastered
+        val level100 = levels.firstOrNull { lvl ->
+            lvl.isUnlocked && !lvl.isMastered && lvl.totalWords > 0 &&
+            lvl.masteredWords >= lvl.totalWords &&
+            lvl.id !in prefs.notifiedExam100LevelIds
+        }
+        if (level100 != null) {
+            pendingExamNotification = Pair(level100, true)
+            ExamNotificationHelper.showExamUnlockedNotification(
+                context = context,
+                level = level100,
+                isHundredPercent = true,
+                uiLanguage = lang
+            )
+            return@LaunchedEffect
+        }
+
+        // Priority 2: Check 60% milestone if not yet notified and level not yet mastered
+        val level60 = levels.firstOrNull { lvl ->
+            lvl.isUnlocked && !lvl.isMastered && lvl.totalWords > 0 &&
+            lvl.masteredWords >= MasteryTestEngine.calculateRequiredMasteryCount(lvl.totalWords) &&
+            lvl.id !in prefs.notifiedExam60LevelIds
+        }
+        if (level60 != null) {
+            pendingExamNotification = Pair(level60, false)
+            ExamNotificationHelper.showExamUnlockedNotification(
+                context = context,
+                level = level60,
+                isHundredPercent = false,
+                uiLanguage = lang
+            )
+        }
+    }
 
     // Automatic Periodic Check: once every 24 hours (1 day)
     LaunchedEffect(Unit) {
@@ -183,6 +224,87 @@ fun HomeScreen(
                         scope.launch {
                             prefsRepo.updateLastContentCheckTimestamp()
                         }
+                    }
+                ) {
+                    Text(if (isId) "Nanti Saja" else "Later")
+                }
+            }
+        )
+    }
+
+    if (pendingExamNotification != null) {
+        val (levelToExam, is100) = pendingExamNotification!!
+        val isId = lang == "id"
+        AlertDialog(
+            onDismissRequest = {
+                val lvlId = levelToExam.id
+                scope.launch {
+                    prefsRepo.markExamEligibleNotified(lvlId, isHundredPercent = is100)
+                }
+                pendingExamNotification = null
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.WorkspacePremium,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(36.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = if (is100) {
+                        if (isId) "100% Kosakata Dikuasai! 🏆" else "100% Vocabulary Mastered! 🏆"
+                    } else {
+                        if (isId) "Ujian Level Terbuka! 🎯" else "Level Exam Unlocked! 🎯"
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = if (is100) {
+                        if (isId)
+                            "Luar biasa! Seluruh kosakata (100%) di ${levelToExam.title} telah Anda kuasai. Ayo ikuti Ujian Tingkat Level sekarang untuk menyelesaikan sertifikasi dan membuka level berikutnya!"
+                        else
+                            "Incredible! You have mastered 100% of the vocabulary in ${levelToExam.title}. Take the Level Mastery Test now to earn certification and unlock the next level!"
+                    } else {
+                        val req = MasteryTestEngine.calculateRequiredMasteryCount(levelToExam.totalWords)
+                        if (isId)
+                            "Selamat! Anda telah menguasai 60% kosakata ($req dari ${levelToExam.totalWords} kata) di ${levelToExam.title}. Anda sekarang sudah memenuhi syarat dan bisa mengikuti Ujian Naik Level!"
+                        else
+                            "Congratulations! You have mastered 60% of the vocabulary ($req of ${levelToExam.totalWords} words) in ${levelToExam.title}. You are now ready to take the Level Mastery Test!"
+                    }
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val lvlId = levelToExam.id
+                        scope.launch {
+                            prefsRepo.markExamEligibleNotified(lvlId, isHundredPercent = is100)
+                        }
+                        pendingExamNotification = null
+                        onNavigateToMasteryTest(lvlId)
+                    }
+                ) {
+                    Text(
+                        if (is100) {
+                            if (isId) "Mulai Ujian Sekarang 🚀" else "Start Exam Now 🚀"
+                        } else {
+                            if (isId) "Ikuti Ujian Sekarang 🎯" else "Take Exam Now 🎯"
+                        }
+                    )
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = {
+                        val lvlId = levelToExam.id
+                        scope.launch {
+                            prefsRepo.markExamEligibleNotified(lvlId, isHundredPercent = is100)
+                        }
+                        pendingExamNotification = null
                     }
                 ) {
                     Text(if (isId) "Nanti Saja" else "Later")
@@ -519,23 +641,35 @@ fun HomeScreen(
                 // Mastery Test Button
                 currentLevel?.let { lvl ->
                     Spacer(modifier = Modifier.height(8.dp))
+                    val isEligible = MasteryTestEngine.isTestEligible(lvl)
+                    val req60 = MasteryTestEngine.calculateRequiredMasteryCount(lvl.totalWords)
                     Button(
                         onClick = { onNavigateToMasteryTest(lvl.id) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (lvl.isMastered)
-                                MaterialTheme.colorScheme.secondary
-                            else
-                                MaterialTheme.colorScheme.primary
+                            containerColor = when {
+                                lvl.isMastered -> MaterialTheme.colorScheme.secondary
+                                isEligible -> MaterialTheme.colorScheme.primary
+                                else -> MaterialTheme.colorScheme.surfaceVariant
+                            },
+                            contentColor = when {
+                                lvl.isMastered -> MaterialTheme.colorScheme.onSecondary
+                                isEligible -> MaterialTheme.colorScheme.onPrimary
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                     ) {
-                        Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = if (!isEligible && !lvl.isMastered) Icons.Default.Lock else Icons.Default.WorkspacePremium,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = if (lvl.isMastered)
-                                (if (lang == "id") "Ulangi Ujian Level 🏆" else "Retake Level Mastery Test 🏆")
-                            else
-                                (if (lang == "id") "Ikuti Ujian Level 🎯" else "Take Level Mastery Test 🎯")
+                            text = when {
+                                lvl.isMastered -> if (lang == "id") "Ulangi Ujian Level 🏆" else "Retake Level Mastery Test 🏆"
+                                isEligible -> if (lang == "id") "Ikuti Ujian Level 🎯" else "Take Level Mastery Test 🎯"
+                                else -> if (lang == "id") "Ujian Terkunci (Kuasai 60% Kata: ${lvl.masteredWords}/$req60) 🔒" else "Exam Locked (Master 60% Words: ${lvl.masteredWords}/$req60) 🔒"
+                            }
                         )
                     }
                 }

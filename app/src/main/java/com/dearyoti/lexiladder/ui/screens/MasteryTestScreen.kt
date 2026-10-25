@@ -225,7 +225,15 @@ private fun MasteryTestIntroView(
     uiLanguage: String = "en",
     onStartTest: () -> Unit
 ) {
-    val isLocked = level?.isUnlocked != true
+    val isUnlocked = level?.isUnlocked == true
+    val isMastered = level?.isMastered == true
+    val isEligible = level != null && MasteryTestEngine.isTestEligible(level)
+    val isLocked = !isEligible
+
+    val totalWords = if (wordsCount > 0) wordsCount else (level?.totalWords ?: 0)
+    val masteredCount = level?.masteredWords ?: 0
+    val required60Count = MasteryTestEngine.calculateRequiredMasteryCount(totalWords)
+    val masteryPercentage = if (totalWords > 0) ((masteredCount.toFloat() / totalWords) * 100).toInt() else 0
 
     Column(
         modifier = Modifier
@@ -321,6 +329,19 @@ private fun MasteryTestIntroView(
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                         )
                     }
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            text = "⭐ $masteredCount/$totalWords ${if (isId) "Dikuasai" else "Mastered"} ($masteryPercentage%)",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (masteryPercentage >= 60) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
                 }
             }
         }
@@ -394,16 +415,43 @@ private fun MasteryTestIntroView(
                 )
 
                 // Item 4: Prerequisite
+                val prereqTitle = if (isId) "Prasyarat Ujian" else "Exam Prerequisites"
+                val prereqSubtitle: String
+                val prereqBadgeText: String
+                val prereqBadgeColor: Color
+                val prereqBadgeTextColor: Color
+
+                if (!isUnlocked) {
+                    prereqSubtitle = if (isId) "Selesaikan ujian level sebelumnya terlebih dahulu" else "Complete prerequisite level first"
+                    prereqBadgeText = if (isId) "Terkunci 🔒" else "Locked 🔒"
+                    prereqBadgeColor = Color(0xFFEEEEEE)
+                    prereqBadgeTextColor = Color(0xFF757575)
+                } else if (!isEligible) {
+                    prereqSubtitle = if (isId)
+                        "Kuasai minimal 60% kata ($required60Count kata). Saat ini: $masteredCount/$totalWords kata ($masteryPercentage%)"
+                    else
+                        "Master at least 60% of words ($required60Count words). Current: $masteredCount/$totalWords ($masteryPercentage%)"
+                    prereqBadgeText = if (isId) "Terkunci 🔒 ($masteryPercentage%/60%)" else "Locked 🔒 ($masteryPercentage%/60%)"
+                    prereqBadgeColor = Color(0xFFFFEBEE)
+                    prereqBadgeTextColor = Color(0xFFC62828)
+                } else {
+                    prereqSubtitle = if (isMastered) {
+                        if (isId) "Level telah tuntas dan bersertifikasi ✓" else "Level certified & mastered ✓"
+                    } else {
+                        if (isId) "Syarat penguasaan 60% kata telah terpenuhi ($masteredCount/$totalWords kata) ✓" else "60% mastery requirement achieved ($masteredCount/$totalWords words) ✓"
+                    }
+                    prereqBadgeText = if (isId) "Siap ✓" else "Ready ✓"
+                    prereqBadgeColor = Color(0xFFE8F5E9)
+                    prereqBadgeTextColor = Color(0xFF2E7D32)
+                }
+
                 SpecTile(
                     icon = "🔑",
-                    title = if (isId) "Prasyarat Level" else "Prerequisites",
-                    subtitle = if (isLocked)
-                        (if (isId) "Selesaikan level sebelumnya terlebih dahulu" else "Complete prerequisite level first")
-                    else
-                        (if (isId) "Semua prasyarat telah terpenuhi" else "All prerequisites are completed"),
-                    badgeText = if (isLocked) (if (isId) "Terkunci 🔒" else "Locked 🔒") else (if (isId) "Siap ✓" else "Ready ✓"),
-                    badgeColor = if (isLocked) Color(0xFFEEEEEE) else Color(0xFFE8F5E9),
-                    badgeTextColor = if (isLocked) Color(0xFF757575) else Color(0xFF2E7D32)
+                    title = prereqTitle,
+                    subtitle = prereqSubtitle,
+                    badgeText = prereqBadgeText,
+                    badgeColor = prereqBadgeColor,
+                    badgeTextColor = prereqBadgeTextColor
                 )
 
                 HorizontalDivider(
@@ -433,14 +481,19 @@ private fun MasteryTestIntroView(
             shape = RoundedCornerShape(14.dp)
         ) {
             Icon(
-                imageVector = if (level?.isMastered == true) Icons.Default.Refresh else Icons.Default.PlayArrow,
+                imageVector = when {
+                    isMastered -> Icons.Default.Refresh
+                    isLocked -> Icons.Default.Lock
+                    else -> Icons.Default.PlayArrow
+                },
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = when {
-                    isLocked -> if (uiLanguage == "id") "Level Masih Terkunci 🔒" else "Level Locked 🔒"
-                    level?.isMastered == true -> UiLocalizer.getString("test_retake_btn", uiLanguage)
+                    !isUnlocked -> if (uiLanguage == "id") "Level Masih Terkunci 🔒" else "Level Locked 🔒"
+                    !isEligible -> if (uiLanguage == "id") "Terkunci: Kuasai Min. 60% Kata ($masteredCount/$required60Count) 🔒" else "Locked: Master Min 60% Words ($masteredCount/$required60Count) 🔒"
+                    isMastered -> UiLocalizer.getString("test_retake_btn", uiLanguage)
                     else -> if (uiLanguage == "id") "Mulai Ujian Sertifikasi Level 🚀" else "Start Level Mastery Test 🚀"
                 },
                 style = MaterialTheme.typography.titleMedium,
