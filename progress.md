@@ -11,7 +11,7 @@
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
 - **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS in 1m 32s) & `.\gradlew bundleRelease` (SUCCESS AAB v1.0.1 14.51 MiB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 73/73 unit tests passed)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 74/74 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.1` (Build 2)
@@ -542,6 +542,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-20 | Phase 8 | Pembaruan Google Play Billing 8.0.0 & Kenaikan Versi (v1.0.1 Build 2): Upgrade pustaka com.android.billingclient:billing-ktx ke 8.0.0, adaptasi QueryProductDetailsResult di BillingManager, kenaikan versionCode = 2 dan versionName = '1.0.1', perakitan ulang signed bundle app-release.aab (14.51 MiB), dan verifikasi jarsigner sukses | `.\gradlew bundleRelease` (SUCCESS in 2m 51s) & `.\gradlew testDebugUnitTest` (59/59 passed) | DONE |
 | 2026-10-25 | Phase 8 | Pengunggahan Berhasil ke Google Play Console (Internal Testing): Versi 1.0.1 (Build 2) dengan Billing Library 8.0.0 berhasil diunggah ke track pengujian internal akun pengembang dearyoti | Dikonfirmasi pengguna di Google Play Console | IN PROGRESS |
 | 2026-10-25 | Phase 8 | Penyelesaian 3 Isu Pengujian Fisik Xiaomi Redmi Note 8 Pro: (1) Perhitungan Target Harian reaktif berdasarkan `todayStudyCount` dan target harian kata, (2) Seeding paket bawaan ke DB (`seedBundledPackagesIfEmpty`) dan penyimpanan timestamp pada 'Nanti Saja' agar dialog update konten tidak muncul terus, (3) Tampilan kata dipelajari & kata dikuasai reaktif (`combine(levelDao, userProgressDao)`) di HomeScreen | `.\gradlew testDebugUnitTest` (73/73 passed) | DONE |
+| 2026-10-25 | Phase 8 | Penyempurnaan UI Profesional & Standar Ujian: (1) Redesain kartu Target Harian & Progres Materi Level di HomeScreen (badge pil, tipografi headline, progress bar bulat 8dp, indikator persentase & sisa kata), (2) Sinkronisasi level aktif (Home, Learn, Practice) via DataStore `selectedLevelId`, (3) Peningkatan ujian sertifikasi level menjadi 25 soal teracak (DEFAULT_QUESTION_COUNT = 25, passing score 80% = minimal 20/25) | `.\gradlew testDebugUnitTest` (74/74 passed) | DONE |
 
 
 

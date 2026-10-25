@@ -352,6 +352,11 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Penanganan tombol "Nanti Saja" untuk mencatat timestamp penundaan 24 jam.
   - [x] Reaktivitas instan `getAllLevels()` dengan menggabungkan flow `levelDao` dan `userProgressDao` agar jumlah kata dipelajari & dikuasai langsung ter-update di layar Beranda seketika setelah menyelesaikan kuis.
   - [x] Tampilan Beranda menampilkan progres materi level ("X / 150 kata dipelajari") dan kartu target harian dengan progress bar responsif.
+- [x] Penyempurnaan UI Profesional & Standar Ujian Level:
+  - [x] Desain ulang kartu Target Harian di HomeScreen dengan badge pil status, headline angka jelas, teks sisa kata, dan progress bar rounded 8dp.
+  - [x] Wadah khusus (Surface) modern untuk Progres Materi Level di HomeScreen dengan label PROGRES MATERI, pill badge piala kata dikuasai, persentase terselesaikan, dan kata tersisa.
+  - [x] Sinkronisasi level terpilih secara global via DataStore `selectedLevelId` antar Beranda, Belajar, dan Latihan agar pengguna tetap pada program latihan level yang dipilih.
+  - [x] Peningkatan standar kelulusan ujian level dari 10 soal menjadi 25 soal teracak komprehensif (`DEFAULT_QUESTION_COUNT = 25`, passing score 80% = minimal 20/25 benar).
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.

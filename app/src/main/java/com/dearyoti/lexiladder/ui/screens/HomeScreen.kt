@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,10 +45,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dearyoti.lexiladder.LexiLadderApp
 import com.dearyoti.lexiladder.core.ads.AdBannerView
 import com.dearyoti.lexiladder.core.localization.UiLocalizer
@@ -74,24 +78,25 @@ fun HomeScreen(
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
 
-    var selectedLevelId by remember { mutableStateOf<String?>(null) }
-    val currentLevel = remember(levels, selectedLevelId) {
-        if (selectedLevelId != null) {
-            levels.firstOrNull { it.id == selectedLevelId && it.isUnlocked }
+    val prefs by prefsRepo.userPreferencesFlow.collectAsState(
+        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences()
+    )
+    val lang = prefs.uiLanguage
+
+    val savedLevelId = prefs.selectedLevelId
+    val currentLevel = remember(levels, savedLevelId) {
+        if (savedLevelId.isNotBlank()) {
+            levels.firstOrNull { it.id == savedLevelId && it.isUnlocked }
         } else {
-            levels.firstOrNull { it.isUnlocked && !it.isMastered }
-                ?: levels.filter { it.isUnlocked }.maxByOrNull { it.order }
-                ?: levels.firstOrNull()
-        }
+            null
+        } ?: levels.firstOrNull { it.isUnlocked && !it.isMastered }
+          ?: levels.filter { it.isUnlocked }.maxByOrNull { it.order }
+          ?: levels.firstOrNull()
     }
     val activeLevelId = currentLevel?.id ?: "level_a1"
     val words by repo.getWordsByLevel(activeLevelId).collectAsState(initial = emptyList())
     val dueCount by repo.getDueReviewCount().collectAsState(initial = 0)
     val difficultWords by repo.getDifficultWords().collectAsState(initial = emptyList())
-    val prefs by prefsRepo.userPreferencesFlow.collectAsState(
-        initial = com.dearyoti.lexiladder.data.preferences.UserPreferences()
-    )
-    val lang = prefs.uiLanguage
 
     val totalWords = if (words.isNotEmpty()) words.size else (currentLevel?.totalWords ?: 40)
     val levelStudiedCount = currentLevel?.studiedWords ?: 0
@@ -233,38 +238,107 @@ fun HomeScreen(
         // Daily target header
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f))
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(18.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = UiLocalizer.getString("home_target_title", lang, prefs.dailyGoalMinutes),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Text(
-                        text = "${(prefs.dailyGoalProgressFraction * 100).toInt()}% " +
-                                (if (lang == "id") "Selesai" else "Done") +
-                                " (${prefs.effectiveTodayStudyCount}/${prefs.dailyTargetReviews} ${if (lang == "id") "kata" else "words"})",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("🎯", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                        Text(
+                            text = UiLocalizer.getString("home_target_title", lang, prefs.dailyGoalMinutes),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+
+                    // Status Pill Badge
+                    val isDailyGoalReached = prefs.dailyGoalProgressFraction >= 1f
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = if (isDailyGoalReached)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            if (isDailyGoalReached) {
+                                Text(
+                                    text = "✓",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                            Text(
+                                text = "${(prefs.dailyGoalProgressFraction * 100).toInt()}% " +
+                                        if (lang == "id") "Selesai" else "Done",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isDailyGoalReached)
+                                    MaterialTheme.colorScheme.onPrimary
+                                else
+                                    MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = UiLocalizer.getString("home_target_desc", lang, prefs.dailyGoalMinutes),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                Spacer(modifier = Modifier.height(12.dp))
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = UiLocalizer.getString("home_target_desc", lang, prefs.dailyGoalMinutes),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                    )
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(
+                            text = "${prefs.effectiveTodayStudyCount}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            text = " / ${prefs.dailyTargetReviews} ${if (lang == "id") "kata" else "words"}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
+                            modifier = Modifier.padding(bottom = 2.dp, start = 2.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
                 LinearProgressIndicator(
                     progress = { prefs.dailyGoalProgressFraction },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(4.dp))
                 )
             }
         }
@@ -280,7 +354,11 @@ fun HomeScreen(
                     val badge = if (lvl.isMastered) "🏆" else "🔓"
                     FilterChip(
                         selected = isSelected,
-                        onClick = { selectedLevelId = lvl.id },
+                        onClick = {
+                            scope.launch {
+                                prefsRepo.updateSelectedLevel(lvl.id)
+                            }
+                        },
                         label = { Text("${lvl.title.split(":").firstOrNull() ?: lvl.title} $badge") }
                     )
                 }
@@ -290,9 +368,10 @@ fun HomeScreen(
         // Active Level Card
         Card(
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(18.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -307,7 +386,7 @@ fun HomeScreen(
                         HomeStatusBadge(status = lvl.status, uiLanguage = lang)
                     }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = currentLevel?.description ?: "Essential vocabulary for everyday conversations",
                     style = MaterialTheme.typography.bodyMedium,
@@ -315,51 +394,126 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
+                // Modern Dedicated Progress Container
+                Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = if (lang == "id") "Progres Materi Level" else "Level Progress",
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                        Text(
-                            text = "$levelStudiedCount / $totalWords " + if (lang == "id") "kata dipelajari" else "words studied",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "🏆 $levelMasteredCount " + if (lang == "id") "kata dikuasai penuh" else "mastered",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = if (lang == "id") "PROGRES MATERI" else "MATERIAL PROGRESS",
+                                    style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Row(verticalAlignment = Alignment.Bottom) {
+                                    Text(
+                                        text = "$levelStudiedCount",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = " / $totalWords ${if (lang == "id") "kata" else "words"}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(bottom = 2.dp, start = 4.dp)
+                                    )
+                                }
+                            }
 
-                    Button(onClick = onNavigateToLearn) {
-                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
-                        Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = UiLocalizer.getString("home_learn_words", lang))
+                            // Mastered words pill badge
+                            Surface(
+                                shape = RoundedCornerShape(20.dp),
+                                color = MaterialTheme.colorScheme.secondaryContainer
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text("🏆", style = MaterialTheme.typography.bodySmall)
+                                    Text(
+                                        text = "$levelMasteredCount ${if (lang == "id") "dikuasai" else "mastered"}",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        LinearProgressIndicator(
+                            progress = { levelProgressFraction },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "${(levelProgressFraction * 100).toInt()}% " +
+                                        if (lang == "id") "terselesaikan" else "completed",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            if (levelStudiedCount < totalWords) {
+                                Text(
+                                    text = "${totalWords - levelStudiedCount} " +
+                                            if (lang == "id") "kata tersisa" else "words remaining",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
-                LinearProgressIndicator(
-                    progress = { levelProgressFraction },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(modifier = Modifier.height(14.dp))
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                OutlinedButton(
-                    onClick = onNavigateToPractice,
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.FitnessCenter, contentDescription = "Practice")
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    Text(text = UiLocalizer.getString("home_quick_quiz", lang))
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                currentLevel?.let { prefsRepo.updateSelectedLevel(it.id) }
+                            }
+                            onNavigateToLearn()
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = UiLocalizer.getString("home_learn_words", lang))
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                currentLevel?.let { prefsRepo.updateSelectedLevel(it.id) }
+                            }
+                            onNavigateToPractice()
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(imageVector = Icons.Default.FitnessCenter, contentDescription = "Practice")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = UiLocalizer.getString("home_quick_quiz", lang))
+                    }
                 }
 
                 // Mastery Test Button
@@ -376,7 +530,7 @@ fun HomeScreen(
                         )
                     ) {
                         Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null)
-                        Spacer(modifier = Modifier.padding(4.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = if (lvl.isMastered)
                                 (if (lang == "id") "Ulangi Ujian Level 🏆" else "Retake Level Mastery Test 🏆")

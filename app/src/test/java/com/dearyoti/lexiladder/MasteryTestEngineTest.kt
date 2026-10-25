@@ -94,6 +94,30 @@ class MasteryTestEngineTest {
     }
 
     @Test
+    fun `generateQuestions uses default question count of 25 when available`() {
+        val largeWordList = (1..30).map { i ->
+            Word(
+                id = "w_$i",
+                text = "Word_$i",
+                partOfSpeech = "noun",
+                definition = "Definition $i",
+                exampleSentence = "Sentence with Word_$i.",
+                levelId = "level_a1",
+                unitId = "unit_1",
+                translation = "Terjemahan $i"
+            )
+        }
+
+        val questions = MasteryTestEngine.generateQuestions(
+            words = largeWordList,
+            randomSeed = 42L
+        )
+
+        assertEquals("Default question count should be 25", MasteryTestEngine.DEFAULT_QUESTION_COUNT, questions.size)
+        assertEquals(25, questions.size)
+    }
+
+    @Test
     fun `evaluateTest calculates score and passes when score reaches passing threshold`() {
         val questions = MasteryTestEngine.generateQuestions(
             words = sampleWords,

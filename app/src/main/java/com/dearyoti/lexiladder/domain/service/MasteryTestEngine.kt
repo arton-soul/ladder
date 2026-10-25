@@ -11,7 +11,7 @@ import kotlin.random.Random
 object MasteryTestEngine {
 
     const val DEFAULT_PASSING_PERCENTAGE = 80
-    const val DEFAULT_QUESTION_COUNT = 10
+    const val DEFAULT_QUESTION_COUNT = 25
     const val REQUIRED_STUDY_RATIO = 0.75f // 75% of words must be studied to be ready for test
 
     fun determineLevelStatus(

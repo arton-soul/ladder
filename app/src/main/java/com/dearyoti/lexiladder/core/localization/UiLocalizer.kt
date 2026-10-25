@@ -116,9 +116,9 @@ object UiLocalizer {
         // Mastery Test
         "test_specs_title" to "Test Specifications",
         "test_specs_questions" to "Questions",
-        "test_specs_questions_val" to "10 Randomized questions",
+        "test_specs_questions_val" to "25 Randomized questions",
         "test_specs_passing" to "Passing Score",
-        "test_specs_passing_val" to "80% (8 of 10 correct)",
+        "test_specs_passing_val" to "80% (20 of 25 correct)",
         "test_specs_format" to "Format",
         "test_specs_format_val" to "Meaning, Translation & Sentence Completion",
         "test_specs_outcome" to "Outcome",
@@ -238,9 +238,9 @@ object UiLocalizer {
         // Mastery Test
         "test_specs_title" to "Spesifikasi Ujian",
         "test_specs_questions" to "Jumlah Soal",
-        "test_specs_questions_val" to "10 Soal Teracak",
+        "test_specs_questions_val" to "25 Soal Teracak",
         "test_specs_passing" to "Nilai Kelulusan",
-        "test_specs_passing_val" to "80% (8 dari 10 benar)",
+        "test_specs_passing_val" to "80% (20 dari 25 benar)",
         "test_specs_format" to "Format",
         "test_specs_format_val" to "Arti, Terjemahan & Melengkapi Kalimat",
         "test_specs_outcome" to "Hasil",

@@ -105,7 +105,8 @@ fun MasteryTestScreen(
     var nextLevelUnlocked by remember { mutableStateOf(false) }
 
     fun startNewTest() {
-        val count = if (words.size >= 10) 10 else words.size.coerceAtLeast(3)
+        val targetCount = MasteryTestEngine.DEFAULT_QUESTION_COUNT
+        val count = if (words.size >= targetCount) targetCount else words.size.coerceAtLeast(3)
         questions = MasteryTestEngine.generateQuestions(
             words = words,
             questionCount = count
@@ -269,6 +270,12 @@ private fun MasteryTestIntroView(
         }
 
         // Test Rules Card
+        val isId = uiLanguage == "id"
+        val targetCount = MasteryTestEngine.DEFAULT_QUESTION_COUNT
+        val actualCount = if (wordsCount >= targetCount) targetCount else wordsCount.coerceAtLeast(3)
+        val passingScore = level?.requiredPassingScore ?: MasteryTestEngine.DEFAULT_PASSING_PERCENTAGE
+        val minCorrect = kotlin.math.ceil(actualCount * (passingScore / 100.0)).toInt()
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -284,11 +291,11 @@ private fun MasteryTestIntroView(
                 )
                 RuleItem(
                     label = UiLocalizer.getString("test_specs_questions", uiLanguage),
-                    value = UiLocalizer.getString("test_specs_questions_val", uiLanguage)
+                    value = if (isId) "$actualCount Soal Teracak (Komprehensif)" else "$actualCount Randomized Questions (Comprehensive)"
                 )
                 RuleItem(
                     label = UiLocalizer.getString("test_specs_passing", uiLanguage),
-                    value = "${level?.requiredPassingScore ?: 80}% (8 of 10 correct)"
+                    value = if (isId) "$passingScore% (Minimal $minCorrect dari $actualCount benar)" else "$passingScore% (Minimum $minCorrect of $actualCount correct)"
                 )
                 RuleItem(
                     label = UiLocalizer.getString("test_specs_format", uiLanguage),

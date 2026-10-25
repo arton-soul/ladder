@@ -76,7 +76,11 @@ fun PracticeScreen(
     val scope = rememberCoroutineScope()
 
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
-    var selectedLevelId by remember { mutableStateOf("all") }
+    val defaultLevelId = remember(prefs.selectedLevelId, unlockedLevels) {
+        if (unlockedLevels.any { it.id == prefs.selectedLevelId }) prefs.selectedLevelId
+        else unlockedLevels.firstOrNull()?.id ?: "level_a1"
+    }
+    var selectedLevelId by remember(defaultLevelId) { mutableStateOf(defaultLevelId) }
     var selectedMode by remember { mutableStateOf(PracticeMode.ALL) }
     var sessionRound by remember { mutableIntStateOf(0) }
 
@@ -206,6 +210,9 @@ fun PracticeScreen(
                         selected = selectedLevelId == lvl.id,
                         onClick = {
                             selectedLevelId = lvl.id
+                            scope.launch {
+                                prefsRepo.updateSelectedLevel(lvl.id)
+                            }
                             currentIndex = 0
                             selectedOption = null
                             isSubmitted = false

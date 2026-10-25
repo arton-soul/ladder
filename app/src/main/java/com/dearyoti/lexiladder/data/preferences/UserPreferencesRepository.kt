@@ -31,7 +31,8 @@ data class UserPreferences(
     val lastActiveDate: String = "",
     val activeDates: Set<String> = emptySet(),
     val todayStudyCount: Int = 0,
-    val todayStudyDate: String = ""
+    val todayStudyDate: String = "",
+    val selectedLevelId: String = "level_a1"
 ) {
     val effectiveStreak: Int
         get() = UserPreferencesRepository.calculateEffectiveStreak(currentStreak, lastActiveDate)
@@ -65,6 +66,7 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_ACTIVE_DATES = stringSetPreferencesKey("active_dates")
         val KEY_TODAY_STUDY_COUNT = intPreferencesKey("today_study_count")
         val KEY_TODAY_STUDY_DATE = stringPreferencesKey("today_study_date")
+        val KEY_SELECTED_LEVEL_ID = stringPreferencesKey("selected_level_id")
 
         const val DEFAULT_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000L // 24 hours (once a day)
 
@@ -124,7 +126,8 @@ class UserPreferencesRepository(private val context: Context) {
             lastActiveDate = preferences[KEY_LAST_ACTIVE_DATE] ?: "",
             activeDates = preferences[KEY_ACTIVE_DATES] ?: emptySet(),
             todayStudyCount = preferences[KEY_TODAY_STUDY_COUNT] ?: 0,
-            todayStudyDate = preferences[KEY_TODAY_STUDY_DATE] ?: ""
+            todayStudyDate = preferences[KEY_TODAY_STUDY_DATE] ?: "",
+            selectedLevelId = preferences[KEY_SELECTED_LEVEL_ID] ?: "level_a1"
         )
     }
 
@@ -161,6 +164,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setPremium(isPremium: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[KEY_IS_PREMIUM] = isPremium
+        }
+    }
+
+    suspend fun updateSelectedLevel(levelId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_SELECTED_LEVEL_ID] = levelId
         }
     }
 

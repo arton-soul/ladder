@@ -70,10 +70,9 @@ fun LearnScreen(
 
     val levels by repo.getAllLevels().collectAsState(initial = emptyList())
     val unlockedLevels = remember(levels) { levels.filter { it.isUnlocked } }
-    var selectedLevelId by remember { mutableStateOf("level_a1") }
 
-    val activeLevelId = remember(selectedLevelId, unlockedLevels) {
-        if (unlockedLevels.any { it.id == selectedLevelId }) selectedLevelId
+    val activeLevelId = remember(prefs.selectedLevelId, unlockedLevels) {
+        if (unlockedLevels.any { it.id == prefs.selectedLevelId }) prefs.selectedLevelId
         else unlockedLevels.firstOrNull()?.id ?: "level_a1"
     }
 
@@ -139,7 +138,9 @@ fun LearnScreen(
                     FilterChip(
                         selected = activeLevelId == lvl.id,
                         onClick = {
-                            selectedLevelId = lvl.id
+                            scope.launch {
+                                prefsRepo.updateSelectedLevel(lvl.id)
+                            }
                             selectedFilter = "all"
                         },
                         label = {
