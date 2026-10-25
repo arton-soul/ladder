@@ -70,6 +70,7 @@ class LexiLadderApp : Application() {
 
         applicationScope.launch {
             vocabularyRepository.seedInitialDataIfEmpty()
+            contentUpdateManager.seedBundledPackagesIfEmpty()
         }
     }
 

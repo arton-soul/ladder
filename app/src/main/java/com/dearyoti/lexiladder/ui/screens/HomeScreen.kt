@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,8 @@ import com.dearyoti.lexiladder.core.notification.ContentNotificationHelper
 import com.dearyoti.lexiladder.data.content.ContentUpdateResult
 import com.dearyoti.lexiladder.data.preferences.UserPreferencesRepository
 import com.dearyoti.lexiladder.domain.model.LevelStatus
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -63,6 +66,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val repo = LexiLadderApp.instance.vocabularyRepository
     val prefsRepo = LexiLadderApp.instance.userPreferencesRepository
     val contentUpdateManager = LexiLadderApp.instance.contentUpdateManager
@@ -90,8 +94,9 @@ fun HomeScreen(
     val lang = prefs.uiLanguage
 
     val totalWords = if (words.isNotEmpty()) words.size else (currentLevel?.totalWords ?: 40)
+    val levelStudiedCount = currentLevel?.studiedWords ?: 0
     val levelMasteredCount = currentLevel?.masteredWords ?: 0
-    val progressFraction = if (totalWords > 0) (levelMasteredCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+    val levelProgressFraction = if (totalWords > 0) (levelStudiedCount.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
 
     // In-App Content Update Popup State
     var showUpdateDialog by remember { mutableStateOf(false) }
@@ -99,7 +104,8 @@ fun HomeScreen(
 
     // Automatic Periodic Check: once every 24 hours (1 day)
     LaunchedEffect(Unit) {
-        val lastCheck = prefs.lastContentCheckTimestamp
+        val currentPrefs = prefsRepo.userPreferencesFlow.first()
+        val lastCheck = currentPrefs.lastContentCheckTimestamp
         if (UserPreferencesRepository.isCheckIntervalElapsed(lastCheck)) {
             prefsRepo.updateLastContentCheckTimestamp()
             try {
@@ -124,7 +130,12 @@ fun HomeScreen(
     if (showUpdateDialog) {
         val isId = lang == "id"
         AlertDialog(
-            onDismissRequest = { showUpdateDialog = false },
+            onDismissRequest = {
+                showUpdateDialog = false
+                scope.launch {
+                    prefsRepo.updateLastContentCheckTimestamp()
+                }
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Default.CloudSync,
@@ -151,6 +162,9 @@ fun HomeScreen(
                 Button(
                     onClick = {
                         showUpdateDialog = false
+                        scope.launch {
+                            prefsRepo.updateLastContentCheckTimestamp()
+                        }
                         onNavigateToContentUpdates()
                     }
                 ) {
@@ -158,7 +172,14 @@ fun HomeScreen(
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showUpdateDialog = false }) {
+                OutlinedButton(
+                    onClick = {
+                        showUpdateDialog = false
+                        scope.launch {
+                            prefsRepo.updateLastContentCheckTimestamp()
+                        }
+                    }
+                ) {
                     Text(if (isId) "Nanti Saja" else "Later")
                 }
             }
@@ -227,7 +248,9 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
-                        text = "${(progressFraction * 100).toInt()}% " + if (lang == "id") "Selesai" else "Done",
+                        text = "${(prefs.dailyGoalProgressFraction * 100).toInt()}% " +
+                                (if (lang == "id") "Selesai" else "Done") +
+                                " (${prefs.effectiveTodayStudyCount}/${prefs.dailyTargetReviews} ${if (lang == "id") "kata" else "words"})",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -240,7 +263,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
-                    progress = { progressFraction },
+                    progress = { prefs.dailyGoalProgressFraction },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -297,15 +320,21 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = UiLocalizer.getString("home_words_mastered", lang),
+                            text = if (lang == "id") "Progres Materi Level" else "Level Progress",
                             style = MaterialTheme.typography.labelLarge
                         )
                         Text(
-                            text = "$levelMasteredCount / $totalWords " + if (lang == "id") "kata" else "words",
+                            text = "$levelStudiedCount / $totalWords " + if (lang == "id") "kata dipelajari" else "words studied",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "🏆 $levelMasteredCount " + if (lang == "id") "kata dikuasai penuh" else "mastered",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
 
@@ -315,6 +344,12 @@ fun HomeScreen(
                         Text(text = UiLocalizer.getString("home_learn_words", lang))
                     }
                 }
+
+                Spacer(modifier = Modifier.height(10.dp))
+                LinearProgressIndicator(
+                    progress = { levelProgressFraction },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(10.dp))
 

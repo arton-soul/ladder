@@ -345,6 +345,13 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Tampilan kartu `DailyStreakCard` di `ProgressScreen`: ikon 🔥/⚡, hitungan streak hari, badge rekor terbaik, kalender bergulir 7 hari terakhir (rolling 7 days) dengan penanda hari aktif & hari ini, serta feedback dinamis.
   - [x] String lokalisasi antarmuka EN dan ID lengkap di `UiLocalizer`.
   - [x] Unit test `DailyStreakTest` (6 tes lolos) & `UiLocalizerTest`.
+- [x] Perbaikan Target Harian, Reaktivitas Beranda & Siklus Pembaruan:
+  - [x] Pelacakan harian `todayStudyCount` dan `todayStudyDate` di DataStore preferences.
+  - [x] Perhitungan persentase target harian dinamis (`dailyGoalProgressFraction`) berdasarkan menit target belajar yang dipilih.
+  - [x] Registrasi otomatis 5 paket bawaan APK ke `installed_packages` (`seedBundledPackagesIfEmpty()`) sehingga remote update check tidak mendeteksi paket lama sebagai pembaruan baru.
+  - [x] Penanganan tombol "Nanti Saja" untuk mencatat timestamp penundaan 24 jam.
+  - [x] Reaktivitas instan `getAllLevels()` dengan menggabungkan flow `levelDao` dan `userProgressDao` agar jumlah kata dipelajari & dikuasai langsung ter-update di layar Beranda seketika setelah menyelesaikan kuis.
+  - [x] Tampilan Beranda menampilkan progres materi level ("X / 150 kata dipelajari") dan kartu target harian dengan progress bar responsif.
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.

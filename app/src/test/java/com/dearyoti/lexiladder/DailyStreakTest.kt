@@ -114,4 +114,46 @@ class DailyStreakTest {
         assertEquals(0, prefsBroken.effectiveStreak)
         assertFalse(prefsBroken.isStudiedToday)
     }
+
+    @Test
+    fun userPreferences_dailyGoalProgressFraction() {
+        val todayStr = LocalDate.now().toString()
+
+        // 5 minutes daily goal = 10 reviews
+        val prefsZero = UserPreferences(
+            dailyGoalMinutes = 5,
+            todayStudyCount = 0,
+            todayStudyDate = todayStr
+        )
+        assertEquals(10, prefsZero.dailyTargetReviews)
+        assertEquals(0, prefsZero.effectiveTodayStudyCount)
+        assertEquals(0f, prefsZero.dailyGoalProgressFraction, 0.001f)
+
+        // 5 words reviewed today out of 10 target -> 50%
+        val prefsHalf = UserPreferences(
+            dailyGoalMinutes = 5,
+            todayStudyCount = 5,
+            todayStudyDate = todayStr
+        )
+        assertEquals(5, prefsHalf.effectiveTodayStudyCount)
+        assertEquals(0.5f, prefsHalf.dailyGoalProgressFraction, 0.001f)
+
+        // 10 words reviewed today out of 10 target -> 100%
+        val prefsCompleted = UserPreferences(
+            dailyGoalMinutes = 5,
+            todayStudyCount = 10,
+            todayStudyDate = todayStr
+        )
+        assertEquals(10, prefsCompleted.effectiveTodayStudyCount)
+        assertEquals(1.0f, prefsCompleted.dailyGoalProgressFraction, 0.001f)
+
+        // Stale date from yesterday should result in 0 effective today count
+        val prefsYesterday = UserPreferences(
+            dailyGoalMinutes = 5,
+            todayStudyCount = 8,
+            todayStudyDate = "2026-10-24"
+        )
+        assertEquals(0, prefsYesterday.effectiveTodayStudyCount)
+        assertEquals(0f, prefsYesterday.dailyGoalProgressFraction, 0.001f)
+    }
 }

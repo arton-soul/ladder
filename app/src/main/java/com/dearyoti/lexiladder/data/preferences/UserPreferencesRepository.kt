@@ -29,13 +29,24 @@ data class UserPreferences(
     val currentStreak: Int = 0,
     val bestStreak: Int = 0,
     val lastActiveDate: String = "",
-    val activeDates: Set<String> = emptySet()
+    val activeDates: Set<String> = emptySet(),
+    val todayStudyCount: Int = 0,
+    val todayStudyDate: String = ""
 ) {
     val effectiveStreak: Int
         get() = UserPreferencesRepository.calculateEffectiveStreak(currentStreak, lastActiveDate)
 
     val isStudiedToday: Boolean
         get() = lastActiveDate == LocalDate.now().toString()
+
+    val effectiveTodayStudyCount: Int
+        get() = if (todayStudyDate == LocalDate.now().toString()) todayStudyCount else 0
+
+    val dailyTargetReviews: Int
+        get() = (dailyGoalMinutes * 2).coerceAtLeast(1)
+
+    val dailyGoalProgressFraction: Float
+        get() = (effectiveTodayStudyCount.toFloat() / dailyTargetReviews.toFloat()).coerceIn(0f, 1f)
 }
 
 class UserPreferencesRepository(private val context: Context) {
@@ -52,6 +63,8 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_BEST_STREAK = intPreferencesKey("best_streak")
         val KEY_LAST_ACTIVE_DATE = stringPreferencesKey("last_active_date")
         val KEY_ACTIVE_DATES = stringSetPreferencesKey("active_dates")
+        val KEY_TODAY_STUDY_COUNT = intPreferencesKey("today_study_count")
+        val KEY_TODAY_STUDY_DATE = stringPreferencesKey("today_study_date")
 
         const val DEFAULT_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000L // 24 hours (once a day)
 
@@ -109,7 +122,9 @@ class UserPreferencesRepository(private val context: Context) {
             currentStreak = preferences[KEY_CURRENT_STREAK] ?: 0,
             bestStreak = preferences[KEY_BEST_STREAK] ?: 0,
             lastActiveDate = preferences[KEY_LAST_ACTIVE_DATE] ?: "",
-            activeDates = preferences[KEY_ACTIVE_DATES] ?: emptySet()
+            activeDates = preferences[KEY_ACTIVE_DATES] ?: emptySet(),
+            todayStudyCount = preferences[KEY_TODAY_STUDY_COUNT] ?: 0,
+            todayStudyDate = preferences[KEY_TODAY_STUDY_DATE] ?: ""
         )
     }
 
@@ -166,10 +181,17 @@ class UserPreferencesRepository(private val context: Context) {
             val cutoff = today.minusDays(60).toString()
             val updatedDates = (existingDates + today.toString()).filter { it >= cutoff }.toSet()
 
+            val todayStr = today.toString()
+            val storedStudyDate = preferences[KEY_TODAY_STUDY_DATE] ?: ""
+            val storedCount = preferences[KEY_TODAY_STUDY_COUNT] ?: 0
+            val updatedCount = if (storedStudyDate == todayStr) storedCount + 1 else 1
+
             preferences[KEY_CURRENT_STREAK] = newStreak
             preferences[KEY_BEST_STREAK] = newBest
-            preferences[KEY_LAST_ACTIVE_DATE] = today.toString()
+            preferences[KEY_LAST_ACTIVE_DATE] = todayStr
             preferences[KEY_ACTIVE_DATES] = updatedDates
+            preferences[KEY_TODAY_STUDY_DATE] = todayStr
+            preferences[KEY_TODAY_STUDY_COUNT] = updatedCount
         }
     }
 }

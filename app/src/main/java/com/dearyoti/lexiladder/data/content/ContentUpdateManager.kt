@@ -15,6 +15,7 @@ import com.dearyoti.lexiladder.domain.content.ContentValidator
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -42,7 +43,32 @@ class ContentUpdateManager(
         return installedPackageDao.getAllInstalledPackages()
     }
 
+    suspend fun seedBundledPackagesIfEmpty() = withContext(Dispatchers.IO) {
+        val existing = installedPackageDao.getAllInstalledPackages().firstOrNull()
+        if (existing.isNullOrEmpty()) {
+            try {
+                val manifest = readBundledManifest()
+                for (pkg in manifest.packages) {
+                    installedPackageDao.insertOrUpdatePackage(
+                        InstalledPackageEntity(
+                            packageId = pkg.packageId,
+                            type = pkg.type,
+                            locale = pkg.locale,
+                            contentVersion = pkg.contentVersion,
+                            schemaVersion = pkg.schemaVersion,
+                            installedAt = System.currentTimeMillis(),
+                            sha256 = pkg.sha256
+                        )
+                    )
+                }
+            } catch (_: Exception) {
+                // Ignore bundled read failure
+            }
+        }
+    }
+
     suspend fun checkUpdates(remoteManifestUrl: String? = null): ContentUpdateResult = withContext(Dispatchers.IO) {
+        seedBundledPackagesIfEmpty()
         val manifest: ContentManifest = try {
             if (!remoteManifestUrl.isNullOrBlank()) {
                 fetchRemoteManifest(remoteManifestUrl)

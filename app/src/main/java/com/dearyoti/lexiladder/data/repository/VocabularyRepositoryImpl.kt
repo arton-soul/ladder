@@ -53,7 +53,10 @@ class VocabularyRepositoryImpl(
     }
 
     override fun getAllLevels(): Flow<List<Level>> {
-        return levelDao.getAllLevels().map { levels ->
+        return combine(
+            levelDao.getAllLevels(),
+            userProgressDao.getAllProgress()
+        ) { levels, _ ->
             levels.map { levelEntity ->
                 val total = wordDao.getWordCountByLevel(levelEntity.id)
                 val studied = userProgressDao.getStudiedWordCountByLevel(levelEntity.id)

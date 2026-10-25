@@ -11,7 +11,7 @@
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
 - **Build terakhir:** `.\gradlew assembleDebug` (SUCCESS in 1m 32s) & `.\gradlew bundleRelease` (SUCCESS AAB v1.0.1 14.51 MiB)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 72/72 unit tests passed)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 73/73 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.1` (Build 2)
@@ -345,6 +345,13 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Tampilan kartu `DailyStreakCard` di `ProgressScreen`: ikon 🔥/⚡, hitungan streak hari, badge rekor terbaik, kalender bergulir 7 hari terakhir (rolling 7 days) dengan penanda hari aktif & hari ini, serta feedback dinamis.
   - [x] String lokalisasi antarmuka EN dan ID lengkap di `UiLocalizer`.
   - [x] Unit test `DailyStreakTest` (6 tes lolos) & `UiLocalizerTest`.
+- [x] Perbaikan Target Harian, Reaktivitas Beranda & Siklus Pembaruan:
+  - [x] Pelacakan harian `todayStudyCount` dan `todayStudyDate` di DataStore preferences.
+  - [x] Perhitungan persentase target harian dinamis (`dailyGoalProgressFraction`) berdasarkan menit target belajar yang dipilih.
+  - [x] Registrasi otomatis 5 paket bawaan APK ke `installed_packages` (`seedBundledPackagesIfEmpty()`) sehingga remote update check tidak mendeteksi paket lama sebagai pembaruan baru.
+  - [x] Penanganan tombol "Nanti Saja" untuk mencatat timestamp penundaan 24 jam.
+  - [x] Reaktivitas instan `getAllLevels()` dengan menggabungkan flow `levelDao` dan `userProgressDao` agar jumlah kata dipelajari & dikuasai langsung ter-update di layar Beranda seketika setelah menyelesaikan kuis.
+  - [x] Tampilan Beranda menampilkan progres materi level ("X / 150 kata dipelajari") dan kartu target harian dengan progress bar responsif.
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.
@@ -534,6 +541,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-20 | Phase 7 | Pembuatan Signed Release Android App Bundle (AAB): Penandatanganan berkas rilis dengan keystore lexyladder.jks (alias: lexy, valid s.d. 2054), verifikasi signature jarsigner, berkas app-release.aab (14.51 MiB), dan dokumen keterangan rilis dwibahasa serta panduan unggah Play Console internal testing | `.\gradlew bundleRelease` (SUCCESS in 6m 33s, 14.51 MiB AAB) & jarsigner verified | DONE |
 | 2026-10-20 | Phase 8 | Pembaruan Google Play Billing 8.0.0 & Kenaikan Versi (v1.0.1 Build 2): Upgrade pustaka com.android.billingclient:billing-ktx ke 8.0.0, adaptasi QueryProductDetailsResult di BillingManager, kenaikan versionCode = 2 dan versionName = '1.0.1', perakitan ulang signed bundle app-release.aab (14.51 MiB), dan verifikasi jarsigner sukses | `.\gradlew bundleRelease` (SUCCESS in 2m 51s) & `.\gradlew testDebugUnitTest` (59/59 passed) | DONE |
 | 2026-10-25 | Phase 8 | Pengunggahan Berhasil ke Google Play Console (Internal Testing): Versi 1.0.1 (Build 2) dengan Billing Library 8.0.0 berhasil diunggah ke track pengujian internal akun pengembang dearyoti | Dikonfirmasi pengguna di Google Play Console | IN PROGRESS |
+| 2026-10-25 | Phase 8 | Penyelesaian 3 Isu Pengujian Fisik Xiaomi Redmi Note 8 Pro: (1) Perhitungan Target Harian reaktif berdasarkan `todayStudyCount` dan target harian kata, (2) Seeding paket bawaan ke DB (`seedBundledPackagesIfEmpty`) dan penyimpanan timestamp pada 'Nanti Saja' agar dialog update konten tidak muncul terus, (3) Tampilan kata dipelajari & kata dikuasai reaktif (`combine(levelDao, userProgressDao)`) di HomeScreen | `.\gradlew testDebugUnitTest` (73/73 passed) | DONE |
 
 
 
