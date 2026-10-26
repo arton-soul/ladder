@@ -1,4 +1,4 @@
-# Catatan Rilis Internal Testing — LexiLadder v1.0.2 (Build 3)
+# Catatan Rilis Internal Testing — LexiLadder v1.0.3 (Build 4)
 
 Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*), dan panduan lengkap pengunggahan ke **Google Play Console (Internal Testing)**.
 
@@ -10,11 +10,11 @@ Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*
 |---|---|
 | **Nama Aplikasi** | LexiLadder: English Vocab |
 | **Package Name / Application ID** | `com.dearyoti.lexiladder` |
-| **Version Name** | `1.0.2` |
-| **Version Code** | `3` |
+| **Version Name** | `1.0.3` |
+| **Version Code** | `4` |
 | **Google Play Billing Library** | `8.0.0` *(Memenuhi syarat kebijakan monetisasi terbaru Google Play)* |
 | **Tipe Berkas** | Android App Bundle (`.aab`) |
-| **Ukuran Berkas** | **14.62 MiB** (15,326,766 bytes) *(Batas Play Console: 150 MB)* |
+| **Ukuran Berkas** | **14.62 MiB** (15,328,949 bytes) *(Batas Play Console: 150 MB)* |
 | **Lokasi Berkas di Proyek** | `app/build/outputs/bundle/release/app-release.aab` |
 | **Minimum SDK** | Android 8.0 (API Level 26) |
 | **Target SDK / Compile SDK** | Android 16 (API Level 36) |
@@ -32,26 +32,24 @@ Salin teks berikut ke kolom **Catatan rilis / Release notes** di Google Play Con
 
 ### 🇮🇩 Bahasa Indonesia (`id-ID`):
 ```text
-Pembaruan Fitur & Konten LexiLadder (v1.0.2 Build 3):
-- Ekspansi Materi Kosakata Level 3 (B1 Intermediate): Penambahan 230 kata baru sehingga genap 250 kata terstruktur dalam 8 unit tematik (total katalog offline kini 600 kata: 150 kata A1, 200 kata A2, 250 kata B1).
-- Desain Baru Layar Ujian Tingkat Level: Tampilan spesifikasi ujian, standar nilai kelulusan, format soal, dan prasyarat yang lebih elegan dan profesional.
-- Peningkatan Standar Ujian Sertifikasi: 25 soal teracak komprehensif dengan nilai kelulusan minimal 80% (minimal 20 dari 25 soal benar).
-- Penguncian Ujian Berbasis Penguasaan (60% Rule): Ujian tingkat level kini terkunci hingga pengguna menguasai minimal 60% kosakata di level tersebut untuk memastikan kesiapan belajar.
-- Notifikasi Milestone Cerdas: Dialog perayaan in-app dan notifikasi Android saat mencapai 60% kata dikuasai, serta pengingat ujian saat mencapai 100% jika belum lulus ujian.
-- Pembaruan Google Play Billing Library ke versi 8.0.0 sesuai standar monetisasi terbaru Google Play.
-- 100% Offline-First: Seluruh fitur belajar, latihan, dan ujian dapat dinikmati tanpa koneksi internet.
+Pembaruan Fitur & Perbaikan Stabilitas LexiLadder (v1.0.3 Build 4):
+- Perbaikan Mode Latihan "Perlu Diulang": Evaluasi penilaian kuis kini 100% akurat, stabil, dan bebas dari anomali pembatalan atau regenerasi soal mendadak saat menjawab kuis.
+- Penyesuaian Syarat Ujian Tingkat Level: Akses ujian sertifikasi kini terbuka lebih cepat dan alami setelah mempelajari minimal 80% materi kosakata di level bersangkutan (120 kata di Level 1, 160 kata di Level 2, 200 kata di Level 3).
+- Perbaikan UI Mode Kartu Kilat (Flashcard): Tombol navigasi kartu selanjutnya kini menampilkan ikon panah kanan (ArrowForward) dengan tepat dan konsisten.
+- Peningkatan Algoritma Pilihan Jawaban Kuis: Sanitasi opsi pengecoh untuk menjamin semua pilihan jawaban unik tanpa duplikasi.
+- Pembaruan Notifikasi Milestone: Peringatan kelayakan ujian disesuaikan dengan pencapaian 80% dan 100% materi.
+- 100% Offline-First: Belajar, latihan, dan ujian kosakata kapan saja tanpa kuota internet.
 ```
 
 ### 🇺🇸 Bahasa Inggris (`en-US`):
 ```text
-LexiLadder Feature & Content Update (v1.0.2 Build 3):
-- Level 3 (B1 Intermediate) Vocabulary Expansion: Added 230 new curated words reaching 250 total words across 8 thematic units (complete 600-word offline catalog: 150 A1, 200 A2, 250 B1).
-- Redesigned Level Mastery Test Screen: Elegant and professional examination dashboard with clear test specifications, passing requirements, and prerequisites.
-- Elevated Certification Standards: 25 comprehensive randomized questions requiring an 80% passing grade (minimum 20 of 25 correct).
-- Mastery-Gated Exams (60% Rule): Level tests are now locked until at least 60% of words in the level are mastered, ensuring true learning progression.
-- Smart Milestone Alerts: Celebratory in-app dialog and status bar notifications upon reaching 60% mastery, and a certification reminder upon reaching 100% mastery.
-- Google Play Billing Library upgraded to version 8.0.0.
-- 100% Offline-First: Learn, practice, and test vocabulary anytime without an internet connection.
+LexiLadder Feature Update & Bug Fixes (v1.0.3 Build 4):
+- Fixed Practice "Due Review" Mode: Quiz answer evaluations are now 100% accurate, stable, and immune to mid-session question reshuffling or unexpected resets.
+- Optimized Level Exam Prerequisites: Level certification exams now unlock naturally upon completing at least 80% of lesson material in that level (120 words for Level 1, 160 words for Level 2, 200 words for Level 3).
+- Fixed Flashcard Navigation UI: The next-card button now correctly displays the forward arrow icon.
+- Enhanced Quiz Distractor Algorithm: Stricter distractor sanitization to guarantee 4 distinct options per question.
+- Smart Milestone Alerts Updated: In-app celebrations and notifications now trigger accurately at 80% and 100% study milestones.
+- 100% Offline-First: Learn, practice, and take exams anytime without an internet connection.
 ```
 
 ---

@@ -10,11 +10,11 @@
 - **Status keseluruhan:** `IN PROGRESS`
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
-- **Build terakhir:** `.\gradlew installDebug` (SUCCESS on Redmi Note 8 Pro) & `bundleRelease` (v1.0.2 Build 3 14.62 MiB)
+- **Build terakhir:** `.\gradlew bundleRelease` (SUCCESS AAB v1.0.3 Build 4 14.62 MiB, jarsigner verified)
 - **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 81/81 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
-- **Versi aplikasi:** `1.0.2` (Build 3)
+- **Versi aplikasi:** `1.0.3` (Build 4)
 - **Package name:** `com.dearyoti.lexiladder` (Display: `LexiLadder: English Vocab`)
 - **Repository aplikasi:** `https://github.com/arton-soul/ladder.git` (Akun: `arton.79@gmail.com`)
 - **Developer Play Store:** `dearyoti` (Email: `made.sudi@gmail.com`)
@@ -549,6 +549,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-26 | Phase 8 | Perbaikan Bug Menu Latihan "Perlu Diulang" (Salah Deteksi Jawaban & Reset Kuis): (1) Pemisahan state kuis `sessionQuestions` dari flow reaktif Room DB via snapshot `LaunchedEffect`, mencegah regenerasi kuis acak di tengah sesi saat Room DB memutasi `dueWords`, (2) Perbaikan deteksi jawaban benar/salah agar tidak tertukar akibat regenerasi soal, (3) Pencegahan penutupan layar prematur (tampilan "Semua Sudah Diulang" hanya muncul jika `sessionQuestions.isEmpty()`), (4) Koreksi rating kegagalan kuis dari `ReviewRating.HARD` menjadi `ReviewRating.WRONG`, (5) Sanitasi distractor kuis dengan `.distinct()` dan filter non-matching di 4 style soal, (6) 4 unit test baru di `PracticeQuizGenerationTest.kt` (81/81 test lulus) | `.\gradlew testDebugUnitTest` (81/81 passed) & `.\gradlew installDebug` (SUCCESS Redmi Note 8 Pro) | DONE |
 | 2026-10-26 | Phase 8 | Penyesuaian Syarat Pembukaan Ujian Level Menjadi Progres Materi 80%: (1) Mengubah syarat kelayakan ujian dari 60% kata dikuasai (SRS 7 hari) menjadi minimal 80% progres materi dipelajari (`REQUIRED_STUDY_PERCENTAGE_FOR_TEST = 80`) di `MasteryTestEngine`, (2) Pembaruan UI gembok dan indikator sisa materi di HomeScreen, ProgressScreen, dan spesifikasi MasteryTestScreen, (3) Penyesuaian milestone notifikasi 80% & 100% materi di `ExamNotificationHelper` dan `HomeScreen`, (4) Pembaruan 4 unit test terkait di `MasteryTestEngineTest.kt` (81/81 test lulus) | `.\gradlew testDebugUnitTest` (81/81 passed) & `.\gradlew installDebug` (SUCCESS Redmi Note 8 Pro) | DONE |
 | 2026-10-26 | Phase 8 | Perbaikan Icon Tombol Navigasi Berikutnya pada Flashcard: Mengganti `Icons.AutoMirrored.Filled.VolumeUp` menjadi `Icons.AutoMirrored.Filled.ArrowForward` pada tombol navigasi kartu selanjutnya di `FlashcardSessionView` (`LearnScreen.kt`) | `.\gradlew testDebugUnitTest` (81/81 passed) & `.\gradlew installDebug` (SUCCESS Redmi Note 8 Pro) | DONE |
+| 2026-10-26 | Phase 8 | Pembuatan Signed Release AAB v1.0.3 (Build 4): Kenaikan versi ke `versionCode = 4` dan `versionName = '1.0.3'`, perakitan signed bundle rilis `app-release.aab` (14.62 MiB), verifikasi jarsigner sukses (signer dearyoti valid s.d. 2054), dan pembaruan dokumen rilis Play Console internal testing | `.\gradlew bundleRelease` (SUCCESS in 2m 47s, 14.62 MiB AAB) & jarsigner verified | DONE |
 
 
 
