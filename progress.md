@@ -10,8 +10,8 @@
 - **Status keseluruhan:** `IN PROGRESS`
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
-- **Build terakhir:** `.\gradlew bundleRelease` (SUCCESS AAB v1.0.2 Build 3 14.62 MiB, jarsigner verified)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 77/77 unit tests passed)
+- **Build terakhir:** `.\gradlew installDebug` (SUCCESS on Redmi Note 8 Pro) & `bundleRelease` (v1.0.2 Build 3 14.62 MiB)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 81/81 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
 - **Versi aplikasi:** `1.0.2` (Build 3)
@@ -546,6 +546,7 @@ Setiap kali Antigravity menyelesaikan task:
 | 2026-10-25 | Phase 8 | Ekspansi Kosakata Level 3 (B1) 250 Kata & Redesain Spesifikasi Ujian Level: (1) Penambahan 230 kata terkurasi CEFR B1 sehingga Level 3 genap 250 kata dalam 8 unit tematik (total 600 kata offline-first catalog), (2) Redesain menyeluruh layar Intro Ujian Level (Hero card modern 20dp, pill highlight, komponen `SpecTile` elegan untuk jumlah soal, standar nilai kelulusan 80%, format soal, prasyarat, dan hasil sertifikasi, serta tombol aksi CTA memikat) | `.\gradlew testDebugUnitTest` (74/74 passed) | DONE |
 | 2026-10-25 | Phase 8 | Penguncian Ujian Level (Syarat Min. 60% Kata Dikuasai) & Sistem Notifikasi Milestone (60% & 100%): (1) Penguncian akses ujian level hingga kata yang dikuasai mencapai minimal 60% (`REQUIRED_MASTERY_PERCENTAGE_FOR_TEST = 60`), (2) Penyesuaian tombol di Home/Progress/MasteryTest dengan status kunci & indikator sisa kata, (3) Notifikasi milestone in-app AlertDialog dan Android push notification via `ExamNotificationHelper` saat mencapai 60% (muncul sekali per level) dan saat mencapai 100% jika belum lulus ujian level (muncul sekali per level) dengan persistensi DataStore | `.\gradlew testDebugUnitTest` (77/77 passed) & `.\gradlew installDebug` di Xiaomi Redmi Note 8 Pro | DONE |
 | 2026-10-25 | Phase 8 | Pembuatan Signed Release AAB v1.0.2 (Build 3): Kenaikan versi ke `versionCode = 3` dan `versionName = '1.0.2'`, perakitan signed bundle rilis `app-release.aab` (14.62 MiB), verifikasi jarsigner sukses (signer dearyoti valid s.d. 2054), dan pembaruan dokumen rilis Play Console internal testing | `.\gradlew bundleRelease` (SUCCESS in 3m 12s, 14.62 MiB AAB) & jarsigner verified | DONE |
+| 2026-10-26 | Phase 8 | Perbaikan Bug Menu Latihan "Perlu Diulang" (Salah Deteksi Jawaban & Reset Kuis): (1) Pemisahan state kuis `sessionQuestions` dari flow reaktif Room DB via snapshot `LaunchedEffect`, mencegah regenerasi kuis acak di tengah sesi saat Room DB memutasi `dueWords`, (2) Perbaikan deteksi jawaban benar/salah agar tidak tertukar akibat regenerasi soal, (3) Pencegahan penutupan layar prematur (tampilan "Semua Sudah Diulang" hanya muncul jika `sessionQuestions.isEmpty()`), (4) Koreksi rating kegagalan kuis dari `ReviewRating.HARD` menjadi `ReviewRating.WRONG`, (5) Sanitasi distractor kuis dengan `.distinct()` dan filter non-matching di 4 style soal, (6) 4 unit test baru di `PracticeQuizGenerationTest.kt` (81/81 test lulus) | `.\gradlew testDebugUnitTest` (81/81 passed) & `.\gradlew installDebug` (SUCCESS Redmi Note 8 Pro) | DONE |
 
 
 

@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -94,38 +95,55 @@ fun PracticeScreen(
         }
     }
 
-    // Active words based on selected mode
-    val activeWordPool = remember(selectedMode, levelFilteredWords, dueWords, difficultWords) {
-        when (selectedMode) {
-            PracticeMode.ALL -> levelFilteredWords
-            PracticeMode.DUE_REVIEW -> {
-                val dueIds = dueWords.map { it.id }.toSet()
-                levelFilteredWords.filter { dueIds.contains(it.id) }
-            }
-            PracticeMode.DIFFICULT -> {
-                val diffIds = difficultWords.map { it.id }.toSet()
-                levelFilteredWords.filter { diffIds.contains(it.id) }
-            }
-        }
-    }
-
-    // Generate dynamic quiz questions with fresh randomization every sessionRound
-    val questions = remember(activeWordPool, levelFilteredWords, selectedMode, sessionRound, expLang, uiLang) {
-        val targetWords = if (activeWordPool.size >= 4) activeWordPool else levelFilteredWords
-        val fallbackPool = if (levelFilteredWords.size >= 4) levelFilteredWords else allWords
-        generateQuizFromWords(
-            words = targetWords,
-            fallbackPool = fallbackPool,
-            explanationLanguage = expLang,
-            uiLanguage = uiLang
-        )
-    }
-
+    var sessionQuestions by remember { mutableStateOf<List<QuizQuestion>>(emptyList()) }
     var currentIndex by remember { mutableIntStateOf(0) }
     var selectedOption by remember { mutableStateOf<Int?>(null) }
     var isSubmitted by remember { mutableStateOf(false) }
     var sessionCorrectCount by remember { mutableIntStateOf(0) }
     var isSessionComplete by remember { mutableStateOf(false) }
+
+    // Stable quiz session generation:
+    // Only triggers on explicit user actions (mode switch, level switch, session restart) or initial load.
+    // NEVER during an active quiz when dueWords or difficultWords mutate in Room DB!
+    LaunchedEffect(selectedMode, selectedLevelId, sessionRound, expLang, uiLang, allWords.isNotEmpty()) {
+        if (allWords.isNotEmpty()) {
+            val levelWords = if (selectedLevelId == "all") {
+                val unlockedIds = unlockedLevels.map { it.id }.toSet()
+                if (unlockedIds.isNotEmpty()) allWords.filter { unlockedIds.contains(it.levelId) } else allWords
+            } else {
+                allWords.filter { it.levelId == selectedLevelId }
+            }
+            val modeWords = when (selectedMode) {
+                PracticeMode.ALL -> levelWords
+                PracticeMode.DUE_REVIEW -> {
+                    val dueIds = dueWords.map { it.id }.toSet()
+                    val forLevel = levelWords.filter { dueIds.contains(it.id) }
+                    if (forLevel.isNotEmpty()) forLevel
+                    else if (selectedLevelId == "all") dueWords
+                    else emptyList()
+                }
+                PracticeMode.DIFFICULT -> {
+                    val diffIds = difficultWords.map { it.id }.toSet()
+                    val forLevel = levelWords.filter { diffIds.contains(it.id) }
+                    if (forLevel.isNotEmpty()) forLevel
+                    else if (selectedLevelId == "all") difficultWords
+                    else emptyList()
+                }
+            }
+            val fallbackPool = if (levelWords.size >= 4) levelWords else allWords
+            sessionQuestions = generateQuizFromWords(
+                words = modeWords,
+                fallbackPool = fallbackPool,
+                explanationLanguage = expLang,
+                uiLanguage = uiLang
+            )
+            currentIndex = 0
+            selectedOption = null
+            isSubmitted = false
+            sessionCorrectCount = 0
+            isSessionComplete = false
+        }
+    }
 
     if (allWords.isEmpty()) {
         Column(
@@ -145,18 +163,13 @@ fun PracticeScreen(
 
     if (isSessionComplete) {
         QuizResultView(
-            totalQuestions = questions.size,
+            totalQuestions = sessionQuestions.size,
             correctCount = sessionCorrectCount,
             isPremium = prefs.isPremium,
             uiLanguage = uiLang,
             onRestart = {
-                val restartAction = {
+                val restartAction: () -> Unit = {
                     sessionRound++
-                    currentIndex = 0
-                    selectedOption = null
-                    isSubmitted = false
-                    sessionCorrectCount = 0
-                    isSessionComplete = false
                 }
                 if (activity != null) {
                     adManager.showInterstitialAd(
@@ -195,7 +208,11 @@ fun PracticeScreen(
                     FilterChip(
                         selected = selectedLevelId == "all",
                         onClick = {
-                            selectedLevelId = "all"
+                            if (selectedLevelId == "all") {
+                                sessionRound++
+                            } else {
+                                selectedLevelId = "all"
+                            }
                             currentIndex = 0
                             selectedOption = null
                             isSubmitted = false
@@ -209,7 +226,11 @@ fun PracticeScreen(
                     FilterChip(
                         selected = selectedLevelId == lvl.id,
                         onClick = {
-                            selectedLevelId = lvl.id
+                            if (selectedLevelId == lvl.id) {
+                                sessionRound++
+                            } else {
+                                selectedLevelId = lvl.id
+                            }
                             scope.launch {
                                 prefsRepo.updateSelectedLevel(lvl.id)
                             }
@@ -225,6 +246,13 @@ fun PracticeScreen(
             }
         }
 
+        val currentDueCount = remember(dueWords, selectedLevelId) {
+            if (selectedLevelId == "all") dueWords.size else dueWords.count { it.levelId == selectedLevelId }
+        }
+        val currentDiffCount = remember(difficultWords, selectedLevelId) {
+            if (selectedLevelId == "all") difficultWords.size else difficultWords.count { it.levelId == selectedLevelId }
+        }
+
         // Practice Mode Filter Chips
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -232,14 +260,18 @@ fun PracticeScreen(
         ) {
             val modes = listOf(
                 PracticeMode.ALL to UiLocalizer.getString("practice_standard_quiz", uiLang, levelFilteredWords.size),
-                PracticeMode.DUE_REVIEW to UiLocalizer.getString("practice_due_review", uiLang, dueWords.size),
-                PracticeMode.DIFFICULT to UiLocalizer.getString("practice_difficult_words", uiLang, difficultWords.size)
+                PracticeMode.DUE_REVIEW to UiLocalizer.getString("practice_due_review", uiLang, currentDueCount),
+                PracticeMode.DIFFICULT to UiLocalizer.getString("practice_difficult_words", uiLang, currentDiffCount)
             )
             items(modes) { (mode, label) ->
                 FilterChip(
                     selected = selectedMode == mode,
                     onClick = {
-                        selectedMode = mode
+                        if (selectedMode == mode) {
+                            sessionRound++
+                        } else {
+                            selectedMode = mode
+                        }
                         currentIndex = 0
                         selectedOption = null
                         isSubmitted = false
@@ -251,7 +283,7 @@ fun PracticeScreen(
             }
         }
 
-        if (selectedMode == PracticeMode.DUE_REVIEW && dueWords.isEmpty()) {
+        if (selectedMode == PracticeMode.DUE_REVIEW && sessionQuestions.isEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
@@ -279,7 +311,7 @@ fun PracticeScreen(
             return
         }
 
-        if (selectedMode == PracticeMode.DIFFICULT && difficultWords.isEmpty()) {
+        if (selectedMode == PracticeMode.DIFFICULT && sessionQuestions.isEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
@@ -307,7 +339,7 @@ fun PracticeScreen(
             return
         }
 
-        if (questions.isEmpty()) {
+        if (sessionQuestions.isEmpty()) {
             Text(
                 if (uiLang == "id") "Tidak ada pertanyaan untuk kategori ini." else "No questions available for this category.",
                 style = MaterialTheme.typography.bodyMedium
@@ -315,7 +347,7 @@ fun PracticeScreen(
             return
         }
 
-        val currentQuestion = questions[currentIndex]
+        val currentQuestion = sessionQuestions[currentIndex]
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -323,7 +355,7 @@ fun PracticeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = UiLocalizer.getString("practice_question_counter", uiLang, currentIndex + 1, questions.size),
+                text = UiLocalizer.getString("practice_question_counter", uiLang, currentIndex + 1, sessionQuestions.size),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -336,7 +368,7 @@ fun PracticeScreen(
         }
 
         LinearProgressIndicator(
-            progress = { (currentIndex + 1).toFloat() / questions.size.toFloat() },
+            progress = { (currentIndex + 1).toFloat() / sessionQuestions.size.toFloat() },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -394,7 +426,7 @@ fun PracticeScreen(
                             sessionCorrectCount++
                         }
                         scope.launch {
-                            val rating = if (correct) ReviewRating.GOOD else ReviewRating.HARD
+                            val rating = if (correct) ReviewRating.GOOD else ReviewRating.WRONG
                             repo.recordReviewRating(currentQuestion.wordId, rating)
                         }
                     }
@@ -438,7 +470,7 @@ fun PracticeScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
                         onClick = {
-                            if (currentIndex < questions.size - 1) {
+                            if (currentIndex < sessionQuestions.size - 1) {
                                 currentIndex++
                                 selectedOption = null
                                 isSubmitted = false
@@ -449,7 +481,7 @@ fun PracticeScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = if (currentIndex < questions.size - 1)
+                            text = if (currentIndex < sessionQuestions.size - 1)
                                 (if (uiLang == "id") "Pertanyaan Berikutnya" else "Next Question")
                             else
                                 (if (uiLang == "id") "Lihat Hasil" else "See Results")
@@ -558,9 +590,15 @@ fun generateQuizFromWords(
         // 3: Translation/Immersion Matching
         when (index % 4) {
             0 -> {
-                val distractorPool = otherWords.shuffled(random).take(3)
-                val options = (listOf(word.definition) + distractorPool.map { it.definition }).shuffled(random)
-                val correctIndex = options.indexOf(word.definition)
+                val correctDef = word.definition.trim()
+                val distractorDefs = otherWords
+                    .map { it.definition.trim() }
+                    .filter { it.isNotEmpty() && !it.equals(correctDef, ignoreCase = true) }
+                    .distinct()
+                    .shuffled(random)
+                    .take(3)
+                val options = (listOf(correctDef) + distractorDefs).shuffled(random)
+                val correctIndex = options.indexOf(correctDef)
                 val expText = if (explanationLanguage == "id") {
                     "\"${word.text}\" (${word.partOfSpeech}) bermakna: ${word.definition}. Arti: ${word.translation ?: "-"}"
                 } else {
@@ -578,9 +616,15 @@ fun generateQuizFromWords(
                 )
             }
             1 -> {
-                val distractorPool = otherWords.shuffled(random).take(3)
-                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
-                val correctIndex = options.indexOf(word.text)
+                val correctText = word.text.trim()
+                val distractorTexts = otherWords
+                    .map { it.text.trim() }
+                    .filter { it.isNotEmpty() && !it.equals(correctText, ignoreCase = true) }
+                    .distinct()
+                    .shuffled(random)
+                    .take(3)
+                val options = (listOf(correctText) + distractorTexts).shuffled(random)
+                val correctIndex = options.indexOf(correctText)
                 val expText = if (explanationLanguage == "id") {
                     "\"${word.text}\" (${word.phonetic ?: ""}): ${word.definition}. Arti: ${word.translation ?: "-"}"
                 } else {
@@ -605,9 +649,15 @@ fun generateQuizFromWords(
                 } else {
                     "Complete with \"${word.text}\": $sentence"
                 }
-                val distractorPool = otherWords.shuffled(random).take(3)
-                val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
-                val correctIndex = options.indexOf(word.text)
+                val correctText = word.text.trim()
+                val distractorTexts = otherWords
+                    .map { it.text.trim() }
+                    .filter { it.isNotEmpty() && !it.equals(correctText, ignoreCase = true) }
+                    .distinct()
+                    .shuffled(random)
+                    .take(3)
+                val options = (listOf(correctText) + distractorTexts).shuffled(random)
+                val correctIndex = options.indexOf(correctText)
                 val expText = if (explanationLanguage == "id") {
                     "Kalimat lengkap: \"${word.exampleSentence}\". (${word.text} = ${word.translation ?: "-"})"
                 } else {
@@ -625,12 +675,19 @@ fun generateQuizFromWords(
                 )
             }
             else -> {
+                val correctText = word.text.trim()
+                val distractorTexts = otherWords
+                    .map { it.text.trim() }
+                    .filter { it.isNotEmpty() && !it.equals(correctText, ignoreCase = true) }
+                    .distinct()
+                    .shuffled(random)
+                    .take(3)
+                val options = (listOf(correctText) + distractorTexts).shuffled(random)
+                val correctIndex = options.indexOf(correctText)
+
                 if (explanationLanguage == "id") {
                     // Indonesian translation to English word
                     val translationText = word.translation ?: word.definition
-                    val distractorPool = otherWords.shuffled(random).take(3)
-                    val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
-                    val correctIndex = options.indexOf(word.text)
                     questions.add(
                         QuizQuestion(
                             id = "q_gen_${word.id}_$index",
@@ -643,9 +700,6 @@ fun generateQuizFromWords(
                     )
                 } else {
                     // English Direct Immersion: Context/Definition fitting
-                    val distractorPool = otherWords.shuffled(random).take(3)
-                    val options = (listOf(word.text) + distractorPool.map { it.text }).shuffled(random)
-                    val correctIndex = options.indexOf(word.text)
                     questions.add(
                         QuizQuestion(
                             id = "q_gen_${word.id}_$index",
