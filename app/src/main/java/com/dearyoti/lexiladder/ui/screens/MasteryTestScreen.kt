@@ -231,9 +231,10 @@ private fun MasteryTestIntroView(
     val isLocked = !isEligible
 
     val totalWords = if (wordsCount > 0) wordsCount else (level?.totalWords ?: 0)
+    val studiedCount = level?.studiedWords ?: 0
     val masteredCount = level?.masteredWords ?: 0
-    val required60Count = MasteryTestEngine.calculateRequiredMasteryCount(totalWords)
-    val masteryPercentage = if (totalWords > 0) ((masteredCount.toFloat() / totalWords) * 100).toInt() else 0
+    val required80Count = MasteryTestEngine.calculateRequiredStudyCount(totalWords)
+    val studyPercentage = if (totalWords > 0) ((studiedCount.toFloat() / totalWords) * 100).toInt() else 0
 
     Column(
         modifier = Modifier
@@ -335,10 +336,10 @@ private fun MasteryTestIntroView(
                         border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                     ) {
                         Text(
-                            text = "⭐ $masteredCount/$totalWords ${if (isId) "Dikuasai" else "Mastered"} ($masteryPercentage%)",
+                            text = "📖 $studiedCount/$totalWords ${if (isId) "Materi" else "Studied"} ($studyPercentage%)",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = if (masteryPercentage >= 60) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = if (studyPercentage >= 80) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                         )
                     }
@@ -428,17 +429,17 @@ private fun MasteryTestIntroView(
                     prereqBadgeTextColor = Color(0xFF757575)
                 } else if (!isEligible) {
                     prereqSubtitle = if (isId)
-                        "Kuasai minimal 60% kata ($required60Count kata). Saat ini: $masteredCount/$totalWords kata ($masteryPercentage%)"
+                        "Pelajari minimal 80% materi ($required80Count kata). Saat ini: $studiedCount/$totalWords kata ($studyPercentage%)"
                     else
-                        "Master at least 60% of words ($required60Count words). Current: $masteredCount/$totalWords ($masteryPercentage%)"
-                    prereqBadgeText = if (isId) "Terkunci 🔒 ($masteryPercentage%/60%)" else "Locked 🔒 ($masteryPercentage%/60%)"
+                        "Study at least 80% of words ($required80Count words). Current: $studiedCount/$totalWords ($studyPercentage%)"
+                    prereqBadgeText = if (isId) "Terkunci 🔒 ($studyPercentage%/80%)" else "Locked 🔒 ($studyPercentage%/80%)"
                     prereqBadgeColor = Color(0xFFFFEBEE)
                     prereqBadgeTextColor = Color(0xFFC62828)
                 } else {
                     prereqSubtitle = if (isMastered) {
                         if (isId) "Level telah tuntas dan bersertifikasi ✓" else "Level certified & mastered ✓"
                     } else {
-                        if (isId) "Syarat penguasaan 60% kata telah terpenuhi ($masteredCount/$totalWords kata) ✓" else "60% mastery requirement achieved ($masteredCount/$totalWords words) ✓"
+                        if (isId) "Syarat 80% materi telah terpenuhi ($studiedCount/$totalWords kata) ✓" else "80% study requirement achieved ($studiedCount/$totalWords words) ✓"
                     }
                     prereqBadgeText = if (isId) "Siap ✓" else "Ready ✓"
                     prereqBadgeColor = Color(0xFFE8F5E9)
@@ -492,7 +493,7 @@ private fun MasteryTestIntroView(
             Text(
                 text = when {
                     !isUnlocked -> if (uiLanguage == "id") "Level Masih Terkunci 🔒" else "Level Locked 🔒"
-                    !isEligible -> if (uiLanguage == "id") "Terkunci: Kuasai Min. 60% Kata ($masteredCount/$required60Count) 🔒" else "Locked: Master Min 60% Words ($masteredCount/$required60Count) 🔒"
+                    !isEligible -> if (uiLanguage == "id") "Terkunci: Pelajari Min. 80% Materi ($studiedCount/$required80Count) 🔒" else "Locked: Study Min 80% Words ($studiedCount/$required80Count) 🔒"
                     isMastered -> UiLocalizer.getString("test_retake_btn", uiLanguage)
                     else -> if (uiLanguage == "id") "Mulai Ujian Sertifikasi Level 🚀" else "Start Level Mastery Test 🚀"
                 },

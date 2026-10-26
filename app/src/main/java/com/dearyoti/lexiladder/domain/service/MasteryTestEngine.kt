@@ -12,21 +12,24 @@ object MasteryTestEngine {
 
     const val DEFAULT_PASSING_PERCENTAGE = 80
     const val DEFAULT_QUESTION_COUNT = 25
-    const val REQUIRED_MASTERY_PERCENTAGE_FOR_TEST = 60
-    const val REQUIRED_MASTERY_RATIO_FOR_TEST = 0.60f
-    const val REQUIRED_STUDY_RATIO = 0.75f // Legacy reference
+    const val REQUIRED_STUDY_PERCENTAGE_FOR_TEST = 80
+    const val REQUIRED_STUDY_RATIO_FOR_TEST = 0.80f
+    const val REQUIRED_MASTERY_PERCENTAGE_FOR_TEST = 80 // Alias for backwards compatibility
+    const val REQUIRED_MASTERY_RATIO_FOR_TEST = 0.80f
 
-    fun calculateRequiredMasteryCount(totalWords: Int): Int {
+    fun calculateRequiredStudyCount(totalWords: Int): Int {
         if (totalWords <= 0) return 0
-        return kotlin.math.ceil((totalWords * REQUIRED_MASTERY_PERCENTAGE_FOR_TEST) / 100.0).toInt()
+        return kotlin.math.ceil((totalWords * REQUIRED_STUDY_PERCENTAGE_FOR_TEST) / 100.0).toInt()
     }
+
+    fun calculateRequiredMasteryCount(totalWords: Int): Int = calculateRequiredStudyCount(totalWords)
 
     fun isTestEligible(level: Level): Boolean {
         return isTestEligible(
             isUnlocked = level.isUnlocked,
             isMastered = level.isMastered,
             totalWords = level.totalWords,
-            masteredWords = level.masteredWords
+            studiedWords = level.studiedWords
         )
     }
 
@@ -34,13 +37,13 @@ object MasteryTestEngine {
         isUnlocked: Boolean,
         isMastered: Boolean,
         totalWords: Int,
-        masteredWords: Int
+        studiedWords: Int
     ): Boolean {
         if (!isUnlocked) return false
         if (isMastered) return true
         if (totalWords <= 0) return false
-        val reqCount = calculateRequiredMasteryCount(totalWords)
-        return masteredWords >= reqCount
+        val reqCount = calculateRequiredStudyCount(totalWords)
+        return studiedWords >= reqCount
     }
 
     fun determineLevelStatus(
@@ -49,7 +52,7 @@ object MasteryTestEngine {
         totalWords: Int,
         studiedWords: Int = 0,
         masteredWords: Int = 0,
-        requiredMasteryRatio: Float = REQUIRED_MASTERY_RATIO_FOR_TEST
+        requiredStudyRatio: Float = REQUIRED_STUDY_RATIO_FOR_TEST
     ): LevelStatus {
         if (!isUnlocked) {
             return LevelStatus.LOCKED
@@ -57,10 +60,10 @@ object MasteryTestEngine {
         if (isMastered) {
             return LevelStatus.MASTERED
         }
-        if (totalWords > 0 && masteredWords >= calculateRequiredMasteryCount(totalWords)) {
+        if (totalWords > 0 && studiedWords >= calculateRequiredStudyCount(totalWords)) {
             return LevelStatus.READY_FOR_TEST
         }
-        if (masteredWords > 0 || studiedWords > 0) {
+        if (studiedWords > 0 || masteredWords > 0) {
             return LevelStatus.IN_PROGRESS
         }
         return LevelStatus.AVAILABLE

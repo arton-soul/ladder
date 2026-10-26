@@ -258,7 +258,7 @@ fun ProgressScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
                         val isEligible = MasteryTestEngine.isTestEligible(level)
-                        val req60 = MasteryTestEngine.calculateRequiredMasteryCount(level.totalWords)
+                        val req80 = MasteryTestEngine.calculateRequiredStudyCount(level.totalWords)
                         Button(
                             onClick = { onNavigateToMasteryTest(level.id) },
                             modifier = Modifier.fillMaxWidth(),
@@ -284,7 +284,7 @@ fun ProgressScreen(
                                 text = when {
                                     level.isMastered -> if (uiLang == "id") "Ulangi Ujian Level 🏆" else "Retake Mastery Test 🏆"
                                     isEligible -> if (uiLang == "id") "Ikuti Ujian Level (Lulus ${level.requiredPassingScore}%) 🎯" else "Take Mastery Test (Pass ${level.requiredPassingScore}%) 🎯"
-                                    else -> if (uiLang == "id") "Ujian Terkunci (Kuasai 60% Kata: ${level.masteredWords}/$req60) 🔒" else "Exam Locked (Master 60% Words: ${level.masteredWords}/$req60) 🔒"
+                                    else -> if (uiLang == "id") "Ujian Terkunci (Pelajari 80% Materi: ${level.studiedWords}/$req80) 🔒" else "Exam Locked (Study 80% Material: ${level.studiedWords}/$req80) 🔒"
                                 }
                             )
                         }

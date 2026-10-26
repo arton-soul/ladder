@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.dearyoti.lexiladder.MainActivity
 import com.dearyoti.lexiladder.domain.model.Level
+import com.dearyoti.lexiladder.domain.service.MasteryTestEngine
 import com.dearyoti.lexiladder.navigation.Screen
 
 object ExamNotificationHelper {
@@ -67,22 +68,22 @@ object ExamNotificationHelper {
 
         val isId = uiLanguage == "id"
         val title = if (isHundredPercent) {
-            if (isId) "100% Kosakata Dikuasai! 🏆" else "100% Vocabulary Mastered! 🏆"
+            if (isId) "100% Materi Terselesaikan! 🏆" else "100% Material Completed! 🏆"
         } else {
             if (isId) "Ujian Level Terbuka! 🎯" else "Level Exam Unlocked! 🎯"
         }
 
         val message = if (isHundredPercent) {
             if (isId)
-                "Luar biasa! 100% kosakata di ${level.title} telah Anda kuasai. Ayo ikuti Ujian Tingkat Level sekarang untuk sertifikasi!"
+                "Luar biasa! 100% materi kosakata di ${level.title} telah Anda pelajari. Ayo ikuti Ujian Tingkat Level sekarang untuk sertifikasi!"
             else
-                "Incredible! 100% of vocabulary in ${level.title} mastered. Take the Level Exam now to get certified!"
+                "Incredible! 100% of vocabulary lessons in ${level.title} completed. Take the Level Exam now to get certified!"
         } else {
-            val reqWords = kotlin.math.ceil(level.totalWords * 0.60).toInt()
+            val reqWords = MasteryTestEngine.calculateRequiredStudyCount(level.totalWords)
             if (isId)
-                "Selamat! Anda telah menguasai 60% kosakata ($reqWords kata) di ${level.title}. Anda sekarang sudah bisa mengikuti Ujian Naik Level!"
+                "Selamat! Anda telah mempelajari 80% materi ($reqWords kata) di ${level.title}. Ujian Naik Level kini sudah terbuka!"
             else
-                "Congratulations! You've mastered 60% of vocabulary ($reqWords words) in ${level.title}. You are now ready to take the Level Exam!"
+                "Congratulations! You've completed 80% of lesson material ($reqWords words) in ${level.title}. Level Exam is now unlocked!"
         }
 
         val notifId = NOTIFICATION_ID_BASE + (level.order * 10) + (if (isHundredPercent) 2 else 1)

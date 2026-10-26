@@ -117,7 +117,7 @@ fun HomeScreen(
         // Priority 1: Check 100% milestone if not yet notified and level not yet mastered
         val level100 = levels.firstOrNull { lvl ->
             lvl.isUnlocked && !lvl.isMastered && lvl.totalWords > 0 &&
-            lvl.masteredWords >= lvl.totalWords &&
+            lvl.studiedWords >= lvl.totalWords &&
             lvl.id !in prefs.notifiedExam100LevelIds
         }
         if (level100 != null) {
@@ -131,17 +131,17 @@ fun HomeScreen(
             return@LaunchedEffect
         }
 
-        // Priority 2: Check 60% milestone if not yet notified and level not yet mastered
-        val level60 = levels.firstOrNull { lvl ->
+        // Priority 2: Check 80% study milestone if not yet notified and level not yet mastered
+        val level80 = levels.firstOrNull { lvl ->
             lvl.isUnlocked && !lvl.isMastered && lvl.totalWords > 0 &&
-            lvl.masteredWords >= MasteryTestEngine.calculateRequiredMasteryCount(lvl.totalWords) &&
+            lvl.studiedWords >= MasteryTestEngine.calculateRequiredStudyCount(lvl.totalWords) &&
             lvl.id !in prefs.notifiedExam60LevelIds
         }
-        if (level60 != null) {
-            pendingExamNotification = Pair(level60, false)
+        if (level80 != null) {
+            pendingExamNotification = Pair(level80, false)
             ExamNotificationHelper.showExamUnlockedNotification(
                 context = context,
-                level = level60,
+                level = level80,
                 isHundredPercent = false,
                 uiLanguage = lang
             )
@@ -254,7 +254,7 @@ fun HomeScreen(
             title = {
                 Text(
                     text = if (is100) {
-                        if (isId) "100% Kosakata Dikuasai! 🏆" else "100% Vocabulary Mastered! 🏆"
+                        if (isId) "100% Materi Terselesaikan! 🏆" else "100% Material Completed! 🏆"
                     } else {
                         if (isId) "Ujian Level Terbuka! 🎯" else "Level Exam Unlocked! 🎯"
                     },
@@ -265,15 +265,15 @@ fun HomeScreen(
                 Text(
                     text = if (is100) {
                         if (isId)
-                            "Luar biasa! Seluruh kosakata (100%) di ${levelToExam.title} telah Anda kuasai. Ayo ikuti Ujian Tingkat Level sekarang untuk menyelesaikan sertifikasi dan membuka level berikutnya!"
+                            "Luar biasa! Seluruh materi kosakata (100%) di ${levelToExam.title} telah Anda pelajari. Ayo ikuti Ujian Tingkat Level sekarang untuk menyelesaikan sertifikasi dan membuka level berikutnya!"
                         else
-                            "Incredible! You have mastered 100% of the vocabulary in ${levelToExam.title}. Take the Level Mastery Test now to earn certification and unlock the next level!"
+                            "Incredible! You have completed 100% of vocabulary lessons in ${levelToExam.title}. Take the Level Mastery Test now to earn certification and unlock the next level!"
                     } else {
-                        val req = MasteryTestEngine.calculateRequiredMasteryCount(levelToExam.totalWords)
+                        val req = MasteryTestEngine.calculateRequiredStudyCount(levelToExam.totalWords)
                         if (isId)
-                            "Selamat! Anda telah menguasai 60% kosakata ($req dari ${levelToExam.totalWords} kata) di ${levelToExam.title}. Anda sekarang sudah memenuhi syarat dan bisa mengikuti Ujian Naik Level!"
+                            "Selamat! Anda telah mempelajari 80% materi ($req dari ${levelToExam.totalWords} kata) di ${levelToExam.title}. Anda sekarang sudah memenuhi syarat dan bisa mengikuti Ujian Naik Level!"
                         else
-                            "Congratulations! You have mastered 60% of the vocabulary ($req of ${levelToExam.totalWords} words) in ${levelToExam.title}. You are now ready to take the Level Mastery Test!"
+                            "Congratulations! You have completed 80% of lesson material ($req of ${levelToExam.totalWords} words) in ${levelToExam.title}. You are now ready to take the Level Mastery Test!"
                     }
                 )
             },
@@ -642,7 +642,7 @@ fun HomeScreen(
                 currentLevel?.let { lvl ->
                     Spacer(modifier = Modifier.height(8.dp))
                     val isEligible = MasteryTestEngine.isTestEligible(lvl)
-                    val req60 = MasteryTestEngine.calculateRequiredMasteryCount(lvl.totalWords)
+                    val req80 = MasteryTestEngine.calculateRequiredStudyCount(lvl.totalWords)
                     Button(
                         onClick = { onNavigateToMasteryTest(lvl.id) },
                         modifier = Modifier.fillMaxWidth(),
@@ -668,7 +668,7 @@ fun HomeScreen(
                             text = when {
                                 lvl.isMastered -> if (lang == "id") "Ulangi Ujian Level 🏆" else "Retake Level Mastery Test 🏆"
                                 isEligible -> if (lang == "id") "Ikuti Ujian Level 🎯" else "Take Level Mastery Test 🎯"
-                                else -> if (lang == "id") "Ujian Terkunci (Kuasai 60% Kata: ${lvl.masteredWords}/$req60) 🔒" else "Exam Locked (Master 60% Words: ${lvl.masteredWords}/$req60) 🔒"
+                                else -> if (lang == "id") "Ujian Terkunci (Pelajari 80% Materi: ${lvl.studiedWords}/$req80) 🔒" else "Exam Locked (Study 80% Material: ${lvl.studiedWords}/$req80) 🔒"
                             }
                         )
                     }
