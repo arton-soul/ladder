@@ -64,4 +64,4 @@ Tingkatkan penguasaan kosakata bahasa Inggris Anda langkah demi langkah bersama 
 ### 🛡️ Informasi Pengembang & Privasi:
 Pengembang: **dearyoti**  
 Email Dukungan: `made.sudi@gmail.com`  
-Kebijakan Privasi: Dapat diakses langsung dari menu Pengaturan aplikasi atau melalui dokumen resmi kami.
+Kebijakan Privasi: https://dearyoti.blogspot.com/p/privacy-policy-for-lexiladder-english.html

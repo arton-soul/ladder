@@ -37,6 +37,7 @@
 ---
 
 ## 4. Google Play Console Declarations
+- **Privacy Policy URL:** `https://dearyoti.blogspot.com/p/privacy-policy-for-lexiladder-english.html` (Published on Blogger)
 - **Application Category:** Education
 - **Content Rating:** PEGI 3 / Everyone (No violent, sexual, or sensitive content)
 - **Target Audience:** Everyone (Age 13+)
