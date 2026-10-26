@@ -72,4 +72,4 @@ Master English vocabulary one step at a time with **LexiLadder**! Whether you ar
 ### 🛡️ Privacy & Transparency:
 Developer: **dearyoti**  
 Contact: `made.sudi@gmail.com`  
-Privacy Policy: Accessible directly within app settings or via our official policy documentation.
+Privacy Policy: https://dearyoti.blogspot.com/p/privacy-policy-for-lexiladder-english.html
