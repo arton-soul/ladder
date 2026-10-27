@@ -352,6 +352,19 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Penanganan tombol "Nanti Saja" untuk mencatat timestamp penundaan 24 jam.
   - [x] Reaktivitas instan `getAllLevels()` dengan menggabungkan flow `levelDao` dan `userProgressDao` agar jumlah kata dipelajari & dikuasai langsung ter-update di layar Beranda seketika setelah menyelesaikan kuis.
   - [x] Tampilan Beranda menampilkan progres materi level ("X / 150 kata dipelajari") dan kartu target harian dengan progress bar responsif.
+- [x] Ekspansi Produk In-App Billing (Exam Booster & All-Access Lifetime):
+  - [x] Tambahkan produk `lexiladder_exam_booster_pack` dan `lexiladder_all_access_lifetime` di samping `lexiladder_premium_remove_ads`.
+  - [x] Dukungan multi-product query, state management map di `BillingManager`.
+  - [x] Hak akses berjenjang (*entitlement logic*) di `UserPreferences` (`isAdFree`, `isExamBoosterUnlocked`, `hasAllAccessLifetime`).
+  - [x] Layar `PremiumScreen` menampilkan kartu komparasi 3 tingkatan (PRO All-Access, Exam Booster, Remove Ads), status aktif, serta kontrol simulasi testing debug.
+  - [x] Unit test `MonetizationAndAdTest` diperluas dan lolos (11 tes passed).
+- [x] Persiapan Konten TOEFL / IELTS (Academic Word List & Simulasi Ujian):
+  - [x] Paket materi belajar JSON: `learning_exam_awl.json` (60 kata AWL terkurasi, 3 unit akademik terstruktur: Analisis & Metodologi, Evaluasi Kritis, serta Inovasi Teknologi & Struktur Sosial).
+  - [x] Paket terjemahan Indonesia JSON: `translation_id_exam_awl.json` (60 entri terjemahan, definisi, dan contoh kalimat berkonteks akademis).
+  - [x] Sinkronisasi aset bundled `app/src/main/assets/content/` dan repositori remote `content/`.
+  - [x] Pembaruan `manifest.json` v3 (7 paket terdaftar dengan SHA-256 dan byte size tepat).
+  - [x] Pengaitan level `level_exam_awl` dengan hak akses `isExamBoosterUnlocked` di `VocabularyRepositoryImpl.getAllLevels()`.
+  - [x] Pengujian integritas konten otomatis di `ContentRepositoryIntegrityTest` dan tes diagnostik kuis AWL di `VocabularyDomainTest` (83/83 tes lolos).
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.
@@ -379,20 +392,51 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
 
 Salin template ini setiap kali satu milestone dikerjakan.
 
-### Milestone: [Nama]
-- **Tanggal:**
-- **Fase:**
-- **Status:** `IN PROGRESS`
-- **Tujuan:**
-- **File yang diperiksa:**
-- **File yang dibuat/diubah:**
+### Milestone: Multi-Product In-App Billing (Exam Booster & All-Access Lifetime)
+- **Tanggal:** 2026-10-26
+- **Fase:** Phase 8 — Post-launch, Monetization & Retention Features
+- **Status:** `DONE`
+- **Tujuan:** Mengintegrasikan produk in-app purchase "Exam Booster Pack" (`lexiladder_exam_booster_pack`) dan "All-Access Lifetime" (`lexiladder_all_access_lifetime`) di samping produk "Remove Ads" (`lexiladder_premium_remove_ads`), dengan UI bertingkat di `PremiumScreen` dan entitlement berjenjang di DataStore.
+- **File yang diperiksa:** `BillingManager.kt`, `UserPreferencesRepository.kt`, `PremiumScreen.kt`, `MonetizationAndAdTest.kt`
+- **File yang diubah:**
+  - `app/src/main/java/com/dearyoti/lexiladder/data/preferences/UserPreferencesRepository.kt`
+  - `app/src/main/java/com/dearyoti/lexiladder/core/billing/BillingManager.kt`
+  - `app/src/main/java/com/dearyoti/lexiladder/ui/screens/PremiumScreen.kt`
+  - `app/src/test/java/com/dearyoti/lexiladder/MonetizationAndAdTest.kt`
 - **Keputusan teknis:**
-- **Perintah yang dijalankan:**
-- **Hasil build/test yang benar-benar terlihat:**
-- **Acceptance criteria terpenuhi:**
-- **Masalah atau blocker:**
-- **Commit/hash:**
-- **Langkah berikutnya:**
+  - Model pembelian bersifat non-consumable (sekali beli seumur hidup).
+  - All-Access Lifetime secara otomatis mencakup hak bebas iklan (`isPremium = true` / `isAdFree = true`) dan membuka modul ujian (`hasExamBooster = true` / `isExamBoosterUnlocked = true`).
+  - `PremiumScreen` menampilkan kartu komparasi visual 3 tingkatan dengan badge harga dinamis Google Play, penanda "Unlocked & Active" untuk paket yang dimiliki, serta kontrol testing debug mode.
+- **Perintah yang dijalankan:** `.\gradlew testDebugUnitTest`
+- **Hasil build/test yang benar-benar terlihat:** BUILD SUCCESSFUL in 1m 50s, 82/82 unit tests passed (11/11 monetization & ad tests passed).
+- **Acceptance criteria terpenuhi:** Semua produk IAP terdefinisi, query multi-produk didukung, flow pembelian spesifik produk dapat dipanggil, pemulihan pembelian (restore purchases) mengenali seluruh paket yang dimiliki, dan unit test lulus 100%.
+- **Masalah atau blocker:** Tidak ada
+- **Langkah berikutnya:** Menyiapkan konfigurasi produk in-app di Google Play Console (ID: `lexiladder_exam_booster_pack` dan `lexiladder_all_access_lifetime`) serta melanjutkan pengujian Internal Testing.
+
+### Milestone: TOEFL / IELTS Academic Word List & Exam Booster Content System
+- **Tanggal:** 2026-10-26
+- **Fase:** Phase 8 — Post-launch, Monetization & Retention Features
+- **Status:** `DONE`
+- **Tujuan:** Menyiapkan konten materi spesifik paket TOEFL & IELTS berbasis Academic Word List (AWL) ke dalam sistem konten JSON (`learning_exam_awl.json` dan `translation_id_exam_awl.json`), memperbarui manifest v3, menyinkronkan aset bundled, serta menghubungkan pembukaan level dengan hak akses `isExamBoosterUnlocked`.
+- **File yang diperiksa:** `content/manifest.json`, `content_system.md`, `VocabularyRepositoryImpl.kt`, `ContentRepositoryIntegrityTest.kt`
+- **File yang diubah/dibuat:**
+  - `content/learning_exam_awl.json` (dibuat: 60 kosakata inti AWL, 3 unit akademik)
+  - `content/translation_id_exam_awl.json` (dibuat: 60 terjemahan, penjelasan, dan contoh kalimat terjemahan)
+  - `app/src/main/assets/content/learning_exam_awl.json` (dibuat: sinkronisasi aset bundled)
+  - `app/src/main/assets/content/translation_id_exam_awl.json` (dibuat: sinkronisasi aset bundled)
+  - `content/manifest.json` & `app/src/main/assets/content/manifest.json` (diperbarui: manifest v3, 7 paket terdaftar dengan kalkulasi hash SHA-256 dan byte size akurat)
+  - `app/src/main/java/com/dearyoti/lexiladder/data/repository/VocabularyRepositoryImpl.kt` (diperbarui: `getAllLevels` menghubungkan level `level_exam_awl` dengan `prefs.isExamBoosterUnlocked`)
+  - `app/src/test/java/com/dearyoti/lexiladder/ContentRepositoryIntegrityTest.kt` (diperbarui: pengujian integritas 7 paket dan validasi schema & kata AWL)
+  - `app/src/test/java/com/dearyoti/lexiladder/VocabularyDomainTest.kt` (diperbarui: pengujian pembangkitan kuis diagnostik kata AWL)
+- **Keputusan teknis:**
+  - Format paket mengikuti skema standar `learning-package` dan `translation-package` (schemaVersion: 1) sehingga kompatibel dengan mesin Room database dan ContentUpdateManager.
+  - Level ujian diberi ID `level_exam_awl` ("Exam Booster: TOEFL & IELTS").
+  - Kuis latihan dan ujian diagnostik otomatis terbangun secara dinamis dari kata-kata yang tersedia di level tersebut tanpa memerlukan schema soal terpisah.
+- **Perintah yang dijalankan:** `.\gradlew testDebugUnitTest`
+- **Hasil build/test yang benar-benar terlihat:** BUILD SUCCESSFUL in 13s, 83/83 unit tests passed (6/6 content integrity tests & 9/9 vocabulary domain tests passed).
+- **Acceptance criteria terpenuhi:** Semua paket konten JSON valid, checksum SHA-256 dan byte size tepat di manifest v3, aset bundled sinkron 100%, hak akses terhubung, kuis diagnostik terbentuk dengan benar, dan seluruh pengujian lulus.
+- **Masalah atau blocker:** Tidak ada
+- **Langkah berikutnya:** Menerbitkan rilis paket konten baru ke GitHub repository (`https://github.com/arton-soul/ladder.git`) dan mengonfirmasi peluncuran Internal Testing di Play Console.
 
 ---
 
@@ -400,7 +444,8 @@ Salin template ini setiap kali satu milestone dikerjakan.
 
 | Tanggal | Keputusan | Alasan | Dampak | Status |
 |---|---|---|---|---|
-| Belum diisi | — | — | — | — |
+| 2026-10-26 | Integrasi materi AWL (Academic Word List) untuk TOEFL & IELTS ke sistem konten JSON | Menyediakan materi belajar berbobot tinggi untuk pembeli Exam Booster & All-Access Lifetime | `learning_exam_awl.json` dan `translation_id_exam_awl.json` terdaftar di manifest v3 | DONE |
+| 2026-10-26 | Penambahan 2 produk IAP: `lexiladder_exam_booster_pack` & `lexiladder_all_access_lifetime` | Meningkatkan potensi monetisasi dengan menyasar pembelajar ujian (TOEFL/IELTS) dan menyediakan opsi All-Access hemat bagi pengguna serius | BillingManager, DataStore UserPreferences, dan PremiumScreen kini mendukung 3 tingkatan produk | DONE |
 
 Jika keputusan mengubah rancangan produk atau arsitektur, perbarui `rancangan.md` juga.
 

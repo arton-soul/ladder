@@ -33,7 +33,9 @@ class ContentRepositoryIntegrityTest {
             "learning_a2.json",
             "translation_id_a1.json",
             "translation_id_a2.json",
-            "ui_id.json"
+            "ui_id.json",
+            "learning_exam_awl.json",
+            "translation_id_exam_awl.json"
         )
         for (fileName in expectedFiles) {
             val f = File(repoContentDir, fileName)
@@ -48,7 +50,7 @@ class ContentRepositoryIntegrityTest {
 
         assertNotNull("Manifest must parse correctly", manifest)
         assertEquals("Manifest schema version must be 1", 1, manifest.manifestSchemaVersion)
-        assertEquals("Manifest packages count must be 5", 5, manifest.packages.size)
+        assertEquals("Manifest packages count must be 7", 7, manifest.packages.size)
 
         for (pkg in manifest.packages) {
             val fileName = pkg.url.substringAfterLast("/")
@@ -83,6 +85,14 @@ class ContentRepositoryIntegrityTest {
         assertTrue("Learning A2 must be valid", a2Validation.isValid)
         assertEquals("Level A2 must have 200 words", 200, a2Pkg.words.size)
         assertEquals("Level A2 must have 7 units", 7, a2Pkg.units.size)
+
+        // Exam AWL
+        val awlFile = File(repoContentDir, "learning_exam_awl.json")
+        val awlPkg = gson.fromJson(awlFile.readText(Charsets.UTF_8), LearningPackage::class.java)
+        val awlValidation = ContentValidator.validateLearningPackage(awlPkg)
+        assertTrue("Learning Exam AWL must be valid", awlValidation.isValid)
+        assertEquals("Exam AWL must have 60 words", 60, awlPkg.words.size)
+        assertEquals("Exam AWL must have 3 units", 3, awlPkg.units.size)
     }
 
     @Test
@@ -100,6 +110,13 @@ class ContentRepositoryIntegrityTest {
         val trA2Validation = ContentValidator.validateTranslationPackage(trA2Pkg)
         assertTrue("Translation A2 must be valid", trA2Validation.isValid)
         assertEquals("Translation A2 must have 200 entries", 200, trA2Pkg.entries.size)
+
+        // Translation Exam AWL
+        val trAwlFile = File(repoContentDir, "translation_id_exam_awl.json")
+        val trAwlPkg = gson.fromJson(trAwlFile.readText(Charsets.UTF_8), TranslationPackage::class.java)
+        val trAwlValidation = ContentValidator.validateTranslationPackage(trAwlPkg)
+        assertTrue("Translation Exam AWL must be valid", trAwlValidation.isValid)
+        assertEquals("Translation Exam AWL must have 60 entries", 60, trAwlPkg.entries.size)
     }
 
     @Test
@@ -119,7 +136,9 @@ class ContentRepositoryIntegrityTest {
             "learning_a2.json",
             "translation_id_a1.json",
             "translation_id_a2.json",
-            "ui_id.json"
+            "ui_id.json",
+            "learning_exam_awl.json",
+            "translation_id_exam_awl.json"
         )
         for (fileName in filesToCheck) {
             val repoFile = File(repoContentDir, fileName)

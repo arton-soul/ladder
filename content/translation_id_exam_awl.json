@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "packageId": "translation.id.en.exam.awl",
+  "contentVersion": 1,
+  "locale": "id",
+  "targetLanguage": "en",
+  "levelId": "level_exam_awl",
+  "entries": [
+    {
+      "wordId": "w_awl_001",
+      "translation": "Menganalisis / Mengurai data",
+      "definition": "Menganalisis secara metodis dan terperinci terhadap struktur atau susunan suatu hal.",
+      "exampleTranslation": "Peneliti menganalisis data statistik untuk mengidentifikasi pola lingkungan."
+    },
+    {
+      "wordId": "w_awl_002",
+      "translation": "Pendekatan / Metode kerja",
+      "definition": "Cara menangani atau memikirkan suatu masalah atau tugas.",
+      "exampleTranslation": "Universitas tersebut menerapkan pendekatan lintas disiplin untuk riset biologi."
+    },
+    {
+      "wordId": "w_awl_003",
+      "translation": "Konsep / Gagasan dasar",
+      "definition": "Ide abstrak atau gagasan umum dalam pemikiran konseptual.",
+      "exampleTranslation": "Teori Einstein memperkenalkan konsep radikal tentang kelengkungan ruang-waktu."
+    },
+    {
+      "wordId": "w_awl_004",
+      "translation": "Data / Fakta statistik",
+      "definition": "Kumpulan fakta dan angka yang dikumpulkan untuk rujukan atau analisis.",
+      "exampleTranslation": "Data empiris yang dikumpulkan dari uji lapangan memvalidasi hipotesis tersebut."
+    },
+    {
+      "wordId": "w_awl_005",
+      "translation": "Berasal dari / Menurunkan",
+      "definition": "Memperoleh sesuatu dari sumber atau asal mula tertentu.",
+      "exampleTranslation": "Banyak istilah medis ilmiah berasal dari akar bahasa Latin dan Yunani kuno."
+    },
+    {
+      "wordId": "w_awl_006",
+      "translation": "Menetapkan / Membuktikan",
+      "definition": "Membangun atas dasar yang kuat atau membuktikan kebenaran secara permanen.",
+      "exampleTranslation": "Eksperimen tersebut membuktikan korelasi jelas antara kurang tidur dan penurunan kognitif."
+    },
+    {
+      "wordId": "w_awl_007",
+      "translation": "Bukti / Fakta pendukung",
+      "definition": "Kumpulan fakta atau informasi yang menunjukkan kebenaran suatu pernyataan.",
+      "exampleTranslation": "Ahli paleontologi menemukan bukti fosil yang mendukung transisi evolusioner."
+    },
+    {
+      "wordId": "w_awl_008",
+      "translation": "Faktor / Unsur penentu",
+      "definition": "Keadaan, fakta, atau pengaruh yang turut berkontribusi pada suatu hasil.",
+      "exampleTranslation": "Status sosial ekonomi tetap menjadi faktor utama dalam pencapaian pendidikan."
+    },
+    {
+      "wordId": "w_awl_009",
+      "translation": "Formula / Rumus",
+      "definition": "Hubungan atau aturan matematis yang dinyatakan dalam simbol-simbol.",
+      "exampleTranslation": "Ahli kimia mengembangkan rumus matematis untuk memprediksi stabilitas molekul."
+    },
+    {
+      "wordId": "w_awl_010",
+      "translation": "Hipotesis / Dugaan ilmiah",
+      "definition": "Penjelasan sementara yang diajukan berdasarkan bukti terbatas sebagai titik awal.",
+      "exampleTranslation": "Ketua ilmuwan menyusun hipotesis kerja sebelum melakukan uji coba laboratorium."
+    },
+    {
+      "wordId": "w_awl_011",
+      "translation": "Mengidentifikasi / Mengenali",
+      "definition": "Menentukan atau memastikan identitas atau ciri khas seseorang atau sesuatu.",
+      "exampleTranslation": "Ahli mikrobiologi mampu mengidentifikasi galur bakteri melalui pengurutan genetik."
+    },
+    {
+      "wordId": "w_awl_012",
+      "translation": "Menunjukkan / Mengindikasikan",
+      "definition": "Menunjukkan, membuktikan, atau memberikan tanda akan suatu hal.",
+      "exampleTranslation": "Temuan laboratorium awal menunjukkan bahwa antibodi tersebut menetralkan infeksi virus."
+    },
+    {
+      "wordId": "w_awl_013",
+      "translation": "Metode / Tata cara",
+      "definition": "Prosedur atau cara tertentu yang sistematis untuk menyelesaikan tugas.",
+      "exampleTranslation": "Uji acak terkontrol adalah metode baku emas dalam penelitian klinis."
+    },
+    {
+      "wordId": "w_awl_014",
+      "translation": "Terjadi / Berlangsung",
+      "definition": "Berlangsung atau ditemukan terjadi pada waktu atau tempat tertentu.",
+      "exampleTranslation": "Reaksi kimia terjadi secara cepat saat katalis diperkenalkan ke dalam larutan."
+    },
+    {
+      "wordId": "w_awl_015",
+      "translation": "Prinsip dasar / Asas",
+      "definition": "Kebenaran mendasar yang menjadi landasan bagi sistem keyakinan atau teori.",
+      "exampleTranslation": "Argumen hukum tersebut berlandaskan pada prinsip dasar hak asasi manusia universal."
+    },
+    {
+      "wordId": "w_awl_016",
+      "translation": "Prosedur / Tata langkah",
+      "definition": "Cara resmi atau teratur dalam melakukan rangkaian tindakan.",
+      "exampleTranslation": "Tim bedah harus mematuhi protokol steril dan panduan prosedur keselamatan dengan ketat."
+    },
+    {
+      "wordId": "w_awl_017",
+      "translation": "Riset / Penelitian ilmiah",
+      "definition": "Penyelidikan sistematis terhadap bahan atau sumber untuk menetapkan fakta.",
+      "exampleTranslation": "Penelitian akademis luas telah mendokumentasikan dampak positif bilingualisme terhadap plastisitas otak."
+    },
+    {
+      "wordId": "w_awl_018",
+      "translation": "Sektor / Bidang",
+      "definition": "Bagian atau bidang kegiatan yang terpisah dari yang lain, terutama dalam ekonomi.",
+      "exampleTranslation": "Investasi di sektor energi terbarukan meluas dengan cepat selama dekade terakhir."
+    },
+    {
+      "wordId": "w_awl_019",
+      "translation": "Teori / Penjelasan ilmiah",
+      "definition": "Sistem gagasan yang dimaksudkan untuk menjelaskan prinsip-prinsip suatu fenomena.",
+      "exampleTranslation": "Teori seleksi alam Darwin mengubah ilmu biologi modern secara mendalam."
+    },
+    {
+      "wordId": "w_awl_020",
+      "translation": "Variabel / Peubah",
+      "definition": "Unsur atau faktor yang nilainya dapat berubah atau bervariasi.",
+      "exampleTranslation": "Peneliti mengendalikan usia dan gender sebagai variabel perancu dalam model statistik."
+    },
+    {
+      "wordId": "w_awl_021",
+      "translation": "Menilai / Menaksir",
+      "definition": "Mengevaluasi sifat, kemampuan, atau mutu suatu hal secara terukur.",
+      "exampleTranslation": "Penguji menilai pemahaman membaca melalui topik esai analitis."
+    },
+    {
+      "wordId": "w_awl_022",
+      "translation": "Mengasumsikan / Menduga",
+      "definition": "Menganggap sesuatu sebagai hal yang benar tanpa memerlukan bukti langsung.",
+      "exampleTranslation": "Ekonom kerap mengasumsikan perilaku rasional saat membangun model makroekonomi."
+    },
+    {
+      "wordId": "w_awl_023",
+      "translation": "Menyimpulkan",
+      "definition": "Mencapai suatu keputusan atau pendapat melalui pertimbangan rasional.",
+      "exampleTranslation": "Para penulis menyimpulkan bahwa intervensi dini secara signifikan meningkatkan hasil jangka panjang."
+    },
+    {
+      "wordId": "w_awl_024",
+      "translation": "Membentuk / Merupakan bagian",
+      "definition": "Menjadi bagian dari keseluruhan atau bergabung membentuk suatu kesatuan.",
+      "exampleTranslation": "Mahasiswa internasional membentuk sekitar dua puluh persen dari total angkatan universitas."
+    },
+    {
+      "wordId": "w_awl_025",
+      "translation": "Konteks / Latar situasi",
+      "definition": "Kondisi atau keadaan yang membentuk latar belakang peristiwa, pernyataan, atau gagasan.",
+      "exampleTranslation": "Analis sastra meneliti soneta Shakespeare dalam konteks historisnya."
+    },
+    {
+      "wordId": "w_awl_026",
+      "translation": "Mendefinisikan / Menjelaskan arti",
+      "definition": "Menyatakan atau menggambarkan secara tepat batas atau makna dari sesuatu.",
+      "exampleTranslation": "Ahli bahasa mendefinisikan pragmatik sebagai studi bahasa dalam konteks komunikatif."
+    },
+    {
+      "wordId": "w_awl_027",
+      "translation": "Memperkirakan / Mengestimasi",
+      "definition": "Menghitung secara kasar atau memperkirakan nilai atau jumlah sesuatu.",
+      "exampleTranslation": "Ahli demografi memperkirakan bahwa populasi perkotaan global akan berlipat ganda pada pertengahan abad."
+    },
+    {
+      "wordId": "w_awl_028",
+      "translation": "Mengevaluasi / Menilai kelayakan",
+      "definition": "Membentuk penilaian terhadap mutu, signifikansi, atau nilai dari suatu karya.",
+      "exampleTranslation": "Mitra bestari mengevaluasi secara ketat manuskrip akademik yang diajukan sebelum diterbitkan."
+    },
+    {
+      "wordId": "w_awl_029",
+      "translation": "Dampak / Pengaruh signifikan",
+      "definition": "Pengaruh kuat atau kesan mendalam yang ditimbulkan oleh suatu kejadian.",
+      "exampleTranslation": "Penggundulan hutan memiliki dampak merusak pada keanekaragaman hayati dan stabilitas iklim."
+    },
+    {
+      "wordId": "w_awl_030",
+      "translation": "Menafsirkan / Menginterpretasi",
+      "definition": "Menjelaskan atau mengartikan makna dari data, informasi, atau simbol.",
+      "exampleTranslation": "Sejarawan menafsirkan prasasti kuno menggunakan teknik perbandingan linguistik."
+    },
+    {
+      "wordId": "w_awl_031",
+      "translation": "Melibatkan / Menyertakan",
+      "definition": "Menyertakan atau mempersyaratkan sesuatu sebagai bagian dari proses.",
+      "exampleTranslation": "Uji klinis melibatkan protokol pengujian manusia multilangkah yang ketat."
+    },
+    {
+      "wordId": "w_awl_032",
+      "translation": "Isu / Masalah penting",
+      "definition": "Topik atau permasalahan penting yang menjadi bahan perdebatan atau diskusi.",
+      "exampleTranslation": "Pengelolaan air berkelanjutan merupakan isu kritis yang dihadapi negara-negara berkembang saat ini."
+    },
+    {
+      "wordId": "w_awl_033",
+      "translation": "Mengatur hukum / Mengesahkan UU",
+      "definition": "Menetapkan aturan atau mengesahkan undang-undang secara formal.",
+      "exampleTranslation": "Parlemen kerap mengesahkan undang-undang untuk memberlakukan batas karbon lingkungan yang ketat."
+    },
+    {
+      "wordId": "w_awl_034",
+      "translation": "Utama / Besar pengaruhnya",
+      "definition": "Sangat penting, serius, atau berpengaruh dalam skala yang luas.",
+      "exampleTranslation": "Resistensi antibiotik mewakili tantangan kesehatan masyarakat global yang utama."
+    },
+    {
+      "wordId": "w_awl_035",
+      "translation": "Mempersepsikan / Menyadari",
+      "definition": "Menjadi sadar atau menafsirkan sesuatu melalui indra atau pemahaman pikiran.",
+      "exampleTranslation": "Subjek yang mempersepsikan otonomi lebih besar cenderung menunjukkan motivasi intrinsik lebih tinggi."
+    },
+    {
+      "wordId": "w_awl_036",
+      "translation": "Mensyaratkan / Memerlukan",
+      "definition": "Membutuhkan sesuatu sebagai syarat wajib untuk tujuan tertentu.",
+      "exampleTranslation": "Kriteria penerimaan pascasarjana mensyaratkan skor persentil ujian standar yang kompetitif."
+    },
+    {
+      "wordId": "w_awl_037",
+      "translation": "Masing-masing",
+      "definition": "Berkaitan secara terpisah dengan masing-masing dari dua hal atau lebih.",
+      "exampleTranslation": "Para delegasi kembali ke kedutaan nasional masing-masing menyusul konferensi tingkat tinggi tersebut."
+    },
+    {
+      "wordId": "w_awl_038",
+      "translation": "Signifikan / Berpengaruh nyata",
+      "definition": "Cukup besar atau penting sehingga patut mendapat perhatian khusus.",
+      "exampleTranslation": "Uji klinis tersebut menghasilkan penurunan risiko kardiovaskular yang signifikan secara statistik."
+    },
+    {
+      "wordId": "w_awl_039",
+      "translation": "Spesifik / Khusus",
+      "definition": "Didefinisikan secara jelas, terperinci, atau khas pada suatu bidang.",
+      "exampleTranslation": "Pedoman hibah menuntut tujuan terukur yang spesifik untuk pendanaan proyek."
+    },
+    {
+      "wordId": "w_awl_040",
+      "translation": "Sahih / Valid secara ilmiah",
+      "definition": "Memiliki dasar yang kokoh dalam logika atau fakta yang dapat dipertanggungjawabkan.",
+      "exampleTranslation": "Instrumen statistik harus menghasilkan data pengukuran yang andal sekaligus sahih."
+    },
+    {
+      "wordId": "w_awl_041",
+      "translation": "Memperoleh / Menguasai kemampuan",
+      "definition": "Mendapatkan atau menguasai aset atau pengetahuan baru bagi diri sendiri.",
+      "exampleTranslation": "Anak-anak kecil memperoleh kesadaran fonologis asli secara alami tanpa instruksi formal."
+    },
+    {
+      "wordId": "w_awl_042",
+      "translation": "Mengelola / Mengadministrasikan",
+      "definition": "Mengatur dan bertanggung jawab atas pelaksanaan organisasi atau program.",
+      "exampleTranslation": "Lembaga kesehatan masyarakat mengelola jaringan distribusi vaksinasi berskala nasional."
+    },
+    {
+      "wordId": "w_awl_043",
+      "translation": "Otoritas / Pihak berwenang",
+      "definition": "Kekuasaan resmi atau lembaga sah yang berhak membuat keputusan dan menegakkan aturan.",
+      "exampleTranslation": "Otoritas keselamatan maritim mengeluarkan peringatan terkait gelombang badai tropis."
+    },
+    {
+      "wordId": "w_awl_044",
+      "translation": "Kategori / Pengelompokan",
+      "definition": "Kelas atau divisi dari hal-hal yang memiliki karakteristik serupa.",
+      "exampleTranslation": "Ahli taksonomi menetapkan spesies laut yang baru ditemukan ke dalam kategori taksonomi yang tepat."
+    },
+    {
+      "wordId": "w_awl_045",
+      "translation": "Komisi / Badan pengawas",
+      "definition": "Tugas atau sekelompok orang yang diberi wewenang khusus untuk menangani mandat resmi.",
+      "exampleTranslation": "Komisi internasional menerbitkan rekomendasi mengenai tata kelola kecerdasan buatan."
+    },
+    {
+      "wordId": "w_awl_046",
+      "translation": "Komunitas / Kalangan ilmiah",
+      "definition": "Kelompok orang yang disatukan oleh kepentingan, lokasi, atau profesi serupa.",
+      "exampleTranslation": "Komunitas ilmiah bersatu untuk mengurutkan genom patogen virus secara kolaboratif."
+    },
+    {
+      "wordId": "w_awl_047",
+      "translation": "Kompleks / Rumit",
+      "definition": "Terdiri dari banyak bagian terhubung yang berbeda sehingga memerlukan analisis mendalam.",
+      "exampleTranslation": "Jaringan saraf tiruan mensimulasikan interaksi matematis non-linear yang kompleks pada jaringan otak."
+    },
+    {
+      "wordId": "w_awl_048",
+      "translation": "Komponen / Bagian penyusun",
+      "definition": "Bagian atau unsur dari keseluruhan sistem yang lebih besar.",
+      "exampleTranslation": "Pengontrol memori perangkat keras adalah komponen penting dari mikrocip berkinerja tinggi."
+    },
+    {
+      "wordId": "w_awl_049",
+      "translation": "Mendistribusikan / Menyalurkan",
+      "definition": "Membagikan atau menyebarkan pasokan ke berbagai wilayah atau sasaran.",
+      "exampleTranslation": "Jaringan logistik menyalurkan bahan makanan segar secara cepat ke pusat-pusat ritel kota."
+    },
+    {
+      "wordId": "w_awl_050",
+      "translation": "Elemen / Unsur penting",
+      "definition": "Bagian esensial atau ciri khas dari suatu konsep atau teori.",
+      "exampleTranslation": "Observasi empiris yang ketat merupakan elemen fundamental dari metode ilmiah."
+    },
+    {
+      "wordId": "w_awl_051",
+      "translation": "Fokus / Titik perhatian utama",
+      "definition": "Pusat minat, kegiatan, atau konsentrasi analisis.",
+      "exampleTranslation": "Fokus utama riset demografi modern adalah tren urbanisasi di kawasan Asia."
+    },
+    {
+      "wordId": "w_awl_052",
+      "translation": "Kerangka kerja / Landasan konseptual",
+      "definition": "Struktur pendukung penting yang melandasi pemikiran intelektual atau rancangan.",
+      "exampleTranslation": "Para sarjana mengembangkan kerangka kerja konseptual untuk meneliti transisi sosial-budaya."
+    },
+    {
+      "wordId": "w_awl_053",
+      "translation": "Fungsi / Peran kegunaan",
+      "definition": "Tujuan atau peran alamiah yang dijalankan oleh organ atau alat tertentu.",
+      "exampleTranslation": "Fungsi utama sel darah merah adalah mengangkut oksigen ke seluruh tubuh."
+    },
+    {
+      "wordId": "w_awl_054",
+      "translation": "Menghasilkan / Membangkitkan",
+      "definition": "Membuat, menciptakan, atau memproduksi energi, gagasan, atau hasil.",
+      "exampleTranslation": "Pembangkit listrik tenaga air menghasilkan energi listrik bersih dari arus sungai."
+    },
+    {
+      "wordId": "w_awl_055",
+      "translation": "Lembaga / Institut riset",
+      "definition": "Organisasi yang didirikan untuk tujuan penelitian ilmiah atau pendidikan tinggi.",
+      "exampleTranslation": "Institut riset tersebut menerima pendanaan untuk meneliti energi panas bumi terbarukan."
+    },
+    {
+      "wordId": "w_awl_056",
+      "translation": "Mengintegrasikan / Menyatukan",
+      "definition": "Menggabungkan unsur-unsur terpisah menjadi satu kesatuan yang utuh.",
+      "exampleTranslation": "Arsitek berupaya mengintegrasikan pendinginan pasif hemat energi ke dalam desain pencakar langit."
+    },
+    {
+      "wordId": "w_awl_057",
+      "translation": "Mempertahankan / Memelihara",
+      "definition": "Menjaga agar suatu kondisi atau keadaan tetap stabil dan berkelanjutan.",
+      "exampleTranslation": "Mekanisme termostatik mempertahankan suhu tubuh konstan pada hewan endotermik."
+    },
+    {
+      "wordId": "w_awl_058",
+      "translation": "Potensi / Kemungkinan berkembang",
+      "definition": "Kemampuan terpendam yang dapat dikembangkan untuk mencapai keberhasilan masa depan.",
+      "exampleTranslation": "Bioteknologi pertanian memiliki potensi signifikan untuk meningkatkan ketahanan tanaman."
+    },
+    {
+      "wordId": "w_awl_059",
+      "translation": "Primer / Utama",
+      "definition": "Memiliki tingkat kepentingan terpenting, utama, atau urutan paling awal.",
+      "exampleTranslation": "Sumber primer seperti surat diplomatik memberikan kesaksian sejarah tangan pertama."
+    },
+    {
+      "wordId": "w_awl_060",
+      "translation": "Pergeseran / Perubahan arah",
+      "definition": "Perubahan kecil atau nyata dalam arah, posisi, atau kecenderungan.",
+      "exampleTranslation": "Perekonomian global menyaksikan pergeseran nyata menuju transaksi digital otomatis."
+    }
+  ]
+}

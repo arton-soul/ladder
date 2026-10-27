@@ -84,17 +84,48 @@ class MonetizationAndAdTest {
     @Test
     fun testBillingProductConstants() {
         assertEquals("lexiladder_premium_remove_ads", BillingManager.PRODUCT_PREMIUM_REMOVE_ADS)
+        assertEquals("lexiladder_exam_booster_pack", BillingManager.PRODUCT_EXAM_BOOSTER)
+        assertEquals("lexiladder_all_access_lifetime", BillingManager.PRODUCT_ALL_ACCESS_LIFETIME)
+
+        assertEquals(3, BillingManager.ALL_PRODUCT_IDS.size)
+        assertTrue(BillingManager.ALL_PRODUCT_IDS.contains(BillingManager.PRODUCT_ALL_ACCESS_LIFETIME))
+        assertTrue(BillingManager.ALL_PRODUCT_IDS.contains(BillingManager.PRODUCT_EXAM_BOOSTER))
+        assertTrue(BillingManager.ALL_PRODUCT_IDS.contains(BillingManager.PRODUCT_PREMIUM_REMOVE_ADS))
     }
 
     @Test
     fun testUserPreferencesPremiumDefaultFalse() {
         val prefs = UserPreferences()
         assertFalse(prefs.isPremium)
+        assertFalse(prefs.hasExamBooster)
+        assertFalse(prefs.hasAllAccessLifetime)
+        assertFalse(prefs.isAdFree)
+        assertFalse(prefs.isExamBoosterUnlocked)
     }
 
     @Test
     fun testUserPreferencesPremiumActivation() {
         val prefs = UserPreferences(isPremium = true)
         assertTrue(prefs.isPremium)
+        assertTrue(prefs.isAdFree)
+        assertFalse(prefs.hasExamBooster)
+        assertFalse(prefs.isExamBoosterUnlocked)
+    }
+
+    @Test
+    fun testUserPreferencesExamBoosterActivation() {
+        val prefs = UserPreferences(hasExamBooster = true)
+        assertFalse(prefs.isPremium)
+        assertFalse(prefs.isAdFree)
+        assertTrue(prefs.hasExamBooster)
+        assertTrue(prefs.isExamBoosterUnlocked)
+    }
+
+    @Test
+    fun testUserPreferencesAllAccessLifetimeActivation() {
+        val prefs = UserPreferences(hasAllAccessLifetime = true)
+        assertTrue(prefs.hasAllAccessLifetime)
+        assertTrue(prefs.isAdFree)
+        assertTrue(prefs.isExamBoosterUnlocked)
     }
 }

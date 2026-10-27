@@ -1,0 +1,692 @@
+{
+  "schemaVersion": 1,
+  "packageId": "learning.en.exam.awl",
+  "contentVersion": 1,
+  "targetLanguage": "en",
+  "levelId": "level_exam_awl",
+  "levelTitle": "Exam Booster: TOEFL & IELTS",
+  "levelDescription": "Academic Word List (AWL) & scholarly collocations for TOEFL 100+ & IELTS Band 7+",
+  "levelOrder": 4,
+  "units": [
+    {
+      "unitId": "unit_awl_1",
+      "title": "Academic Analysis & Scientific Methodology",
+      "wordIds": [
+        "w_awl_001",
+        "w_awl_002",
+        "w_awl_003",
+        "w_awl_004",
+        "w_awl_005",
+        "w_awl_006",
+        "w_awl_007",
+        "w_awl_008",
+        "w_awl_009",
+        "w_awl_010",
+        "w_awl_011",
+        "w_awl_012",
+        "w_awl_013",
+        "w_awl_014",
+        "w_awl_015",
+        "w_awl_016",
+        "w_awl_017",
+        "w_awl_018",
+        "w_awl_019",
+        "w_awl_020"
+      ]
+    },
+    {
+      "unitId": "unit_awl_2",
+      "title": "Critical Evaluation & Academic Argumentation",
+      "wordIds": [
+        "w_awl_021",
+        "w_awl_022",
+        "w_awl_023",
+        "w_awl_024",
+        "w_awl_025",
+        "w_awl_026",
+        "w_awl_027",
+        "w_awl_028",
+        "w_awl_029",
+        "w_awl_030",
+        "w_awl_031",
+        "w_awl_032",
+        "w_awl_033",
+        "w_awl_034",
+        "w_awl_035",
+        "w_awl_036",
+        "w_awl_037",
+        "w_awl_038",
+        "w_awl_039",
+        "w_awl_040"
+      ]
+    },
+    {
+      "unitId": "unit_awl_3",
+      "title": "Technological Innovation & Societal Structure",
+      "wordIds": [
+        "w_awl_041",
+        "w_awl_042",
+        "w_awl_043",
+        "w_awl_044",
+        "w_awl_045",
+        "w_awl_046",
+        "w_awl_047",
+        "w_awl_048",
+        "w_awl_049",
+        "w_awl_050",
+        "w_awl_051",
+        "w_awl_052",
+        "w_awl_053",
+        "w_awl_054",
+        "w_awl_055",
+        "w_awl_056",
+        "w_awl_057",
+        "w_awl_058",
+        "w_awl_059",
+        "w_awl_060"
+      ]
+    }
+  ],
+  "words": [
+    {
+      "wordId": "w_awl_001",
+      "term": "Analyze",
+      "partOfSpeech": "verb",
+      "definition": "To examine methodically and in detail the constitution or structure of something.",
+      "example": "Researchers analyzed the statistical data to identify environmental patterns.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈæn.ə.laɪz/",
+      "translation": "Menganalisis / Mengurai data"
+    },
+    {
+      "wordId": "w_awl_002",
+      "term": "Approach",
+      "partOfSpeech": "noun",
+      "definition": "A way of dealing with something or a way of doing or thinking about something.",
+      "example": "The university adopted an interdisciplinary approach to biological research.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/əˈproʊtʃ/",
+      "translation": "Pendekatan / Metode kerja"
+    },
+    {
+      "wordId": "w_awl_003",
+      "term": "Concept",
+      "partOfSpeech": "noun",
+      "definition": "An abstract idea or a general notion conceived in the mind.",
+      "example": "Einstein's theory introduced the radical concept of spacetime curvature.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈkɑːn.sept/",
+      "translation": "Konsep / Gagasan dasar"
+    },
+    {
+      "wordId": "w_awl_004",
+      "term": "Data",
+      "partOfSpeech": "noun",
+      "definition": "Facts and statistics collected together for reference or analysis.",
+      "example": "Empirical data collected from the field trial validated the hypothesis.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈdeɪ.tə/",
+      "translation": "Data / Fakta statistik"
+    },
+    {
+      "wordId": "w_awl_005",
+      "term": "Derive",
+      "partOfSpeech": "verb",
+      "definition": "To obtain something from a specified source or origin.",
+      "example": "Many scientific medical terms derive from ancient Latin and Greek roots.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/dɪˈraɪv/",
+      "translation": "Berasal dari / Menurunkan"
+    },
+    {
+      "wordId": "w_awl_006",
+      "term": "Establish",
+      "partOfSpeech": "verb",
+      "definition": "To set up on a firm or permanent basis; to achieve permanent acceptance.",
+      "example": "The experiment established a clear correlation between sleep deprivation and cognitive decline.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ɪˈstæb.lɪʃ/",
+      "translation": "Menetapkan / Membuktikan"
+    },
+    {
+      "wordId": "w_awl_007",
+      "term": "Evidence",
+      "partOfSpeech": "noun",
+      "definition": "The available body of facts or information indicating whether a belief is true.",
+      "example": "Paleontologists uncovered fossil evidence supporting the evolutionary transition.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈev.ə.dəns/",
+      "translation": "Bukti / Fakta pendukung"
+    },
+    {
+      "wordId": "w_awl_008",
+      "term": "Factor",
+      "partOfSpeech": "noun",
+      "definition": "A circumstance, fact, or influence that contributes to a result.",
+      "example": "Socioeconomic status remains a major factor in educational attainment.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈfæk.tɚ/",
+      "translation": "Faktor / Unsur penentu"
+    },
+    {
+      "wordId": "w_awl_009",
+      "term": "Formula",
+      "partOfSpeech": "noun",
+      "definition": "A mathematical relationship or rule expressed in symbols.",
+      "example": "Chemists developed a mathematical formula to predict molecular stability.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈfɔːr.mjə.lə/",
+      "translation": "Formula / Rumus"
+    },
+    {
+      "wordId": "w_awl_010",
+      "term": "Hypothesis",
+      "partOfSpeech": "noun",
+      "definition": "A proposed explanation made on the basis of limited evidence as a starting point.",
+      "example": "The lead scientist formulated a working hypothesis before conducting laboratory trials.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/haɪˈpɑː.θə.sɪs/",
+      "translation": "Hipotesis / Dugaan ilmiah"
+    },
+    {
+      "wordId": "w_awl_011",
+      "term": "Identify",
+      "partOfSpeech": "verb",
+      "definition": "To establish or indicate who or what someone or something is.",
+      "example": "Microbiologists were able to identify the bacterial strain through genetic sequencing.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/aɪˈden.t̬ə.faɪ/",
+      "translation": "Mengidentifikasi / Mengenali"
+    },
+    {
+      "wordId": "w_awl_012",
+      "term": "Indicate",
+      "partOfSpeech": "verb",
+      "definition": "To point out, show, or make a sign of something.",
+      "example": "Preliminary lab findings indicate that the antibody neutralizes the viral infection.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈɪn.də.keɪt/",
+      "translation": "Menunjukkan / Mengindikasikan"
+    },
+    {
+      "wordId": "w_awl_013",
+      "term": "Method",
+      "partOfSpeech": "noun",
+      "definition": "A particular procedure for accomplishing or approaching something.",
+      "example": "The randomized controlled trial is the gold standard method in clinical research.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈmeθ.əd/",
+      "translation": "Metode / Tata cara"
+    },
+    {
+      "wordId": "w_awl_014",
+      "term": "Occur",
+      "partOfSpeech": "verb",
+      "definition": "To happen; to take place; to exist or be found.",
+      "example": "Chemical reactions occur rapidly when catalysts are introduced into the solution.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/əˈkɝː/",
+      "translation": "Terjadi / Berlangsung"
+    },
+    {
+      "wordId": "w_awl_015",
+      "term": "Principle",
+      "partOfSpeech": "noun",
+      "definition": "A fundamental truth or proposition that serves as the foundation for a belief.",
+      "example": "The legal argument was grounded on the basic principle of universal human rights.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈprɪn.sə.pəl/",
+      "translation": "Prinsip dasar / Asas"
+    },
+    {
+      "wordId": "w_awl_016",
+      "term": "Procedure",
+      "partOfSpeech": "noun",
+      "definition": "An established or official way of doing something.",
+      "example": "Surgical teams must adhere strictly to sterile protocol and safety procedure guidelines.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/prəˈsiː.dʒɚ/",
+      "translation": "Prosedur / Tata langkah"
+    },
+    {
+      "wordId": "w_awl_017",
+      "term": "Research",
+      "partOfSpeech": "noun",
+      "definition": "The systematic investigation into and study of materials to establish facts.",
+      "example": "Extensive academic research has documented the positive impact of bilingualism on brain plasticity.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈriː.sɝːtʃ/",
+      "translation": "Riset / Penelitian ilmiah"
+    },
+    {
+      "wordId": "w_awl_018",
+      "term": "Sector",
+      "partOfSpeech": "noun",
+      "definition": "An area or portion that is distinct from others, especially in an economy.",
+      "example": "Investment in the renewable energy sector expanded rapidly over the past decade.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈsek.tɚ/",
+      "translation": "Sektor / Bidang"
+    },
+    {
+      "wordId": "w_awl_019",
+      "term": "Theory",
+      "partOfSpeech": "noun",
+      "definition": "A supposition or a system of ideas intended to explain something.",
+      "example": "Darwin's theory of natural selection transformed modern biological sciences.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈθiː.ɚ.i/",
+      "translation": "Teori / Penjelasan ilmiah"
+    },
+    {
+      "wordId": "w_awl_020",
+      "term": "Variable",
+      "partOfSpeech": "noun",
+      "definition": "An element, feature, or factor that is liable to vary or change.",
+      "example": "Researchers controlled for age and gender as a confounding variable in the statistical model.",
+      "unitId": "unit_awl_1",
+      "phonetic": "/ˈver.i.ə.bəl/",
+      "translation": "Variabel / Peubah"
+    },
+    {
+      "wordId": "w_awl_021",
+      "term": "Assess",
+      "partOfSpeech": "verb",
+      "definition": "To evaluate or estimate the nature, ability, or quality of something.",
+      "example": "Examiners assess reading comprehension through analytical essay prompts.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/əˈses/",
+      "translation": "Menilai / Menaksir"
+    },
+    {
+      "wordId": "w_awl_022",
+      "term": "Assume",
+      "partOfSpeech": "verb",
+      "definition": "To suppose to be the case, without proof.",
+      "example": "Economists often assume rational behavior when constructing macroeconomic models.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/əˈsuːm/",
+      "translation": "Mengasumsikan / Menduga"
+    },
+    {
+      "wordId": "w_awl_023",
+      "term": "Conclude",
+      "partOfSpeech": "verb",
+      "definition": "To arrive at a judgment or opinion by reasoning.",
+      "example": "Authors conclude that early intervention significantly improves long-term outcomes.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/kənˈkluːd/",
+      "translation": "Menyimpulkan"
+    },
+    {
+      "wordId": "w_awl_024",
+      "term": "Constitute",
+      "partOfSpeech": "verb",
+      "definition": "To be a part of a whole; to combine to form a whole.",
+      "example": "International students constitute approximately twenty percent of the university cohort.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈkɑːn.stə.tuːt/",
+      "translation": "Membentuk / Merupakan bagian"
+    },
+    {
+      "wordId": "w_awl_025",
+      "term": "Context",
+      "partOfSpeech": "noun",
+      "definition": "The circumstances that form the setting for an event, statement, or idea.",
+      "example": "Literary analysts examine Shakespearean sonnets within their historical context.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈkɑːn.tekst/",
+      "translation": "Konteks / Latar situasi"
+    },
+    {
+      "wordId": "w_awl_026",
+      "term": "Define",
+      "partOfSpeech": "verb",
+      "definition": "To state or describe exactly the nature, scope, or meaning of something.",
+      "example": "Linguists define pragmatics as the study of language in communicative context.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/dɪˈfaɪn/",
+      "translation": "Mendefinisikan / Menjelaskan arti"
+    },
+    {
+      "wordId": "w_awl_027",
+      "term": "Estimate",
+      "partOfSpeech": "verb",
+      "definition": "To roughly calculate or judge the value, number, or quantity of something.",
+      "example": "Demographers estimate that global urban populations will double by mid-century.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈes.tə.meɪt/",
+      "translation": "Memperkirakan / Mengestimasi"
+    },
+    {
+      "wordId": "w_awl_028",
+      "term": "Evaluate",
+      "partOfSpeech": "verb",
+      "definition": "To form an idea of the amount, number, or value of; to assess.",
+      "example": "Peer reviewers rigorously evaluate submitted academic manuscripts before publication.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ɪˈvæl.ju.eɪt/",
+      "translation": "Mengevaluasi / Menilai kelayakan"
+    },
+    {
+      "wordId": "w_awl_029",
+      "term": "Impact",
+      "partOfSpeech": "noun",
+      "definition": "The marked effect or strong impression produced by something.",
+      "example": "Deforestation has a devastating impact on local biodiversity and climate stability.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈɪm.pækt/",
+      "translation": "Dampak / Pengaruh signifikan"
+    },
+    {
+      "wordId": "w_awl_030",
+      "term": "Interpret",
+      "partOfSpeech": "verb",
+      "definition": "To explain the meaning of information, words, or actions.",
+      "example": "Historians interpret ancient inscriptions using comparative linguistic techniques.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ɪnˈtɝː.prət/",
+      "translation": "Menafsirkan / Menginterpretasi"
+    },
+    {
+      "wordId": "w_awl_031",
+      "term": "Involve",
+      "partOfSpeech": "verb",
+      "definition": "To have or include something as a necessary part or result.",
+      "example": "Clinical trials involve rigorous multi-phase human testing protocols.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ɪnˈvɑːlv/",
+      "translation": "Melibatkan / Menyertakan"
+    },
+    {
+      "wordId": "w_awl_032",
+      "term": "Issue",
+      "partOfSpeech": "noun",
+      "definition": "An important topic or problem for debate or discussion.",
+      "example": "Sustainable water management is a critical issue facing developing nations today.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈɪʃ.uː/",
+      "translation": "Isu / Masalah penting"
+    },
+    {
+      "wordId": "w_awl_033",
+      "term": "Legislate",
+      "partOfSpeech": "verb",
+      "definition": "To make or enact laws.",
+      "example": "Parliaments frequently legislate to enforce stringent environmental carbon limits.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈledʒ.ə.sleɪt/",
+      "translation": "Mengatur hukum / Mengesahkan UU"
+    },
+    {
+      "wordId": "w_awl_034",
+      "term": "Major",
+      "partOfSpeech": "adjective",
+      "definition": "Important, serious, or significant in scale or influence.",
+      "example": "Antibiotic resistance represents a major global public health challenge.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈmeɪ.dʒɚ/",
+      "translation": "Utama / Besar pengaruhnya"
+    },
+    {
+      "wordId": "w_awl_035",
+      "term": "Perceive",
+      "partOfSpeech": "verb",
+      "definition": "To become aware or conscious of something; to interpret or regard.",
+      "example": "Subjects who perceive greater autonomy tend to display higher intrinsic motivation.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/pɚˈsiːv/",
+      "translation": "Mempersepsikan / Menyadari"
+    },
+    {
+      "wordId": "w_awl_036",
+      "term": "Require",
+      "partOfSpeech": "verb",
+      "definition": "To need for a particular purpose; to make necessary.",
+      "example": "Graduate admission criteria require competitive standardized exam percentile scores.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/rɪˈkwaɪr/",
+      "translation": "Mensyaratkan / Memerlukan"
+    },
+    {
+      "wordId": "w_awl_037",
+      "term": "Respective",
+      "partOfSpeech": "adjective",
+      "definition": "Belonging or relating separately to each of two or more people or things.",
+      "example": "The delegates returned to their respective national embassies following the summit.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/rɪˈspek.tɪv/",
+      "translation": "Masing-masing"
+    },
+    {
+      "wordId": "w_awl_038",
+      "term": "Significant",
+      "partOfSpeech": "adjective",
+      "definition": "Sufficiently great or important to be worthy of attention.",
+      "example": "The clinical trial produced a statistically significant reduction in cardiovascular risk.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/sɪɡˈnɪf.ə.kənt/",
+      "translation": "Signifikan / Berpengaruh nyata"
+    },
+    {
+      "wordId": "w_awl_039",
+      "term": "Specific",
+      "partOfSpeech": "adjective",
+      "definition": "Clearly defined or identified; precise in detail.",
+      "example": "The grant guidelines demand specific measurable objectives for project funding.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/spəˈsɪf.ɪk/",
+      "translation": "Spesifik / Khusus"
+    },
+    {
+      "wordId": "w_awl_040",
+      "term": "Valid",
+      "partOfSpeech": "adjective",
+      "definition": "Having a sound basis in logic or fact; reasonable or cogent.",
+      "example": "Statistical instruments must yield both reliable and valid measurement results.",
+      "unitId": "unit_awl_2",
+      "phonetic": "/ˈvæl.ɪd/",
+      "translation": "Sahih / Valid secara ilmiah"
+    },
+    {
+      "wordId": "w_awl_041",
+      "term": "Acquire",
+      "partOfSpeech": "verb",
+      "definition": "To buy or obtain an asset; to gain knowledge or skills.",
+      "example": "Young children acquire native phonological awareness naturally without formal instruction.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/əˈkwaɪr/",
+      "translation": "Memperoleh / Menguasai kemampuan"
+    },
+    {
+      "wordId": "w_awl_042",
+      "term": "Administrate",
+      "partOfSpeech": "verb",
+      "definition": "To manage and be responsible for the running of a business or system.",
+      "example": "Public health agencies administrate nationwide vaccination delivery networks.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ədˈmɪn.ə.streɪt/",
+      "translation": "Mengelola / Mengadministrasikan"
+    },
+    {
+      "wordId": "w_awl_043",
+      "term": "Authority",
+      "partOfSpeech": "noun",
+      "definition": "The power or right to give orders, make decisions, and enforce obedience.",
+      "example": "The maritime safety authority issued warnings concerning hurricane storm surges.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/əˈθɔːr.ə.t̬i/",
+      "translation": "Otoritas / Pihak berwenang"
+    },
+    {
+      "wordId": "w_awl_044",
+      "term": "Category",
+      "partOfSpeech": "noun",
+      "definition": "A class or division of things regarded as having shared characteristics.",
+      "example": "Taxonomists assign newly discovered marine species to their appropriate taxonomic category.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈkæt̬.ə.ɡɔːr.i/",
+      "translation": "Kategori / Pengelompokan"
+    },
+    {
+      "wordId": "w_awl_045",
+      "term": "Commission",
+      "partOfSpeech": "noun",
+      "definition": "An instruction, command, or duty given to a person or group of people.",
+      "example": "The international commission published recommendations on artificial intelligence governance.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/kəˈmɪʃ.ən/",
+      "translation": "Komisi / Badan pengawas"
+    },
+    {
+      "wordId": "w_awl_046",
+      "term": "Community",
+      "partOfSpeech": "noun",
+      "definition": "A group of people living together or having shared characteristics.",
+      "example": "The scientific community rallied together to sequence the viral pathogen genome.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/kəˈmjuː.nə.t̬i/",
+      "translation": "Komunitas / Kalangan ilmiah"
+    },
+    {
+      "wordId": "w_awl_047",
+      "term": "Complex",
+      "partOfSpeech": "adjective",
+      "definition": "Consisting of many different and connected parts; intricate.",
+      "example": "Neural networks simulate complex non-linear mathematical interactions in brain tissue.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/kɑːmˈpleks/",
+      "translation": "Kompleks / Rumit"
+    },
+    {
+      "wordId": "w_awl_048",
+      "term": "Component",
+      "partOfSpeech": "noun",
+      "definition": "A part or element of a larger whole, especially of a machine or system.",
+      "example": "Hardware memory controllers are a vital component of high-performance microchips.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/kəmˈpoʊ.nənt/",
+      "translation": "Komponen / Bagian penyusun"
+    },
+    {
+      "wordId": "w_awl_049",
+      "term": "Distribute",
+      "partOfSpeech": "verb",
+      "definition": "To give shares of something; to deal out or spread over an area.",
+      "example": "Logistic networks distribute perishable food items rapidly to urban retail centers.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/dɪˈstrɪb.juːt/",
+      "translation": "Mendistribusikan / Menyalurkan"
+    },
+    {
+      "wordId": "w_awl_050",
+      "term": "Element",
+      "partOfSpeech": "noun",
+      "definition": "An essential or characteristic part of something abstract.",
+      "example": "Rigorous empirical observation is a foundational element of the scientific method.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈel.ə.mənt/",
+      "translation": "Elemen / Unsur penting"
+    },
+    {
+      "wordId": "w_awl_051",
+      "term": "Focus",
+      "partOfSpeech": "noun",
+      "definition": "The center of interest or activity; an adaptation of vision.",
+      "example": "The primary focus of modern demographic research is urbanization trends in Asia.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈfoʊ.kəs/",
+      "translation": "Fokus / Titik perhatian utama"
+    },
+    {
+      "wordId": "w_awl_052",
+      "term": "Framework",
+      "partOfSpeech": "noun",
+      "definition": "An essential supporting structure of an intellectual system.",
+      "example": "Scholars developed a conceptual framework to examine socio-cultural transitions.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈfreɪm.wɝːk/",
+      "translation": "Kerangka kerja / Landasan konseptual"
+    },
+    {
+      "wordId": "w_awl_053",
+      "term": "Function",
+      "partOfSpeech": "noun",
+      "definition": "An activity or purpose natural to or intended for a person or thing.",
+      "example": "The primary function of red blood cells is to transport oxygen throughout the body.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈfʌŋk.ʃən/",
+      "translation": "Fungsi / Peran kegunaan"
+    },
+    {
+      "wordId": "w_awl_054",
+      "term": "Generate",
+      "partOfSpeech": "verb",
+      "definition": "To produce or create something, such as energy, ideas, or wealth.",
+      "example": "Hydroelectric power plants generate clean electrical energy from river currents.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈdʒen.ə.reɪt/",
+      "translation": "Menghasilkan / Membangkitkan"
+    },
+    {
+      "wordId": "w_awl_055",
+      "term": "Institute",
+      "partOfSpeech": "noun",
+      "definition": "An organization having a particular educational or research purpose.",
+      "example": "The research institute received funding to investigate renewable geothermal energy.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈɪn.stə.tuːt/",
+      "translation": "Lembaga / Institut riset"
+    },
+    {
+      "wordId": "w_awl_056",
+      "term": "Integrate",
+      "partOfSpeech": "verb",
+      "definition": "To combine one thing with another so that they become a whole.",
+      "example": "Architects strive to integrate energy-efficient passive cooling into skyscraper designs.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈɪn.t̬ə.ɡreɪt/",
+      "translation": "Mengintegrasikan / Menyatukan"
+    },
+    {
+      "wordId": "w_awl_057",
+      "term": "Maintain",
+      "partOfSpeech": "verb",
+      "definition": "To cause or enable a condition or state of affairs to continue.",
+      "example": "Thermostatic mechanisms maintain constant body temperature in endothermic animals.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/meɪnˈteɪn/",
+      "translation": "Mempertahankan / Memelihara"
+    },
+    {
+      "wordId": "w_awl_058",
+      "term": "Potential",
+      "partOfSpeech": "noun",
+      "definition": "Latent qualities or abilities that may be developed into future success.",
+      "example": "Agricultural biotechnology holds significant potential to enhance crop resilience.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/poʊˈten.ʃəl/",
+      "translation": "Potensi / Kemungkinan berkembang"
+    },
+    {
+      "wordId": "w_awl_059",
+      "term": "Primary",
+      "partOfSpeech": "adjective",
+      "definition": "Of chief importance; principal; earliest in time or order.",
+      "example": "Primary sources such as diplomatic letters provide firsthand historical accounts.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ˈpraɪ.mer.i/",
+      "translation": "Primer / Utama"
+    },
+    {
+      "wordId": "w_awl_060",
+      "term": "Shift",
+      "partOfSpeech": "noun",
+      "definition": "A slight change in position, direction, or tendency.",
+      "example": "The global economy is witnessing a distinct shift toward automated digital transactions.",
+      "unitId": "unit_awl_3",
+      "phonetic": "/ʃɪft/",
+      "translation": "Pergeseran / Perubahan arah"
+    }
+  ]
+}

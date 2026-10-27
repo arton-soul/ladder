@@ -53,18 +53,26 @@ class VocabularyRepositoryImpl(
     }
 
     override fun getAllLevels(): Flow<List<Level>> {
+        val prefsFlow = userPreferencesRepository?.userPreferencesFlow
+            ?: kotlinx.coroutines.flow.flowOf(com.dearyoti.lexiladder.data.preferences.UserPreferences())
         return combine(
             levelDao.getAllLevels(),
-            userProgressDao.getAllProgress()
-        ) { levels, _ ->
+            userProgressDao.getAllProgress(),
+            prefsFlow
+        ) { levels, _, prefs ->
             levels.map { levelEntity ->
+                val isUnlocked = if (levelEntity.id.startsWith("level_exam_")) {
+                    prefs.isExamBoosterUnlocked
+                } else {
+                    levelEntity.isUnlocked
+                }
                 val total = wordDao.getWordCountByLevel(levelEntity.id)
                 val studied = userProgressDao.getStudiedWordCountByLevel(levelEntity.id)
                 val mastered = userProgressDao.getMasteredWordCountByLevel(levelEntity.id)
                 val hasPassed = masteryTestDao.hasPassedLevel(levelEntity.id)
                 val isMastered = levelEntity.isMastered || hasPassed
                 val status = MasteryTestEngine.determineLevelStatus(
-                    isUnlocked = levelEntity.isUnlocked,
+                    isUnlocked = isUnlocked,
                     isMastered = isMastered,
                     totalWords = total,
                     studiedWords = studied,
@@ -75,7 +83,7 @@ class VocabularyRepositoryImpl(
                     studiedWords = studied,
                     masteredWords = mastered,
                     status = status
-                )
+                ).copy(isUnlocked = isUnlocked)
             }
         }
     }

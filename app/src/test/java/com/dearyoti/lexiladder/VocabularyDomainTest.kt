@@ -153,4 +153,25 @@ class VocabularyDomainTest {
         val wordIdsInQuiz = quiz.map { it.wordId }.toSet()
         assertEquals(4, wordIdsInQuiz.size)
     }
+
+    @Test
+    fun quizGeneration_worksForExamAwlDiagnosticWords() {
+        val awlWords = listOf(
+            Word("w_awl_001", "Analyze", "verb", "To examine methodically and in detail", "Researchers analyzed the statistical data.", "level_exam_awl", "unit_awl_1", "/ˈæn.ə.laɪz/", "Menganalisis"),
+            Word("w_awl_002", "Concept", "noun", "An abstract idea or a general notion", "The radical concept of spacetime curvature.", "level_exam_awl", "unit_awl_1", "/ˈkɑːn.sept/", "Konsep"),
+            Word("w_awl_003", "Hypothesis", "noun", "A proposed explanation made on limited evidence", "The scientist formulated a working hypothesis.", "level_exam_awl", "unit_awl_1", "/haɪˈpɑː.θə.sɪs/", "Hipotesis"),
+            Word("w_awl_004", "Evaluate", "verb", "To form an idea of the value or quality", "Reviewers evaluate submitted academic manuscripts.", "level_exam_awl", "unit_awl_2", "/ɪˈvæl.ju.eɪt/", "Mengevaluasi"),
+            Word("w_awl_005", "Significant", "adjective", "Sufficiently great or important to be worthy of attention", "Statistically significant reduction in risk.", "level_exam_awl", "unit_awl_2", "/sɪɡˈnɪf.ə.kənt/", "Signifikan")
+        )
+
+        val diagnosticQuiz = generateQuizFromWords(awlWords)
+        assertEquals(5, diagnosticQuiz.size)
+        for (q in diagnosticQuiz) {
+            assertEquals(4, q.options.size)
+            assertEquals(4, q.options.distinct().size)
+            assertTrue(q.correctOptionIndex in 0..3)
+            val correct = q.options[q.correctOptionIndex]
+            assertTrue(awlWords.any { it.text == correct || it.definition == correct || it.translation == correct })
+        }
+    }
 }

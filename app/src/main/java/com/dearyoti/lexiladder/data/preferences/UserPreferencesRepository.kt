@@ -25,6 +25,8 @@ data class UserPreferences(
     val isDarkMode: Boolean = false,
     val isOnboardingCompleted: Boolean = false,
     val isPremium: Boolean = false,
+    val hasExamBooster: Boolean = false,
+    val hasAllAccessLifetime: Boolean = false,
     val lastContentCheckTimestamp: Long = 0L,
     val currentStreak: Int = 0,
     val bestStreak: Int = 0,
@@ -50,6 +52,12 @@ data class UserPreferences(
 
     val dailyGoalProgressFraction: Float
         get() = (effectiveTodayStudyCount.toFloat() / dailyTargetReviews.toFloat()).coerceIn(0f, 1f)
+
+    val isAdFree: Boolean
+        get() = isPremium || hasAllAccessLifetime
+
+    val isExamBoosterUnlocked: Boolean
+        get() = hasExamBooster || hasAllAccessLifetime
 }
 
 class UserPreferencesRepository(private val context: Context) {
@@ -61,6 +69,8 @@ class UserPreferencesRepository(private val context: Context) {
         val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
         val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         val KEY_IS_PREMIUM = booleanPreferencesKey("is_premium")
+        val KEY_HAS_EXAM_BOOSTER = booleanPreferencesKey("has_exam_booster")
+        val KEY_HAS_ALL_ACCESS_LIFETIME = booleanPreferencesKey("has_all_access_lifetime")
         val KEY_LAST_CONTENT_CHECK = longPreferencesKey("last_content_check_timestamp")
         val KEY_CURRENT_STREAK = intPreferencesKey("current_streak")
         val KEY_BEST_STREAK = intPreferencesKey("best_streak")
@@ -124,6 +134,8 @@ class UserPreferencesRepository(private val context: Context) {
             isDarkMode = preferences[KEY_DARK_MODE] ?: false,
             isOnboardingCompleted = preferences[KEY_ONBOARDING_COMPLETED] ?: false,
             isPremium = preferences[KEY_IS_PREMIUM] ?: false,
+            hasExamBooster = preferences[KEY_HAS_EXAM_BOOSTER] ?: false,
+            hasAllAccessLifetime = preferences[KEY_HAS_ALL_ACCESS_LIFETIME] ?: false,
             lastContentCheckTimestamp = preferences[KEY_LAST_CONTENT_CHECK] ?: 0L,
             currentStreak = preferences[KEY_CURRENT_STREAK] ?: 0,
             bestStreak = preferences[KEY_BEST_STREAK] ?: 0,
@@ -184,6 +196,23 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setPremium(isPremium: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[KEY_IS_PREMIUM] = isPremium
+        }
+    }
+
+    suspend fun setExamBooster(hasBooster: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_HAS_EXAM_BOOSTER] = hasBooster
+        }
+    }
+
+    suspend fun setAllAccessLifetime(hasAllAccess: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_HAS_ALL_ACCESS_LIFETIME] = hasAllAccess
+            if (hasAllAccess) {
+                // All-Access automatically covers premium (ad-free) and exam booster
+                preferences[KEY_IS_PREMIUM] = true
+                preferences[KEY_HAS_EXAM_BOOSTER] = true
+            }
         }
     }
 

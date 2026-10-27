@@ -1,6 +1,7 @@
 package com.dearyoti.lexiladder.ui.screens
 
 import android.app.Activity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +37,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -51,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dearyoti.lexiladder.BuildConfig
 import com.dearyoti.lexiladder.LexiLadderApp
+import com.dearyoti.lexiladder.core.billing.BillingManager
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,18 +72,36 @@ fun PremiumScreen(
     val prefs by prefsRepo.userPreferencesFlow.collectAsState(
         initial = com.dearyoti.lexiladder.data.preferences.UserPreferences()
     )
-    val productDetails by billingManager.premiumProductDetails.collectAsState()
+    val productsDetails by billingManager.productsDetails.collectAsState()
     val isConnecting by billingManager.isConnecting.collectAsState()
     val statusMessage by billingManager.billingStatusMessage.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val allAccessPrice = productsDetails[BillingManager.PRODUCT_ALL_ACCESS_LIFETIME]
+        ?.oneTimePurchaseOfferDetails?.formattedPrice ?: "$5.99"
+    val examBoosterPrice = productsDetails[BillingManager.PRODUCT_EXAM_BOOSTER]
+        ?.oneTimePurchaseOfferDetails?.formattedPrice ?: "$2.99"
+    val removeAdsPrice = productsDetails[BillingManager.PRODUCT_PREMIUM_REMOVE_ADS]
+        ?.oneTimePurchaseOfferDetails?.formattedPrice ?: "$1.99"
+
+    fun initiatePurchase(productId: String) {
+        if (activity != null) {
+            val launched = billingManager.launchPurchaseFlow(activity, productId)
+            if (!launched) {
+                scope.launch {
+                    snackbarHostState.showSnackbar("Unable to open Google Play Store. Check internet connection.")
+                }
+            }
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("LexiLadder Premium") },
+                title = { Text("Premium & Upgrades") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -102,7 +125,7 @@ fun PremiumScreen(
             // Gold Header Icon
             Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(76.dp)
                     .background(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = CircleShape
@@ -112,134 +135,94 @@ fun PremiumScreen(
                 Icon(
                     imageVector = Icons.Default.WorkspacePremium,
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(46.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Text(
-                text = "Upgrade to Premium",
+                text = "Upgrade LexiLadder",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
 
             Text(
-                text = "Unlock an uninterrupted, ad-free English learning experience with permanent offline support.",
+                text = "Supercharge your English vocabulary with specialized exam modules or enjoy a completely ad-free experience forever.",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            // Features Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            // Tier 1: All-Access Lifetime (PRO)
+            PurchaseTierCard(
+                title = "All-Access Lifetime (PRO)",
+                badge = "⭐ BEST VALUE • ONE-TIME",
+                price = allAccessPrice,
+                description = "Unlock every current and future premium feature with a single lifetime purchase.",
+                features = listOf(
+                    "Includes Exam Booster Pack (TOEFL / IELTS)",
+                    "100% Ad-Free learning forever across all screens",
+                    "All future vocabulary, grammar & test expansions",
+                    "Full offline access & permanent lifetime ownership"
+                ),
+                isOwned = prefs.hasAllAccessLifetime,
+                isHighlighted = true,
+                isConnecting = isConnecting,
+                onPurchaseClick = { initiatePurchase(BillingManager.PRODUCT_ALL_ACCESS_LIFETIME) }
+            )
+
+            // Tier 2: Exam Booster Pack
+            PurchaseTierCard(
+                title = "Exam Booster Pack",
+                badge = "TOEFL & IELTS",
+                price = examBoosterPrice,
+                description = "Specialized academic vocabulary and simulated tests designed for exam achievers.",
+                features = listOf(
+                    "570 Academic Word List (AWL) core vocabulary",
+                    "High-scoring collocations & phrasal verbs",
+                    "Timed diagnostic practice tests with band estimate",
+                    "One-time purchase with permanent offline access"
+                ),
+                isOwned = prefs.isExamBoosterUnlocked,
+                isHighlighted = false,
+                isConnecting = isConnecting,
+                onPurchaseClick = { initiatePurchase(BillingManager.PRODUCT_EXAM_BOOSTER) }
+            )
+
+            // Tier 3: Remove Ads Only
+            PurchaseTierCard(
+                title = "Ad-Free Experience",
+                badge = "LIFETIME",
+                price = removeAdsPrice,
+                description = "Remove all banners and interstitial ads permanently for focused, peaceful learning.",
+                features = listOf(
+                    "Zero banners in Home, Progress, and Settings",
+                    "Zero interstitial interruptions after lessons",
+                    "Faster, cleaner app experience offline & online"
+                ),
+                isOwned = prefs.isAdFree,
+                isHighlighted = false,
+                isConnecting = isConnecting,
+                onPurchaseClick = { initiatePurchase(BillingManager.PRODUCT_PREMIUM_REMOVE_ADS) }
+            )
+
+            // Restore Purchases Button
+            OutlinedButton(
+                onClick = {
+                    billingManager.restorePurchases { success, message ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message)
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    PremiumFeatureRow(
-                        title = "100% Ad-Free Learning",
-                        description = "No banners, no interstitials between lessons, and no popups."
-                    )
-                    PremiumFeatureRow(
-                        title = "Zero Interruption During Quizzes",
-                        description = "Focus on building vocabulary and passing mastery tests peacefully."
-                    )
-                    PremiumFeatureRow(
-                        title = "Full Offline Access Preserved",
-                        description = "Never lose your premium benefits even when offline or in airplane mode."
-                    )
-                    PremiumFeatureRow(
-                        title = "One-Time Lifetime Purchase",
-                        description = "Pay once and enjoy forever on all your Android devices using the same Google account."
-                    )
-                }
-            }
-
-            // Current Status / Purchase Action
-            if (prefs.isPremium) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = Color(0xFF2E7D32),
-                            modifier = Modifier.size(36.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "You are a Premium Member!",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1B5E20)
-                        )
-                        Text(
-                            text = "All advertisements are permanently disabled. Thank you for supporting LexiLadder!",
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.Center,
-                            color = Color(0xFF2E7D32)
-                        )
-                    }
-                }
-            } else {
-                val priceText = productDetails?.oneTimePurchaseOfferDetails?.formattedPrice ?: "$1.99"
-
-                Button(
-                    onClick = {
-                        if (activity != null) {
-                            val launched = billingManager.launchPurchaseFlow(activity)
-                            if (!launched) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Unable to open Google Play Store. Check internet or simulated mode.")
-                                }
-                            }
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    if (isConnecting) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    } else {
-                        Text(
-                            text = "Unlock Premium for $priceText",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-
-                OutlinedButton(
-                    onClick = {
-                        billingManager.restorePurchases { success, message ->
-                            scope.launch {
-                                snackbarHostState.showSnackbar(message)
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(imageVector = Icons.Default.Restore, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Restore Purchases")
-                }
+                Icon(imageVector = Icons.Default.Restore, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Restore Purchases")
             }
 
             // QA / Debug Simulation Mode
@@ -258,7 +241,7 @@ fun PremiumScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Simulate Google Play purchase state without live Play Console connection:",
+                            text = "Simulate Google Play purchase state for each product tier:",
                             style = MaterialTheme.typography.bodySmall
                         )
                         Row(
@@ -266,16 +249,33 @@ fun PremiumScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Button(
+                                onClick = { billingManager.simulateAllAccessPurchase(true) },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Sim All-Access", style = MaterialTheme.typography.bodySmall)
+                            }
+                            Button(
+                                onClick = { billingManager.simulateExamBoosterPurchase(true) },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Sim Booster", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedButton(
                                 onClick = { billingManager.simulatePremiumPurchase(true) },
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text("Simulate Buy")
+                                Text("Sim No-Ads", style = MaterialTheme.typography.bodySmall)
                             }
                             OutlinedButton(
-                                onClick = { billingManager.simulatePremiumPurchase(false) },
+                                onClick = { billingManager.simulateAllAccessPurchase(false) },
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text("Simulate Reset")
+                                Text("Reset All", style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
@@ -295,34 +295,155 @@ fun PremiumScreen(
 }
 
 @Composable
-private fun PremiumFeatureRow(
+private fun PurchaseTierCard(
     title: String,
-    description: String
+    badge: String?,
+    price: String,
+    description: String,
+    features: List<String>,
+    isOwned: Boolean,
+    isHighlighted: Boolean,
+    isConnecting: Boolean,
+    onPurchaseClick: () -> Unit
 ) {
-    Row(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isOwned) {
+                Color(0xFFE8F5E9)
+            } else if (isHighlighted) {
+                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
+        ),
+        border = if (isOwned) {
+            BorderStroke(1.5.dp, Color(0xFF4CAF50))
+        } else if (isHighlighted) {
+            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        } else {
+            BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        },
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isHighlighted) 4.dp else 1.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.CheckCircle,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(20.dp)
-                .padding(top = 2.dp)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold
-            )
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                if (badge != null && !isOwned) {
+                    SuggestionChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = badge,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        colors = SuggestionChipDefaults.suggestionChipColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                            labelColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = null
+                    )
+                }
+            }
+
             Text(
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                features.forEach { feature ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = if (isOwned) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(top = 2.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = feature,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            if (isOwned) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = Color(0xFF2E7D32),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "Unlocked & Active",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1B5E20)
+                    )
+                }
+            } else {
+                Button(
+                    onClick = onPurchaseClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isHighlighted) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.secondary
+                        }
+                    )
+                ) {
+                    if (isConnecting) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Get for $price",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
         }
     }
 }

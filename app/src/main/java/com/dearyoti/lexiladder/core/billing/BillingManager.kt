@@ -31,9 +31,20 @@ class BillingManager(
     companion object {
         private const val TAG = "BillingManager"
         const val PRODUCT_PREMIUM_REMOVE_ADS = "lexiladder_premium_remove_ads"
+        const val PRODUCT_EXAM_BOOSTER = "lexiladder_exam_booster_pack"
+        const val PRODUCT_ALL_ACCESS_LIFETIME = "lexiladder_all_access_lifetime"
+
+        val ALL_PRODUCT_IDS = listOf(
+            PRODUCT_ALL_ACCESS_LIFETIME,
+            PRODUCT_EXAM_BOOSTER,
+            PRODUCT_PREMIUM_REMOVE_ADS
+        )
     }
 
     private var billingClient: BillingClient? = null
+
+    private val _productsDetails = MutableStateFlow<Map<String, ProductDetails>>(emptyMap())
+    val productsDetails: StateFlow<Map<String, ProductDetails>> = _productsDetails.asStateFlow()
 
     private val _premiumProductDetails = MutableStateFlow<ProductDetails?>(null)
     val premiumProductDetails: StateFlow<ProductDetails?> = _premiumProductDetails.asStateFlow()
@@ -101,12 +112,12 @@ class BillingManager(
             return
         }
 
-        val productList = listOf(
+        val productList = ALL_PRODUCT_IDS.map { id ->
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(PRODUCT_PREMIUM_REMOVE_ADS)
+                .setProductId(id)
                 .setProductType(BillingClient.ProductType.INAPP)
                 .build()
-        )
+        }
 
         val params = QueryProductDetailsParams.newBuilder()
             .setProductList(productList)
@@ -114,11 +125,10 @@ class BillingManager(
 
         client.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val product = queryProductDetailsResult.productDetailsList.firstOrNull {
-                    it.productId == PRODUCT_PREMIUM_REMOVE_ADS
-                }
-                _premiumProductDetails.value = product
-                Log.d(TAG, "Product details loaded: ${product?.title}")
+                val detailsMap = queryProductDetailsResult.productDetailsList.associateBy { it.productId }
+                _productsDetails.value = detailsMap
+                _premiumProductDetails.value = detailsMap[PRODUCT_PREMIUM_REMOVE_ADS]
+                Log.d(TAG, "Product details loaded for products: ${detailsMap.keys}")
             } else {
                 Log.w(TAG, "queryProductDetails failed: ${billingResult.debugMessage}")
             }
@@ -144,12 +154,13 @@ class BillingManager(
         }
     }
 
-    fun launchPurchaseFlow(activity: Activity): Boolean {
+    fun launchPurchaseFlow(activity: Activity, productId: String = PRODUCT_ALL_ACCESS_LIFETIME): Boolean {
         val client = billingClient
-        val productDetails = _premiumProductDetails.value
+        val productDetails = _productsDetails.value[productId]
+            ?: if (productId == PRODUCT_PREMIUM_REMOVE_ADS) _premiumProductDetails.value else null
 
         if (client == null || !client.isReady || productDetails == null) {
-            Log.w(TAG, "Cannot launch purchase flow. BillingClient not ready or product details missing.")
+            Log.w(TAG, "Cannot launch purchase flow for $productId. BillingClient not ready or product details missing.")
             _billingStatusMessage.value = "Google Play Billing is not ready. Please check internet connection."
             startBillingConnection()
             return false
@@ -182,25 +193,48 @@ class BillingManager(
     }
 
     private fun processPurchases(purchases: List<Purchase>) {
-        var hasPremium = false
+        var hasRemoveAds = false
+        var hasExamBooster = false
+        var hasAllAccess = false
+
         for (purchase in purchases) {
-            if (purchase.products.contains(PRODUCT_PREMIUM_REMOVE_ADS)) {
-                if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                    hasPremium = true
-                    if (!purchase.isAcknowledged) {
-                        acknowledgePurchase(purchase)
-                    }
-                } else if (purchase.purchaseState == Purchase.PurchaseState.PENDING) {
-                    Log.d(TAG, "Purchase is in PENDING state.")
-                    _billingStatusMessage.value = "Purchase is pending approval by Google Play."
+            if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                if (!purchase.isAcknowledged) {
+                    acknowledgePurchase(purchase)
                 }
+                if (purchase.products.contains(PRODUCT_ALL_ACCESS_LIFETIME)) {
+                    hasAllAccess = true
+                }
+                if (purchase.products.contains(PRODUCT_EXAM_BOOSTER)) {
+                    hasExamBooster = true
+                }
+                if (purchase.products.contains(PRODUCT_PREMIUM_REMOVE_ADS)) {
+                    hasRemoveAds = true
+                }
+            } else if (purchase.purchaseState == Purchase.PurchaseState.PENDING) {
+                Log.d(TAG, "Purchase is in PENDING state.")
+                _billingStatusMessage.value = "Purchase is pending approval by Google Play."
             }
         }
 
-        if (hasPremium) {
-            coroutineScope.launch {
-                userPreferencesRepository.setPremium(true)
-                _billingStatusMessage.value = "Premium activated successfully! All ads removed."
+        coroutineScope.launch {
+            if (hasAllAccess) {
+                userPreferencesRepository.setAllAccessLifetime(true)
+                _billingStatusMessage.value = "All-Access Lifetime activated! All features unlocked."
+            } else {
+                if (hasExamBooster) {
+                    userPreferencesRepository.setExamBooster(true)
+                }
+                if (hasRemoveAds) {
+                    userPreferencesRepository.setPremium(true)
+                }
+                if (hasExamBooster && hasRemoveAds) {
+                    _billingStatusMessage.value = "Exam Booster & Ad-Free activated!"
+                } else if (hasExamBooster) {
+                    _billingStatusMessage.value = "Exam Booster Pack activated!"
+                } else if (hasRemoveAds) {
+                    _billingStatusMessage.value = "Premium ad-free activated!"
+                }
             }
         }
     }
@@ -237,13 +271,21 @@ class BillingManager(
 
         client.queryPurchasesAsync(params) { billingResult, purchases ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val hasPremium = purchases.any {
-                    it.products.contains(PRODUCT_PREMIUM_REMOVE_ADS) &&
-                            it.purchaseState == Purchase.PurchaseState.PURCHASED
-                }
-                if (hasPremium) {
+                val purchasedProducts = purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
+                    .flatMap { it.products }
+                    .toSet()
+
+                val foundProducts = ALL_PRODUCT_IDS.filter { it in purchasedProducts }
+                if (foundProducts.isNotEmpty()) {
                     processPurchases(purchases)
-                    onComplete(true, "Premium restored successfully! Ads are disabled.")
+                    val summary = when {
+                        PRODUCT_ALL_ACCESS_LIFETIME in foundProducts -> "All-Access Lifetime restored successfully!"
+                        PRODUCT_EXAM_BOOSTER in foundProducts && PRODUCT_PREMIUM_REMOVE_ADS in foundProducts -> "Exam Booster and Ad-Free restored successfully!"
+                        PRODUCT_EXAM_BOOSTER in foundProducts -> "Exam Booster Pack restored successfully!"
+                        PRODUCT_PREMIUM_REMOVE_ADS in foundProducts -> "Ad-Free Premium restored successfully!"
+                        else -> "Purchases restored successfully!"
+                    }
+                    onComplete(true, summary)
                 } else {
                     onComplete(false, "No previous purchases found for this Google account.")
                 }
@@ -259,7 +301,25 @@ class BillingManager(
     fun simulatePremiumPurchase(enable: Boolean) {
         coroutineScope.launch {
             userPreferencesRepository.setPremium(enable)
-            _billingStatusMessage.value = if (enable) "Simulated Premium Activated!" else "Simulated Premium Deactivated."
+            _billingStatusMessage.value = if (enable) "Simulated Ad-Free Activated!" else "Simulated Ad-Free Deactivated."
+        }
+    }
+
+    fun simulateExamBoosterPurchase(enable: Boolean) {
+        coroutineScope.launch {
+            userPreferencesRepository.setExamBooster(enable)
+            _billingStatusMessage.value = if (enable) "Simulated Exam Booster Activated!" else "Simulated Exam Booster Deactivated."
+        }
+    }
+
+    fun simulateAllAccessPurchase(enable: Boolean) {
+        coroutineScope.launch {
+            userPreferencesRepository.setAllAccessLifetime(enable)
+            if (!enable) {
+                userPreferencesRepository.setPremium(false)
+                userPreferencesRepository.setExamBooster(false)
+            }
+            _billingStatusMessage.value = if (enable) "Simulated All-Access Lifetime Activated!" else "Simulated All-Access Reset."
         }
     }
 }

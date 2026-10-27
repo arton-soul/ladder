@@ -1,6 +1,6 @@
 {
   "manifestSchemaVersion": 1,
-  "manifestVersion": 2,
+  "manifestVersion": 3,
   "appContent": {
     "fallbackUiLocale": "en",
     "targetLanguage": "en"
@@ -70,6 +70,32 @@
       "sha256": "bddeff80fb23de0f585f987d5d6e9e32be6c66ace0ba7680ac2df059f418b776",
       "sizeBytes": 5952,
       "description": "Indonesian UI Localization Catalog"
+    },
+    {
+      "packageId": "learning.en.exam.awl",
+      "type": "learning-package",
+      "locale": "en",
+      "contentVersion": 1,
+      "schemaVersion": 1,
+      "minimumAppVersion": 1,
+      "status": "published",
+      "url": "https://raw.githubusercontent.com/arton-soul/ladder/master/content/learning_exam_awl.json",
+      "sha256": "7aaba8ab525fd184cb7c09465866ecfc8fd26e355eab444e5cce28eae7d4535b",
+      "sizeBytes": 26250,
+      "description": "Exam Booster: TOEFL & IELTS Academic Word List Package (60 words)"
+    },
+    {
+      "packageId": "translation.id.en.exam.awl",
+      "type": "translation-package",
+      "locale": "id",
+      "contentVersion": 1,
+      "schemaVersion": 1,
+      "minimumAppVersion": 1,
+      "status": "published",
+      "url": "https://raw.githubusercontent.com/arton-soul/ladder/master/content/translation_id_exam_awl.json",
+      "sha256": "789ca9fd542ab1b853b0f86cfeb8bdb7d084f34f625c3a656e72a4dd8342ff23",
+      "sizeBytes": 18310,
+      "description": "Indonesian Translations for TOEFL & IELTS Exam Booster (60 entries)"
     }
   ]
 }
