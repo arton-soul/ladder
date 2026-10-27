@@ -10,11 +10,11 @@
 - **Status keseluruhan:** `IN PROGRESS`
 - **Fase aktif:** Phase 8 — Post-launch & Retention Features
 - **Fase terakhir selesai:** Phase 7 — QA, ASO & Release Preparation
-- **Build terakhir:** `.\gradlew bundleRelease` (SUCCESS AAB v1.0.3 Build 4 14.62 MiB, jarsigner verified)
-- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 81/81 unit tests passed)
+- **Build terakhir:** `.\gradlew bundleRelease` (SUCCESS AAB v1.0.4 Build 5 14.63 MiB, jarsigner verified)
+- **Test terakhir:** `.\gradlew testDebugUnitTest` (SUCCESS - 83/83 unit tests passed)
 - **Blocker aktif:** Tidak ada
 - **Tanggal mulai implementasi:** 2026-10-19
-- **Versi aplikasi:** `1.0.3` (Build 4)
+- **Versi aplikasi:** `1.0.4` (Build 5)
 - **Package name:** `com.dearyoti.lexiladder` (Display: `LexiLadder: English Vocab`)
 - **Repository aplikasi:** `https://github.com/arton-soul/ladder.git` (Akun: `arton.79@gmail.com`)
 - **Developer Play Store:** `dearyoti` (Email: `made.sudi@gmail.com`)
@@ -365,6 +365,10 @@ Jangan tandai `[x]` hanya karena kode sudah ditulis. Acceptance criteria dan has
   - [x] Pembaruan `manifest.json` v3 (7 paket terdaftar dengan SHA-256 dan byte size tepat).
   - [x] Pengaitan level `level_exam_awl` dengan hak akses `isExamBoosterUnlocked` di `VocabularyRepositoryImpl.getAllLevels()`.
   - [x] Pengujian integritas konten otomatis di `ContentRepositoryIntegrityTest` dan tes diagnostik kuis AWL di `VocabularyDomainTest` (83/83 tes lolos).
+- [x] Pembuatan Signed Release Bundle v1.0.4 Build 5 (`app-release.aab` 14.63 MiB):
+  - [x] Versi aplikasi dinaikkan ke versionCode 5, versionName 1.0.4.
+  - [x] Kompilasi bundle rilis ditandatangani dengan keystore resmi `lexyladder.jks` (`jarsigner -verify` VALID).
+  - [x] Pembaruan dokumen panduan unggah rilis di `Doc/store_listing/internal_testing_release_notes.md`.
 - [ ] Tambahkan daftar email penguji (internal testers).
 - [ ] Verifikasi instalasi melalui link Play Store testing.
 - [ ] Monitor crash log & review performa awal.
@@ -438,12 +442,32 @@ Salin template ini setiap kali satu milestone dikerjakan.
 - **Masalah atau blocker:** Tidak ada
 - **Langkah berikutnya:** Menerbitkan rilis paket konten baru ke GitHub repository (`https://github.com/arton-soul/ladder.git`) dan mengonfirmasi peluncuran Internal Testing di Play Console.
 
+### Milestone: Signed Release Bundle v1.0.4 Build 5 for Internal Testing
+- **Tanggal:** 2026-10-28
+- **Fase:** Phase 8 — Post-launch, Monetization & Retention Features
+- **Status:** `DONE`
+- **Tujuan:** Mengompilasi signed release bundle `.aab` versi 1.0.4 (Build 5) yang menyertakan modul penagihan multi-produk IAP dan paket materi offline TOEFL/IELTS AWL untuk diunggah ke Google Play Console track Internal Testing.
+- **File yang diperiksa:** `app/build.gradle.kts`, `Doc/store_listing/internal_testing_release_notes.md`, `release_signing_guide.md`
+- **File yang diubah/dibuat:**
+  - `app/build.gradle.kts` (versionCode: 5, versionName: "1.0.4")
+  - `app/build/outputs/bundle/release/app-release.aab` (14.63 MiB, 15,344,537 bytes)
+  - `Doc/store_listing/internal_testing_release_notes.md` (Catatan rilis v1.0.4 Build 5 dwibahasa ID & EN)
+- **Keputusan teknis:**
+  - Build rilis ditandatangani dengan keystore resmi `D:\Android\Keystore\LexyLadder\lexyladder.jks` alias `lexy` (signer: `CN=dearyoti, OU=dearyoti, O=dearyoti, C=ID`).
+  - Verifikasi integritas tanda tangan menggunakan `jarsigner -verify` berhasil valid.
+- **Perintah yang dijalankan:** `.\gradlew bundleRelease`
+- **Hasil build/test yang benar-benar terlihat:** BUILD SUCCESSFUL in 2m 34s, file `app-release.aab` siap diunggah ke Play Console.
+- **Acceptance criteria terpenuhi:** Versi aplikasi naik secara berurutan, tanda tangan rilis valid, catatan rilis siap pakai, dan ukuran bundel mematuhi batas Play Store.
+- **Masalah atau blocker:** Tidak ada
+- **Langkah berikutnya:** Pengguna mengunggah `app-release.aab` ke Google Play Console pada track Internal Testing dan membagikan link ke penguji.
+
 ---
 
 ## 14. Log Keputusan
 
 | Tanggal | Keputusan | Alasan | Dampak | Status |
 |---|---|---|---|---|
+| 2026-10-28 | Bump versi ke 1.0.4 (Build 5) dan kompilasi signed bundle rilis | Menyediakan bundel produksi terbaru berisi Exam Booster TOEFL/IELTS & Multi-Product IAP untuk diuji via Internal Testing | Berkas `app-release.aab` 14.63 MiB siap diunggah | DONE |
 | 2026-10-26 | Integrasi materi AWL (Academic Word List) untuk TOEFL & IELTS ke sistem konten JSON | Menyediakan materi belajar berbobot tinggi untuk pembeli Exam Booster & All-Access Lifetime | `learning_exam_awl.json` dan `translation_id_exam_awl.json` terdaftar di manifest v3 | DONE |
 | 2026-10-26 | Penambahan 2 produk IAP: `lexiladder_exam_booster_pack` & `lexiladder_all_access_lifetime` | Meningkatkan potensi monetisasi dengan menyasar pembelajar ujian (TOEFL/IELTS) dan menyediakan opsi All-Access hemat bagi pengguna serius | BillingManager, DataStore UserPreferences, dan PremiumScreen kini mendukung 3 tingkatan produk | DONE |
 

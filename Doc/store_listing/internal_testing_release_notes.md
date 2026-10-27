@@ -1,4 +1,4 @@
-# Catatan Rilis Internal Testing — LexiLadder v1.0.3 (Build 4)
+# Catatan Rilis Internal Testing — LexiLadder v1.0.4 (Build 5)
 
 Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*), dan panduan lengkap pengunggahan ke **Google Play Console (Internal Testing)**.
 
@@ -10,11 +10,11 @@ Dokumen ini memuat detail teknis, catatan rilis resmi dwibahasa (*Release Notes*
 |---|---|
 | **Nama Aplikasi** | LexiLadder: English Vocab |
 | **Package Name / Application ID** | `com.dearyoti.lexiladder` |
-| **Version Name** | `1.0.3` |
-| **Version Code** | `4` |
+| **Version Name** | `1.0.4` |
+| **Version Code** | `5` |
 | **Google Play Billing Library** | `8.0.0` *(Memenuhi syarat kebijakan monetisasi terbaru Google Play)* |
 | **Tipe Berkas** | Android App Bundle (`.aab`) |
-| **Ukuran Berkas** | **14.62 MiB** (15,328,949 bytes) *(Batas Play Console: 150 MB)* |
+| **Ukuran Berkas** | **14.63 MiB** (15,344,537 bytes) *(Batas Play Console: 150 MB)* |
 | **Lokasi Berkas di Proyek** | `app/build/outputs/bundle/release/app-release.aab` |
 | **Minimum SDK** | Android 8.0 (API Level 26) |
 | **Target SDK / Compile SDK** | Android 16 (API Level 36) |
@@ -32,24 +32,24 @@ Salin teks berikut ke kolom **Catatan rilis / Release notes** di Google Play Con
 
 ### 🇮🇩 Bahasa Indonesia (`id-ID`):
 ```text
-Pembaruan Fitur & Perbaikan Stabilitas LexiLadder (v1.0.3 Build 4):
-- Perbaikan Mode Latihan "Perlu Diulang": Evaluasi penilaian kuis kini 100% akurat, stabil, dan bebas dari anomali pembatalan atau regenerasi soal mendadak saat menjawab kuis.
-- Penyesuaian Syarat Ujian Tingkat Level: Akses ujian sertifikasi kini terbuka lebih cepat dan alami setelah mempelajari minimal 80% materi kosakata di level bersangkutan (120 kata di Level 1, 160 kata di Level 2, 200 kata di Level 3).
-- Perbaikan UI Mode Kartu Kilat (Flashcard): Tombol navigasi kartu selanjutnya kini menampilkan ikon panah kanan (ArrowForward) dengan tepat dan konsisten.
-- Peningkatan Algoritma Pilihan Jawaban Kuis: Sanitasi opsi pengecoh untuk menjamin semua pilihan jawaban unik tanpa duplikasi.
-- Pembaruan Notifikasi Milestone: Peringatan kelayakan ujian disesuaikan dengan pencapaian 80% dan 100% materi.
-- 100% Offline-First: Belajar, latihan, dan ujian kosakata kapan saja tanpa kuota internet.
+Pembaruan Fitur & Konten Baru LexiLadder (v1.0.4 Build 5):
+- Peluncuran Paket Ujian TOEFL & IELTS (Exam Booster): Hadir 60 kosakata inti Academic Word List (AWL) terstruktur dalam 3 unit (Analisis & Metodologi, Evaluasi Kritis, serta Inovasi Teknologi & Struktur Sosial).
+- Kuis Diagnostik & Simulasi Ujian Akademik: Latihan konteks kalimat, tebak definisi, dan simulasi kelulusan ujian level AWL dengan passing grade 80%.
+- Opsi Pembelian Baru: Dukungan produk in-app purchase "Exam Booster Pack" dan "All-Access Lifetime (PRO)" untuk membuka semua fitur dan bebas iklan selamanya.
+- Tampilan Baru Halaman Premium: Antarmuka kartu bertingkat yang lebih modern dengan status kepemilikan lencana "Unlocked & Active".
+- Peningkatan Sinkronisasi Manifest Konten: Manifest konten versi 3 kini terintegrasi penuh secara offline.
+- 100% Offline-First: Belajar, latihan, dan simulasi ujian tanpa memerlukan koneksi internet.
 ```
 
 ### 🇺🇸 Bahasa Inggris (`en-US`):
 ```text
-LexiLadder Feature Update & Bug Fixes (v1.0.3 Build 4):
-- Fixed Practice "Due Review" Mode: Quiz answer evaluations are now 100% accurate, stable, and immune to mid-session question reshuffling or unexpected resets.
-- Optimized Level Exam Prerequisites: Level certification exams now unlock naturally upon completing at least 80% of lesson material in that level (120 words for Level 1, 160 words for Level 2, 200 words for Level 3).
-- Fixed Flashcard Navigation UI: The next-card button now correctly displays the forward arrow icon.
-- Enhanced Quiz Distractor Algorithm: Stricter distractor sanitization to guarantee 4 distinct options per question.
-- Smart Milestone Alerts Updated: In-app celebrations and notifications now trigger accurately at 80% and 100% study milestones.
-- 100% Offline-First: Learn, practice, and take exams anytime without an internet connection.
+LexiLadder New Features & Content Update (v1.0.4 Build 5):
+- TOEFL & IELTS Exam Booster Pack: Added 60 essential Academic Word List (AWL) core words across 3 academic units (Research & Methodology, Critical Evaluation, and Technological & Societal Structure).
+- Diagnostic Quizzes & Academic Exam Simulation: Context sentences, definition matching, and automated timed mastery test simulations with an 80% passing grade.
+- New Purchase Options: Added "Exam Booster Pack" and "All-Access Lifetime (PRO)" in-app products to unlock all modules and remove all ads permanently.
+- Modernized Premium Screen: Redesigned multi-tier product cards with clear ownership badges ("Unlocked & Active").
+- Content Manifest v3 Sync: Bundled offline content packages updated with verified SHA-256 integrity.
+- 100% Offline-First: Learn, practice, and test vocabulary anytime without an internet connection.
 ```
 
 ---
